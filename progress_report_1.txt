@@ -29,5 +29,10 @@ For each group member, list the individual contributions, and a link to proof in
 - Setup Github Repository [proof](https://github.com/mbentley124/cse280) 
 - Interested in Concurrent Persistent STL for C++, Learning AI with the Unity Game Engine Projects, and Eye Gaze Correction
 
+### Cody Benkoski
+
+- Interested in Concurrent Persistent STL for C++, Uber for Tools, Campus Mapping. (0 Hours)
+- Explored an outside project based on using non-traditional means to geolocate devices, but found that the necessary data is not readily available on Lehigh's Grafana instance. (3 Hours)
+
 Estimated time allocated this week: X Hrs
 
