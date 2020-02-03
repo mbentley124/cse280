@@ -40,3 +40,7 @@ For each group member, list the individual contributions, and a link to proof in
 
 Estimated time allocated this week: X Hrs
 
+### Joseph Malisov
+
+- Very interested in VR of the Lehigh Watershed, and also interested in Campus Mapping, Learning AI with the Unity Game Engine, Concurrent Persistent STL for C++. (1 hour)
+- Also intereted in potential outside project as described by Cody.
