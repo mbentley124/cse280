@@ -27,6 +27,7 @@ For each group member, list the individual contributions, and a link to proof in
 ### Michael Bentley
 
 - Helped decide on project proposal [proof](project proposal submission)
+- Decided short presentation topic of Firestore [proof](presentation on Tuesday)
 
 Estimated time allocated this week: 30 Minutes.
 
