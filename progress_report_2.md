@@ -26,6 +26,9 @@ For each group member, list the individual contributions, and a link to proof in
 
 ### Michael Bentley
 
-- Helped decide on project proposal [proof](project proposal submission) 
+- Helped decide on project proposal [proof](project proposal submission)
 
-Estimated time allocated this week: 30 minutes
+### Cody Benkoski
+- Found a C++ web framework for us to do the sprint project in. [proof](http://pistache.io/)
+
+Estimated time allocated this week: 1 hour.
