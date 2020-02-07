@@ -28,7 +28,20 @@ For each group member, list the individual contributions, and a link to proof in
 
 - Helped decide on project proposal [proof](project proposal submission)
 
+Estimated time allocated this week: 30 Minutes.
+
 ### Cody Benkoski
 - Found a C++ web framework for us to do the sprint project in. [proof](http://pistache.io/)
 
 Estimated time allocated this week: 1 hour.
+
+### Hansen
+- Assisted in deciding on progress proposal [proof](project proposal submission)
+
+Estimated time allocated this week: 30 Minutes.
+
+### Joe
+- Created basic mockup of website [proof](https://github.com/josephmalisov/CSE280MiniProject)
+- Helped with deciding on progress proposal [proof](project proposal submission)
+
+Estimated time allocated this week: 2 hours.
