@@ -32,6 +32,15 @@ For each group member, list the individual contributions, and a link to proof in
 ### Cody Benkoski
 
 - Interested in Concurrent Persistent STL for C++, Uber for Tools, Campus Mapping. (0 Hours)
-- Explored an outside project based on using non-traditional means to geolocate devices, but found that the necessary data is not readily available on Lehigh's Grafana instance. The data available is too coarse to determine a specific individuals approximate location. (3 Hours) [proof](https://grafana.cc.lehigh.edu)
+- Explored an outside project based on using non-traditional means to geolocate devices, but found that the necessary data is not readily available on Lehigh's Grafana instance. (3 Hours)
+
+### Hansen Lukman
+
+-Interested in Concurrent Persistent STL for C++, Learning AI with the Unity Game Engine Projects
 
 Estimated time allocated this week: X Hrs
+
+### Joseph Malisov
+
+- Very interested in VR of the Lehigh Watershed, and also interested in Campus Mapping, Learning AI with the Unity Game Engine, Concurrent Persistent STL for C++. (1 hour)
+- Also intereted in potential outside project as described by Cody.
