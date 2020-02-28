@@ -15,29 +15,36 @@ def make_directory_structure(lehigh, lanta):
         if not os.path.isdir(path):
             os.mkdir(path)
 
-def make_request_to_lanta(route_id):
-    no_cache = str(rand.randrange(879008975685))
+def make_request_to_lanta(route_id, meta):
+    human,unix = meta
+    no_cache = str(rand.randrange(87900687908975685))
     path = "data/lanta/raw/"+route_id+"/_"+no_cache+".json"
     file_request_out = open(path,"w+")
 
     result_xml = requests.get("https://realtimelanta.availtec.com/InfoPoint/rest/Vehicles/GetAllVehiclesForRoute?routeID="+route_id+"&_="+no_cache)
     res_json = result_xml.json()
+    for bus in res_json:
+        bus["human_scrape_time"] = human
+        bus["unix_scrape_time"] = unix 
+    # print(res_json)
     file_request_out.write(json.dumps(res_json))
     file_request_out.close()
 
 
-def make_request_to_lehigh(): #due to how Lehigh works, we're just gonna scrape the bus endpoint and loop through that to save it
+def make_request_to_lehigh(meta): #due to how Lehigh works, we're just gonna scrape the bus endpoint and loop through that to save it
     bus_url = "https://bus.lehigh.edu/scripts/busdata.php?format=json"
     
     temp = requests.get(bus_url)
     data = temp.json()
-
+    human,unix = meta
     for bus in data.values():
         bus_type = bus.get("key")
-        if bus_type == "LU" or bus_type == "CH": #don't attempt to get AccessLU or Charter Bus
-            continue
         route_id = bus.get("rid")
-        no_cache = str(rand.randrange(879008975685))
+        if bus_type == "LU" or bus_type == "CH" or route_id == "6": #don't attempt to get AccessLU or Charter Bus
+            continue
+        bus["human_scrape_time"] = human
+        bus["unix_scrape_time"] = unix
+        no_cache = str(rand.randrange(879008975686587697085))
         path = "data/lehigh/raw/"+route_id+"/_"+no_cache+".json"
         file_request_out = open(path,"w+")
         file_request_out.write(json.dumps(bus))
@@ -55,9 +62,16 @@ file_lehigh_routes_in.close()
 
 make_directory_structure(lehigh_routes, lanta_routes)
 
+day_dict = {}
+time_prev = t.strftime("%a%d%b%Y", t.gmtime())
 while True:
     t.sleep(4)
-    for lanta_rid in lanta_routes:
-        make_request_to_lanta(lanta_rid)
+    time_scraped_str = t.strftime("%a%d%b%Y", t.gmtime())
+    time_scraped_unix = str(t.time())
 
-    make_request_to_lehigh()
+    meta = (time_scraped_str, time_scraped_unix)
+    for lanta_rid in lanta_routes:
+        make_request_to_lanta(lanta_rid, meta)
+
+    make_request_to_lehigh(meta)
+    time_prev = time_scraped_str
