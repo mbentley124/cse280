@@ -1,7 +1,6 @@
 import json
 import requests
 import os
-import xmltodict as x2d
 import random as rand
 import time as t
 
