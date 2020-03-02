@@ -6,7 +6,7 @@ Spoke with Professor Spear, Professor Montella, and Mr. Brunieo about potential 
 
 ### Goals completed this week
 
-Decided what project to work on. 
+Decided what project to work on, laid out all goals and deliverables.
 
 ### Goals not met this week
 
@@ -18,7 +18,7 @@ Finding a project that works with what everybody is interested in.
 
 ### Goals for next week
 
-Get everyone up to speed on web scraping.
+Get everyone up to speed on web scraping and lay out a database schema.
 
 ## Individual Member Contributions
 
@@ -35,10 +35,11 @@ Estimated time allocated this week: 30 Minutes.
 
 Estimated time allocated this week: 1 hour.
 
-### Hansen
+### Hansen Lukman
 - Assisted in deciding on progress proposal [proof](project proposal submission)
+- Set up a machine/server for project's data collection.
 
-Estimated time allocated this week: 30 Minutes.
+Estimated time allocated this week: 1.5 hours.
 
 ### Joe
 - Helped with deciding on progress proposal
