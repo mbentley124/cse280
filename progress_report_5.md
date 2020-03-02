@@ -31,9 +31,13 @@ For each group member, list the individual contributions, and a link to proof in
 Estimated time allocated this week: 30 Minutes.
 
 ### Cody Benkoski
-- Found a C++ web framework for us to do the sprint project in. [proof](http://pistache.io/)
+- Provisioned two servers to handle the routing and map display for the bus [proof](https://routeserver.codyben.me) [proof](https://tileserver.codyben.me)
 
-Estimated time allocated this week: 1 hour.
+- Spoke to LTS-WMS about the replacement for the bus system. 
+
+- Wrote scraper to concurrently catalog data from Lehigh & LANTA. [proof](https://github.com/mbentley124/cse280/commit/374b1b6f84cab385d159e63dbd364deb3a197d4e)
+
+Estimated time allocated this week: 5 hours.
 
 ### Hansen Lukman
 - Assisted in deciding on progress proposal [proof](project proposal submission)
