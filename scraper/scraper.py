@@ -22,13 +22,16 @@ def make_request_to_lanta(route_id, meta):
     file_request_out = open(path,"w+")
 
     result_xml = requests.get("https://realtimelanta.availtec.com/InfoPoint/rest/Vehicles/GetAllVehiclesForRoute?routeID="+route_id+"&_="+no_cache)
-    res_json = result_xml.json()
-    for bus in res_json:
-        bus["human_scrape_time"] = human
-        bus["unix_scrape_time"] = unix 
-    # print(res_json)
-    file_request_out.write(json.dumps(res_json))
-    file_request_out.close()
+    try:
+	    res_json = result_xml.json()
+	    for bus in res_json:
+	        bus["human_scrape_time"] = human
+	        bus["unix_scrape_time"] = unix 
+	    # print(res_json)
+	    file_request_out.write(json.dumps(res_json))
+	    file_request_out.close()
+    except:
+    	print("LANTA Backend submitted malformed JSON (probs)")
 
 
 def make_request_to_lehigh(meta): #due to how Lehigh works, we're just gonna scrape the bus endpoint and loop through that to save it
