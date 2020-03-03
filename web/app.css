@@ -1,0 +1,7 @@
+#mapid { height: 90%; }
+html, body {
+   height: 100%;
+}
+.leaflet-popup-content {
+	font-size: 32px;
+}
