@@ -1,0 +1,6 @@
+*Count approximate requests per tile
+	- can count from nginx logs
+*Duration of cached/noncached requests
+	- ttfb from curl, maybe
+*Size of average tile returned from backend.
+	- can use stress test script, then sum over image size.
