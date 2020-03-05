@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Lehigh Bus Widget</string>
+    <string name="action_settings">Settings</string>
+    <string name="appwidget_text">TAP UPDATE</string>
+    <string name="configure">Configure</string>
+    <string name="add_widget">Add widget</string>
+    <string name="sd0">Route 0</string>
+    <string name="sd1">Route 2</string>
+    <string name="button">UPDATE</string>
+</resources>

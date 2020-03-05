@@ -1,0 +1,64 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout2"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#502D0F"
+    android:padding="2dp">
+
+    <TextView
+        android:id="@+id/appwidget_text2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:autoText="false"
+        android:background="#502D0F"
+        android:contentDescription="@string/appwidget_text"
+        android:text="@string/appwidget_text"
+        android:textColor="#ffffff"
+        android:textSize="18sp"
+        android:textStyle="bold|italic" />
+
+    <TextView
+        android:id="@+id/sd0"
+        android:layout_width="188dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/appwidget_text2"
+        android:layout_alignStart="@+id/appwidget_text2"
+        android:layout_alignLeft="@+id/appwidget_text2"
+        android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="22dp"
+        android:text="Route 0"
+        android:textColor="#FFFFFF"
+        android:textSize="8sp" />
+
+    <TextView
+        android:id="@+id/sd1"
+        android:layout_width="189dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/appwidget_text2"
+        android:layout_alignStart="@+id/appwidget_text2"
+        android:layout_alignLeft="@+id/appwidget_text2"
+        android:layout_marginStart="2dp"
+        android:layout_marginLeft="2dp"
+        android:layout_marginTop="6dp"
+        android:text="Route 1"
+        android:textColor="#FFFFFF"
+        android:textSize="8sp" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="131dp"
+        android:layout_height="28dp"
+        android:layout_alignTop="@+id/appwidget_text2"
+        android:layout_alignEnd="@+id/sd0"
+        android:layout_alignRight="@+id/sd0"
+        android:layout_marginTop="74dp"
+        android:layout_marginEnd="44dp"
+        android:layout_marginRight="44dp"
+        android:padding="2dp"
+        android:text="UPDATE"
+        android:textSize="12sp" />
+
+</RelativeLayout>
