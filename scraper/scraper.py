@@ -38,7 +38,11 @@ def make_request_to_lehigh(meta): #due to how Lehigh works, we're just gonna scr
     bus_url = "https://bus.lehigh.edu/scripts/busdata.php?format=json"
     
     temp = requests.get(bus_url)
-    data = temp.json()
+    try:
+        data = temp.json()
+    except:
+        print("failed to scrape Lehigh.")
+        return
     human,unix = meta
     for bus in data.values():
         bus_type = bus.get("key")
