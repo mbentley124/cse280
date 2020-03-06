@@ -31,7 +31,9 @@ For each group member, list the individual contributions, and a link to proof in
 Estimated time allocated this week: 1 Hour 30 minutes.
 
 ### Cody Benkoski
+- Wrote scripts to get obtain data about current bus tracker. Discovered trends in datasets pertaining to bus arrival times.
 
+Estimated time allocated this week: 4 hours.
 
 ### Hansen Lukman
 - Became familiar with code pushed to group's machine and the data collection.
@@ -41,3 +43,7 @@ Estimated time allocated this week: 1 Hour.
 
 ### Joe
 
+- Became familiar with curretly pushed group code.
+- Discussed requirement analysis and metrics.
+
+Estimated time allocated this week: 1 hour.
