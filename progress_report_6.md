@@ -34,7 +34,10 @@ Estimated time allocated this week: 1 Hour 30 minutes.
 
 
 ### Hansen Lukman
+- Became familiar with code pushed to group's machine and the data collection.
+- Briefly discussed future plans for roles.
 
+Estimated time allocated this week: 1 Hour.
 
 ### Joe
 
