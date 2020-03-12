@@ -133,6 +133,6 @@ while True:
 
     stop_dict['lehigh'] = get_lehigh_stops()
     file_all_stops_out = open("data/all/stops.json", "w+")
-    file_all_stops_out.write(json.dumps(stop_dict))
+    file_all_stops_out.write("var stops = "+json.dumps(stop_dict)) #need to do this since we load this on page load in a simple way.
     file_all_times_out.close()
     stop_dict['lehigh'] = stop_dict['lanta'] = []
