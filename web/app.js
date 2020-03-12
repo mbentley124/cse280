@@ -32,6 +32,22 @@ var bstop = L.icon({
     // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
 });
 
+var lu_stop = L.icon({
+    iconUrl: 'img/lu_stop.png',
+
+    iconSize:     icb, // size of the icon
+    //iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+    // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+});
+
+var lanta_stop = L.icon({
+    iconUrl: 'img/lanta_stop.png',
+
+    iconSize:     icb, // size of the icon
+    //iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+    // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+});
+
 var pe = L.icon({
     iconUrl: 'img/PE.jpeg',
 
@@ -59,10 +75,18 @@ function update_map(map) {
 	//console.log(map)
 	$.getJSON("bus_data.json", function( data ) {
 		if(isFirstRun) {
-		 $.each(stops, function() {
-			 L.marker([this.lat, this.long], {icon: bstop}).addTo(map);
-			 stop_arr[this.name] = [this.lat,this.long];
+		 $.each(stops.lehigh, function() {
+			L.marker([this.lat, this.long], {icon: lu_stop}).addTo(map);
+			stop_arr[this.name] = [this.lat,this.long];
+			
 			//  console.log(cardinality_arr);
+		 });
+
+		 $.each(stops.lanta, function(k,v){
+			 $.each(stops.lanta[k], function(){
+				L.marker([this.Latitude, this.Longitude], {icon: lanta_stop}).addTo(map);
+				stop_arr[this.Name] = [this.Latitude,this.Longitude];
+			 });
 		 });
 		 $.each(data, function(){
 			cardinality_arr[this.vid] = new Set();
@@ -106,4 +130,4 @@ L.tileLayer(tile_server_url+'tile/{z}/{x}/{y}.png', {
 }).addTo(mymap);
 
 update_map(mymap);
-setInterval(function(mymap){update_map(mymap)}, 1000, mymap);
+// setInterval(function(mymap){update_map(mymap)}, 1000, mymap);
