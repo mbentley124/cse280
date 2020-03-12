@@ -1,2 +1,3 @@
 scraper/data/*
 stress_test/*
+scraper/*.log
