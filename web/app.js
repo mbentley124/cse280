@@ -57,7 +57,7 @@ var cc = L.icon({
 });
 function update_map(map) {
 	//console.log(map)
-	$.getJSON("https://bus.codyben.me/bus_data.json", function( data ) {
+	$.getJSON("bus_data.json", function( data ) {
 		if(isFirstRun) {
 		 $.each(stops, function() {
 			 L.marker([this.lat, this.long], {icon: bstop}).addTo(map);
