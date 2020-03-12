@@ -3,6 +3,11 @@ import requests
 import os
 import random as rand
 import time as t
+import datetime
+
+def log_error(e):
+    curr_time = str(datetime.datetime.now())
+    print(curr_time+"\t"+e)
 
 def make_directory_structure(lehigh, lanta):
     for v in lehigh:
@@ -14,6 +19,33 @@ def make_directory_structure(lehigh, lanta):
         path = "data/lanta/raw/"+v
         if not os.path.isdir(path):
             os.mkdir(path)
+
+def get_lanta_stops(route_id):
+    no_cache = str(rand.randrange(87900687908975685))
+    #https://realtimelanta.availtec.com/InfoPoint/rest/RouteDetails/Get/104
+    #https://realtimelanta.availtec.com/InfoPoint/Resources/Traces/Route_104.kml
+    # print("making req")
+    result_json = requests.get("https://realtimelanta.availtec.com/InfoPoint/rest/RouteDetails/Get/"+route_id+"?_="+no_cache)
+    stop_list = []
+    try:
+        data = result_json.json()
+        # print(data)
+        for stop in data.get("Stops"):
+            stop_list.append(stop)
+        return stop_list
+    except:
+        log_error("error getting LANTA routes (probs malformed JSON)")
+        return []
+
+
+def get_lehigh_stops():
+    stop_url = "https://bus.lehigh.edu/scripts/stopdata.php?format=json"
+    temp = requests.get(stop_url)
+    try:
+        return temp.json()
+    except:
+        log_error("failed to scrape Lehigh.")
+        return {}
 
 def make_request_to_lanta(route_id, meta):
     human,unix = meta
@@ -32,7 +64,7 @@ def make_request_to_lanta(route_id, meta):
         file_request_out.close()
         return res_json
     except:
-    	print("LANTA Backend submitted malformed JSON (probs)")
+    	log_error("LANTA Backend submitted malformed JSON (probs)")
 
 
 def make_request_to_lehigh(meta): #due to how Lehigh works, we're just gonna scrape the bus endpoint and loop through that to save it
@@ -42,7 +74,7 @@ def make_request_to_lehigh(meta): #due to how Lehigh works, we're just gonna scr
     try:
         data = temp.json()
     except:
-        print("failed to scrape Lehigh.")
+        log_error("failed to scrape Lehigh.")
         return
     human,unix = meta
     for bus in data.values():
@@ -78,6 +110,10 @@ all_dict['lehigh'] = []
 all_dict['lanta'] = []
 time_prev = t.strftime("%a%d%b%Y", t.gmtime())
 
+stop_dict = {}
+stop_dict['lehigh'] = []
+stop_dict['lanta'] = []
+
 while True:
     t.sleep(4)
     time_scraped_str = t.strftime("%a%d%b%Y", t.gmtime())
@@ -86,10 +122,17 @@ while True:
     meta = (time_scraped_str, time_scraped_unix)
     for lanta_rid in lanta_routes:
         all_dict['lanta'].append(make_request_to_lanta(lanta_rid, meta))
+        stop_dict['lanta'].append(get_lanta_stops(lanta_rid))
 
     all_dict['lehigh'] = make_request_to_lehigh(meta)
     time_prev = time_scraped_str
-    file_all_routes_out = open("data/all/bus_data.json", "w+") # open file IMMEDIATELY before writing
-    file_all_routes_out.write(json.dumps(all_dict))
-    file_all_routes_out.close()
+    file_all_times_out = open("data/all/bus_data.json", "w+") # open file IMMEDIATELY before writing
+    file_all_times_out.write(json.dumps(all_dict))
+    file_all_times_out.close()
     all_dict['lehigh'] = all_dict['lanta'] = []
+
+    stop_dict['lehigh'] = get_lehigh_stops()
+    file_all_stops_out = open("data/all/stops.json", "w+")
+    file_all_stops_out.write(json.dumps(stop_dict))
+    file_all_times_out.close()
+    stop_dict['lehigh'] = stop_dict['lanta'] = []
