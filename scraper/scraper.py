@@ -89,7 +89,7 @@ while True:
 
     all_dict['lehigh'] = make_request_to_lehigh(meta)
     time_prev = time_scraped_str
-    file_all_routes_out = open("web_temp/bus_data.json", "w+") # open file IMMEDIATELY before writing
+    file_all_routes_out = open("data/all/bus_data.json", "w+") # open file IMMEDIATELY before writing
     file_all_routes_out.write(json.dumps(all_dict))
     file_all_routes_out.close()
     all_dict['lehigh'] = all_dict['lanta'] = []
