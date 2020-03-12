@@ -23,13 +23,14 @@ def make_request_to_lanta(route_id, meta):
 
     result_xml = requests.get("https://realtimelanta.availtec.com/InfoPoint/rest/Vehicles/GetAllVehiclesForRoute?routeID="+route_id+"&_="+no_cache)
     try:
-	    res_json = result_xml.json()
-	    for bus in res_json:
-	        bus["human_scrape_time"] = human
-	        bus["unix_scrape_time"] = unix 
-	    # print(res_json)
-	    file_request_out.write(json.dumps(res_json))
-	    file_request_out.close()
+        res_json = result_xml.json()
+        for bus in res_json:
+            bus["human_scrape_time"] = human
+            bus["unix_scrape_time"] = unix 
+        # print(res_json)
+        file_request_out.write(json.dumps(res_json))
+        file_request_out.close()
+        return res_json
     except:
     	print("LANTA Backend submitted malformed JSON (probs)")
 
@@ -56,6 +57,8 @@ def make_request_to_lehigh(meta): #due to how Lehigh works, we're just gonna scr
         file_request_out = open(path,"w+")
         file_request_out.write(json.dumps(bus))
         file_request_out.close()
+        return data
+    
 
 
 file_lanta_routes_in = open("routes/lanta/routes.json", "r")
@@ -70,7 +73,11 @@ file_lehigh_routes_in.close()
 make_directory_structure(lehigh_routes, lanta_routes)
 
 day_dict = {}
+all_dict = {}
+all_dict['lehigh'] = []
+all_dict['lanta'] = []
 time_prev = t.strftime("%a%d%b%Y", t.gmtime())
+
 while True:
     t.sleep(4)
     time_scraped_str = t.strftime("%a%d%b%Y", t.gmtime())
@@ -78,7 +85,11 @@ while True:
 
     meta = (time_scraped_str, time_scraped_unix)
     for lanta_rid in lanta_routes:
-        make_request_to_lanta(lanta_rid, meta)
+        all_dict['lanta'].append(make_request_to_lanta(lanta_rid, meta))
 
-    make_request_to_lehigh(meta)
+    all_dict['lehigh'] = make_request_to_lehigh(meta)
     time_prev = time_scraped_str
+    file_all_routes_out = open("web_temp/bus_data.json", "w+") # open file IMMEDIATELY before writing
+    file_all_routes_out.write(json.dumps(all_dict))
+    file_all_routes_out.close()
+    all_dict['lehigh'] = all_dict['lanta'] = []
