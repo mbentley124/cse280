@@ -26,9 +26,9 @@ For each group member, list the individual contributions, and a link to proof in
 
 ### Michael Bentley
 
-- Helped decide create list of requirments for project [proof](presentation sent and github milestones)
+- Became more familar with code already written for the project. 
 
-Estimated time allocated this week: 1 Hour 30 minutes.
+Estimated time allocated this week: 1 Hour.
 
 ### Cody Benkoski
 - Wrote scripts to get obtain data about current bus tracker. Discovered trends in datasets pertaining to bus arrival times.
