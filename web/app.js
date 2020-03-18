@@ -168,6 +168,7 @@ function update_map(map) {
 					 
 			});
 		}
+	});
         //NOW WE ARE OUT OF ifFirstRun
 		//TODO: fix this (doesn't account for LANTA). ATM, nothing updates after initial placement
 		//TODO: Done :)
@@ -194,4 +195,4 @@ L.tileLayer(tile_server_url + 'tile/{z}/{x}/{y}.png', { //takes tile server URL 
 }).addTo(mymap);
 
 update_map(mymap);
-// setInterval(function(mymap){update_map(mymap)}, 1000, mymap); //TODO: will update map every 'interval'
+setInterval(function(mymap){update_map(mymap)}, 1000, mymap); //TODO: will update map every 'interval'
