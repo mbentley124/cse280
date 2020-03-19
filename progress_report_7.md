@@ -31,9 +31,12 @@ For each group member, list the individual contributions, and a link to proof in
 Estimated time allocated this week: 1 Hour.
 
 ### Cody Benkoski
-- Wrote scripts to get obtain data about current bus tracker. Discovered trends in datasets pertaining to bus arrival times.
+- Moved current development work to Sunlab machine. Did some DNS work. [proof](http://ssh.bus.codyben.me)
+- Implemented basic map which shows LANTA and Lehigh buses. Fixed some display logic. 
+- Configured NGINX reverse proxy to allow for database access without ssh tunneling. [proof](http://ssh.bus.codyben.me/phpmyadmin)
+- Created database, and attached it to a PhpMyAdmin installation. 
 
-Estimated time allocated this week: 4 hours.
+Estimated time allocated this week: 7 hours.
 
 ### Hansen Lukman
 - Became familiar with code pushed to group's machine and the data collection.
