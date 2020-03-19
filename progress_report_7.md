@@ -2,6 +2,8 @@
 
 ## Summary of Work Completed
 
+Discussed future communication/cooperation reflecting remote work. 
+Added LANTA stops and busses visuals.
 Determined the work required for our project, and the goals we would like to complete. 
 
 ### Goals completed this week
@@ -47,6 +49,6 @@ Estimated time allocated this week: 1 Hour.
 ### Joe
 
 - Became familiar with curretly pushed group code.
-- Discussed requirement analysis and metrics.
+- Vigorously added comments.
 
-Estimated time allocated this week: 1 hour.
+Estimated time allocated this week: 2.5 hour.
