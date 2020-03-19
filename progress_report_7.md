@@ -45,7 +45,7 @@ Estimated time allocated this week: 7 hours.
 
 ### Hansen Lukman
 - Became more familiar with group code and how to handle database integration using PhpMyAdmin.
-- Laid out basic schema for database after group discussion. [proof] (https://docs.google.com/document/d/1kRkdrRlGd4rXWvfdcL-GV-20Us4335BYpHkdUx88IuE/edit?usp=sharing)
+- Laid out basic schema for database after group discussion. [proof](https://docs.google.com/document/d/1kRkdrRlGd4rXWvfdcL-GV-20Us4335BYpHkdUx88IuE/edit?usp=sharing)
 
 Estimated time allocated this week: 2 Hours.
 
