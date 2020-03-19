@@ -1,9 +1,13 @@
+# TODO: don't output JSON files for lehigh and lanta individually
+
+
 import json
 import requests
 import os
 import random as rand
 import time as t
 import datetime
+
 
 def log_error(e):
     curr_time = str(datetime.datetime.now())
@@ -92,22 +96,27 @@ def make_request_to_lehigh(meta): #due to how Lehigh works, we're just gonna scr
         return data
     
 
-
+# open and load in routes for lehigh and lants from files
 file_lanta_routes_in = open("routes/lanta/routes.json", "r")
 file_lehigh_routes_in = open("routes/lehigh/routes.json", "r")
 
+# put them in a hashmap
 lanta_routes = json.loads(file_lanta_routes_in.read())
 lehigh_routes = json.loads(file_lehigh_routes_in.read())
 
+# close the files
 file_lanta_routes_in.close()
 file_lehigh_routes_in.close()
 
+# makes a new dir for each route
+# JSON files will be stored in these
 make_directory_structure(lehigh_routes, lanta_routes)
 
-day_dict = {}
+# holds JSON data that was scraped and that will be output into a JSON file for the frontend to use.
 all_dict = {}
 all_dict['lehigh'] = []
 all_dict['lanta'] = []
+
 time_prev = t.strftime("%a%d%b%Y", t.gmtime())
 
 stop_dict = {}
@@ -124,6 +133,7 @@ while True:
         all_dict['lanta'].append(make_request_to_lanta(lanta_rid, meta))
         stop_dict['lanta'].append(get_lanta_stops(lanta_rid))
 
+# gets lehigh bus data and puts it in JSON file
     all_dict['lehigh'] = make_request_to_lehigh(meta)
     time_prev = time_scraped_str
     file_all_times_out = open("data/all/bus_data.json", "w+") # open file IMMEDIATELY before writing
@@ -131,6 +141,7 @@ while True:
     file_all_times_out.close()
     all_dict['lehigh'] = all_dict['lanta'] = []
 
+# gets Lehigh stop data and puts it in JSON file
     stop_dict['lehigh'] = get_lehigh_stops()
     file_all_stops_out = open("data/all/stops.json", "w+")
     file_all_stops_out.write("var stops = "+json.dumps(stop_dict)) #need to do this since we load this on page load in a simple way.
