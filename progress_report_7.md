@@ -2,24 +2,27 @@
 
 ## Summary of Work Completed
 
-Discussed future communication/cooperation reflecting remote work. 
+Discussed future communication/cooperation reflecting remote work (determined to be through Zoom Meetings).
 Added LANTA stops and busses visuals.
 Determined the work required for our project, and the goals we would like to complete. 
+Laid out basic schema for database.
 
 ### Goals completed this week
 
 Everyone started to get familar with the web scraping and data we are collecting. 
-Also created presentation demonstrating what our project was and our goals. 
+Also created presentation demonstrating what our project was and our goals.
 
 ### Goals not met this week
 
-Did not lay out the database schema fully. 
 
 ### Challenges faced this week
+
+Getting accustomed to working remotely.
 
 ### Goals for next week
 
 Get everyone fully up to speed on the work that has already been done.
+Create database tables and begin storing new data from scraper and pre-existing data stored in JSON.
 Also start to work on some of the milestones listed in our Github repo. 
 
 ## Individual Member Contributions
@@ -41,10 +44,10 @@ Estimated time allocated this week: 1 Hour.
 Estimated time allocated this week: 7 hours.
 
 ### Hansen Lukman
-- Became familiar with code pushed to group's machine and the data collection.
-- Briefly discussed future plans for roles.
+- Became more familiar with group code and how to handle database integration using PhpMyAdmin.
+- Laid out basic schema for database after group discussion. [proof] (https://docs.google.com/document/d/1kRkdrRlGd4rXWvfdcL-GV-20Us4335BYpHkdUx88IuE/edit?usp=sharing)
 
-Estimated time allocated this week: 1 Hour.
+Estimated time allocated this week: 2 Hours.
 
 ### Joe
 
