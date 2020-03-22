@@ -154,7 +154,7 @@ function update_map(map) {
                 // cardinality_arr[this.vid] = new Set();
                 // console.log(cardinality_arr);
                 $.each(data.lanta[k], function() { //LOOP: initial placement of every LANTA bus
-                    marker_obj[this.vid] = L.marker([this.Latitude, this.Longitude], { icon: lanta }).addTo(map);
+                    marker_obj[this.VehicleId] = L.marker([this.Latitude, this.Longitude], { icon: lanta }).addTo(map);
                 });
 
             });
