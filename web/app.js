@@ -20,8 +20,8 @@ let tile_server_url_dark = "https://api.mapbox.com/styles/v1/bencodyoski/ck83deg
 var dark = check_dark();;
 let route_server_url = "https://routeserver.codyben.me/";
 
-
-if ( args.get("dark").toLowerCase() === "true" ) { //check the URL if the argument for dark mode is set
+var dark_arg = (args.get("dark") == null ? 'false' : args.get("dark"))
+if ( dark_arg.toLowerCase() === "true" ) { //check the URL if the argument for dark mode is set
     dark = true;
 }
 
