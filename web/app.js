@@ -185,7 +185,7 @@ function update_map(map) {
 					// console.log(cardinality_arr);
 					 $.each(data.lanta[k], function(){
 						var loc_list = [this.Latitude, this.Longitude]
-						var marker = (marker_obj[this.vid]);
+						var marker = (marker_obj[this.VehicleId]);
 						marker.setLatLng(loc_list).update();
 						// marker_obj[this.vid] = L.marker(, {icon: lanta}).addTo(map);
 					 });
