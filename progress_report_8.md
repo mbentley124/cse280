@@ -2,28 +2,20 @@
 
 ## Summary of Work Completed
 
-Discussed future communication/cooperation reflecting remote work (determined to be through Zoom Meetings).
-Added LANTA stops and busses visuals.
-Determined the work required for our project, and the goals we would like to complete. 
-Laid out basic schema for database.
+
 
 ### Goals completed this week
 
-Everyone started to get familar with the web scraping and data we are collecting. 
-Also created presentation demonstrating what our project was and our goals.
+Created tables in Database
 
 ### Goals not met this week
 
 
 ### Challenges faced this week
 
-Getting accustomed to working remotely.
 
 ### Goals for next week
 
-Get everyone fully up to speed on the work that has already been done.
-Create database tables and begin storing new data from scraper and pre-existing data stored in JSON.
-Also start to work on some of the milestones listed in our Github repo. 
 
 ## Individual Member Contributions
 
