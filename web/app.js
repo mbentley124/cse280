@@ -8,9 +8,22 @@ marker_obj = {}; //store bus markers/locations (for updating)
 route_to_use = null; //used in if statements for knowing which routes to use
 var stop_arr = {}; //holds location of each bus stop
 
+let query_string = window.location.search; //get query string from url
+let args = new URLSearchParams(query_string);
+
+
+
 //routes
-var tile_server_url = "https://tileserver.codyben.me/";
-var route_server_url = "https://routeserver.codyben.me/";
+let tile_server_url_light = "https://api.mapbox.com/styles/v1/bencodyoski/ck83ddg6u5xa91ipc15icdk21/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYmVuY29keW9za2kiLCJhIjoiY2s1c2s0Y2JmMHA2bzNrbzZ5djJ3bDdscyJ9.7MuHmoSKO5zAgY0IKChI8w";
+var tile_server_url = "https://api.mapbox.com/styles/v1/bencodyoski/ck83ddg6u5xa91ipc15icdk21/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYmVuY29keW9za2kiLCJhIjoiY2s1c2s0Y2JmMHA2bzNrbzZ5djJ3bDdscyJ9.7MuHmoSKO5zAgY0IKChI8w";
+let tile_server_url_dark = "https://api.mapbox.com/styles/v1/bencodyoski/ck83degh82qlu1in7bvg1h09q/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYmVuY29keW9za2kiLCJhIjoiY2s1c2s0Y2JmMHA2bzNrbzZ5djJ3bDdscyJ9.7MuHmoSKO5zAgY0IKChI8w";
+var dark = check_dark();;
+let route_server_url = "https://routeserver.codyben.me/";
+
+
+if ( args.get("dark").toLowerCase() === "true" ) { //check the URL if the argument for dark mode is set
+    dark = true;
+}
 
 //change window size
 if (window.innerWidth > 600) {
@@ -19,6 +32,17 @@ if (window.innerWidth > 600) {
 } else {
     ic = [128, 128]
     icb = [96, 96]
+}
+
+//determine if we should make it dark or not.
+function check_dark() {
+    var hours = new Date().getHours();
+
+    if( hours >= 20 && hours <= 4) {
+        return true;
+    } 
+
+    return false;
 }
 
 /*
@@ -189,7 +213,15 @@ function update_map(map) {
 
 mymap = L.map('mapid').setView([40.604377, -75.372161], 16); //sets center of map & zoom level
 
-L.tileLayer(tile_server_url + 'tile/{z}/{x}/{y}.png', { //takes tile server URL and will return a tile
+
+/* do the dark mode switch */
+if (dark) {
+    tile_server_url = tile_server_url_dark;
+} else {
+    tile_server_url = tile_server_url_light;
+}
+
+L.tileLayer(tile_server_url, { //takes tile server URL and will return a tile
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
 }).addTo(mymap);
