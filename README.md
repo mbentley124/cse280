@@ -1,9 +1,25 @@
-CSE 280 Project
+# CSE 280 Project
 
-- Creators: Cody Benkoski, Michael Bentley, Hansen Lukman, Joseph Malisov
+- Creators: 
+  - Cody Benkoski 
+  - Michael Bentley 
+  - Hansen Lukman 
+  - Joseph Malisov
+## Goal
+Integrate Lehigh University Bus Tracker with LANTA Bus Tracker. 
 
-- Project: Integrate Lehigh University Bus Tracker with LANTA Bus Tracker. Potential improvements: improved ETA, directions to stops.
+## Improvemnets 
+- Better cross platform experience.
+- Seamless integration of LANTA & Lehigh U bus systems.
+- Data analysis to produce more efficient and reliable bus systems for campus.
 
-Backend is written in python & frontend uses mostly jQuery.
+## Tech
+- Python3 (scraping, web backend)
+- jQuery  (minor frontend work)
+- MySQL   (somewhere to store the data)
+- Varnish (handle caching of OSM tiles on last mile)
 
-Must be connected to Lehigh Sunlab server to access server.
+### Where can I see it?
+The project is located on a [Sunlab machine graciously allocated by the CSE department](http://ssh.bus.codyben.me)
+
+*connection to the Lehigh VPN is required if off campus*
