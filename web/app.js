@@ -16,9 +16,9 @@ var curr_style = "light"
 
 
 //routes
-let tile_server_url_light = "https://api.mapbox.com/styles/v1/bencodyoski/ck83ddg6u5xa91ipc15icdk21/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYmVuY29keW9za2kiLCJhIjoiY2s1c2s0Y2JmMHA2bzNrbzZ5djJ3bDdscyJ9.7MuHmoSKO5zAgY0IKChI8w";
+let tile_server_url_light = "https://tiles.codyben.me/styles/positron/{z}/{x}/{y}.png";
 var tile_server_url = "https://api.mapbox.com/styles/v1/bencodyoski/ck83ddg6u5xa91ipc15icdk21/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYmVuY29keW9za2kiLCJhIjoiY2s1c2s0Y2JmMHA2bzNrbzZ5djJ3bDdscyJ9.7MuHmoSKO5zAgY0IKChI8w";
-let tile_server_url_dark = "https://api.mapbox.com/styles/v1/bencodyoski/ck83degh82qlu1in7bvg1h09q/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYmVuY29keW9za2kiLCJhIjoiY2s1c2s0Y2JmMHA2bzNrbzZ5djJ3bDdscyJ9.7MuHmoSKO5zAgY0IKChI8w";
+let tile_server_url_dark = "https://tiles.codyben.me/styles/dark-matter/{z}/{x}/{y}.png";
 let route_server_url = "https://routeserver.codyben.me/";
 
 
