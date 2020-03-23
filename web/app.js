@@ -10,6 +10,8 @@ var stop_arr = {}; //holds location of each bus stop
 
 let query_string = window.location.search; //get query string from url
 let args = new URLSearchParams(query_string);
+var tile_style = {}; //holds different tile styles.
+var curr_style = "light"
 
 
 
@@ -17,13 +19,21 @@ let args = new URLSearchParams(query_string);
 let tile_server_url_light = "https://api.mapbox.com/styles/v1/bencodyoski/ck83ddg6u5xa91ipc15icdk21/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYmVuY29keW9za2kiLCJhIjoiY2s1c2s0Y2JmMHA2bzNrbzZ5djJ3bDdscyJ9.7MuHmoSKO5zAgY0IKChI8w";
 var tile_server_url = "https://api.mapbox.com/styles/v1/bencodyoski/ck83ddg6u5xa91ipc15icdk21/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYmVuY29keW9za2kiLCJhIjoiY2s1c2s0Y2JmMHA2bzNrbzZ5djJ3bDdscyJ9.7MuHmoSKO5zAgY0IKChI8w";
 let tile_server_url_dark = "https://api.mapbox.com/styles/v1/bencodyoski/ck83degh82qlu1in7bvg1h09q/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYmVuY29keW9za2kiLCJhIjoiY2s1c2s0Y2JmMHA2bzNrbzZ5djJ3bDdscyJ9.7MuHmoSKO5zAgY0IKChI8w";
-var dark = check_dark();;
 let route_server_url = "https://routeserver.codyben.me/";
 
-var dark_arg = (args.get("dark") == null ? 'false' : args.get("dark"))
-if ( dark_arg.toLowerCase() === "true" ) { //check the URL if the argument for dark mode is set
-    dark = true;
-}
+
+
+tile_style['dark'] = L.tileLayer(tile_server_url_dark, { //takes tile server URL and will return a tile
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+});
+
+tile_style['light'] = L.tileLayer(tile_server_url_light, { //takes tile server URL and will return a tile
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+});
+
+
 
 //change window size
 if (window.innerWidth > 600) {
@@ -39,10 +49,22 @@ function check_dark() {
     var hours = new Date().getHours();
 
     if( hours >= 20 && hours <= 4) {
-        return true;
+        return 'dark';
     } 
 
-    return false;
+    return 'light';
+}
+
+function toggle_style(style) { //use buttons to toggle dark mode on/off
+    console.log(style);
+    if( style in tile_style ) {
+        mymap.removeLayer(tile_style[curr_style]);
+        mymap.addLayer(tile_style[style]);
+        curr_style = style;
+
+    } else {
+        console.warn("Invalid tile style selected.");
+    }
 }
 
 /*
@@ -213,18 +235,7 @@ function update_map(map) {
 
 mymap = L.map('mapid').setView([40.604377, -75.372161], 16); //sets center of map & zoom level
 
-
-/* do the dark mode switch */
-if (dark) {
-    tile_server_url = tile_server_url_dark;
-} else {
-    tile_server_url = tile_server_url_light;
-}
-
-L.tileLayer(tile_server_url, { //takes tile server URL and will return a tile
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    maxZoom: 18,
-}).addTo(mymap);
+toggle_style((args.get("style") == null) ? check_dark() : args.get("style"));
 
 update_map(mymap);
 setInterval(function(mymap){update_map(mymap)}, 1000, mymap); //TODO: will update map every 'interval'
