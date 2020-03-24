@@ -30,6 +30,7 @@ Estimated time allocated this week: 1 Hour.
 ### Cody Benkoski
 - Added a light and dark mode.
 - LANTA and Lehigh buses now update on the map.
+- Stood up a Varnish cache in front of tileserver.
 
 Estimated time allocated this week: 3 hours.
 
