@@ -134,7 +134,7 @@ while True:
         stop_dict['lanta'].append(get_lanta_stops(lanta_rid))
 
 # gets lehigh bus data and puts it in JSON file
-    all_dict['lehigh'] = make_request_to_lehigh(meta)
+    all_dict['lehigh'] = None #make_request_to_lehigh(meta)
     time_prev = time_scraped_str
     file_all_times_out = open("data/all/bus_data.json", "w+") # open file IMMEDIATELY before writing
     file_all_times_out.write(json.dumps(all_dict))
@@ -142,7 +142,7 @@ while True:
     all_dict['lehigh'] = all_dict['lanta'] = []
 
 # gets Lehigh stop data and puts it in JSON file
-    stop_dict['lehigh'] = get_lehigh_stops()
+    stop_dict['lehigh'] = None #get_lehigh_stops()
     file_all_stops_out = open("data/all/stops.json", "w+")
     file_all_stops_out.write("var stops = "+json.dumps(stop_dict)) #need to do this since we load this on page load in a simple way.
     file_all_times_out.close()
