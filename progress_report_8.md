@@ -23,9 +23,10 @@ For each group member, list the individual contributions, and a link to proof in
 
 ### Michael Bentley
 
-- Became more familar with code already written for the project. 
+- Determined method for more accurately determine bus routes
+- Started to plan a more robust backend for website
 
-Estimated time allocated this week: 1 Hour.
+Estimated time allocated this week: 2 Hours.
 
 ### Cody Benkoski
 - Added a light and dark mode.
