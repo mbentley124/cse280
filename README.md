@@ -20,6 +20,6 @@ Integrate Lehigh University Bus Tracker with LANTA Bus Tracker.
 - Varnish (handle caching of OSM tiles on last mile)
 
 ### Where can I see it?
-The project is located on a [Sunlab machine graciously allocated by the CSE department](http://ssh.bus.codyben.me)
+The project is located on a [Sunlab machine graciously allocated by the CSE department](https://bus.codyben.me)
 
 *connection to the Lehigh VPN is required if off campus*
