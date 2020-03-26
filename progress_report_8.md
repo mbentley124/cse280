@@ -1,7 +1,7 @@
 # Progress Report 8
 
 ## Summary of Work Completed
-
+Updates to User Interface
 
 
 ### Goals completed this week
@@ -15,7 +15,8 @@ Created tables in Database
 
 
 ### Goals for next week
-
+Put historic data in database
+More User Interface updates including a floating panel allowing users to select routes
 
 ## Individual Member Contributions
 
@@ -43,7 +44,6 @@ Estimated time allocated this week: 2 Hours.
 
 ### Joe
 
-- Became familiar with curretly pushed group code.
-- Vigorously added comments.
+- User interface updates (including buttons to change view modes and sidebar).
 
-Estimated time allocated this week: 2.5 hour.
+Estimated time allocated this week: 2 hours.
