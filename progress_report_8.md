@@ -3,6 +3,7 @@
 ## Summary of Work Completed
 Updates to User Interface
 Moved accumulated JSON files on scraping machine to database
+Automated database insertion within scraper
 
 ### Goals completed this week
 Put historic data in database (the JSON files)
@@ -14,7 +15,6 @@ Put historic data in database (the JSON files)
 
 
 ### Goals for next week
-Put historic data in database
 More User Interface updates including a floating panel allowing users to select routes
 
 ## Individual Member Contributions
@@ -37,8 +37,9 @@ Estimated time allocated this week: 3 hours.
 
 ### Hansen Lukman
 - Moved historic bus data into database.
+- Automated database insertion within the scraper.
 
-Estimated time allocated this week: 2 Hours.
+Estimated time allocated this week: 3 Hours.
 
 ### Joe
 
