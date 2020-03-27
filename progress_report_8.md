@@ -2,11 +2,10 @@
 
 ## Summary of Work Completed
 Updates to User Interface
-
+Moved accumulated JSON files on scraping machine to database
 
 ### Goals completed this week
-
-Created tables in Database
+Put historic data in database (the JSON files)
 
 ### Goals not met this week
 
@@ -37,8 +36,7 @@ Estimated time allocated this week: 2 Hours.
 Estimated time allocated this week: 3 hours.
 
 ### Hansen Lukman
-- Became more familiar with group code and how to handle database integration using PhpMyAdmin.
-- Laid out basic schema for database after group discussion. [proof](https://docs.google.com/document/d/1kRkdrRlGd4rXWvfdcL-GV-20Us4335BYpHkdUx88IuE/edit?usp=sharing)
+- Moved historic bus data into database.
 
 Estimated time allocated this week: 2 Hours.
 
