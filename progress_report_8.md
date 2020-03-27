@@ -1,12 +1,12 @@
 # Progress Report 8
 
 ## Summary of Work Completed
-Updates to User Interface
-Moved accumulated JSON files on scraping machine to database
-Automated database insertion within scraper
+- Updates to User Interface
+- Moved accumulated JSON files on scraping machine to database
+- Automated database insertion within scraper
 
 ### Goals completed this week
-Put historic data in database (the JSON files)
+- Put historic data in database (the JSON files)
 
 ### Goals not met this week
 
@@ -15,7 +15,7 @@ Put historic data in database (the JSON files)
 
 
 ### Goals for next week
-More User Interface updates including a floating panel allowing users to select routes
+- More User Interface updates including a floating panel allowing users to select routes
 
 ## Individual Member Contributions
 
