@@ -17,9 +17,10 @@ var curr_style = "light"
 
 //routes
 let tile_server_url_light = "https://tiles.codyben.me/styles/positron/{z}/{x}/{y}.png";
-var tile_server_url = "https://api.mapbox.com/styles/v1/bencodyoski/ck83ddg6u5xa91ipc15icdk21/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYmVuY29keW9za2kiLCJhIjoiY2s1c2s0Y2JmMHA2bzNrbzZ5djJ3bDdscyJ9.7MuHmoSKO5zAgY0IKChI8w";
+var tile_server_url_mapbox = "https://api.mapbox.com/styles/v1/bencodyoski/ck83ddg6u5xa91ipc15icdk21/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYmVuY29keW9za2kiLCJhIjoiY2s1c2s0Y2JmMHA2bzNrbzZ5djJ3bDdscyJ9.7MuHmoSKO5zAgY0IKChI8w";
 let tile_server_url_dark = "https://tiles.codyben.me/styles/dark-matter/{z}/{x}/{y}.png";
 let route_server_url = "https://routeserver.codyben.me/";
+let tile_server_url = "http://tiles.codyben.me/styles/osm-bright/{z}/{x}/{y}.png";
 
 
 
@@ -29,6 +30,11 @@ tile_style['dark'] = L.tileLayer(tile_server_url_dark, { //takes tile server URL
 });
 
 tile_style['light'] = L.tileLayer(tile_server_url_light, { //takes tile server URL and will return a tile
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+});
+
+tile_style['default'] = L.tileLayer(tile_server_url, { //takes tile server URL and will return a tile
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
 });
@@ -48,23 +54,83 @@ if (window.innerWidth > 600) {
 function check_dark() {
     var hours = new Date().getHours();
 
-    if( hours >= 20 && hours <= 4) {
+    if (hours >= 20 || hours <= 4) {
+        $(".navbar").removeClass("bg-primary").addClass("bg-dark");
+        $("body").addClass("body_dark");
         return 'dark';
-    } 
+    }
 
-    return 'light';
+    return 'default';
 }
 
 function toggle_style(style) { //use buttons to toggle dark mode on/off
     console.log(style);
-    if( style in tile_style ) {
+    if (style in tile_style) {
         mymap.removeLayer(tile_style[curr_style]);
         mymap.addLayer(tile_style[style]);
         curr_style = style;
 
+        if (curr_style == "dark") {
+            $(".navbar").removeClass("bg-primary").addClass("bg-dark");
+            $("body").addClass("body_dark");
+        } else if (curr_style == "light") {
+            $(".navbar").removeClass("bg-dark").addClass("bg-primary");
+            $("body").removeClass("body_dark");
+        }
+
     } else {
         console.warn("Invalid tile style selected.");
     }
+}
+
+function distance(lat1, lon1, lat2, lon2, unit) {
+    //https://www.geodatasource.com/developers/javascript
+    if ((lat1 == lat2) && (lon1 == lon2)) {
+        return 0;
+    } else {
+        var radlat1 = Math.PI * lat1 / 180;
+        var radlat2 = Math.PI * lat2 / 180;
+        var theta = lon1 - lon2;
+        var radtheta = Math.PI * theta / 180;
+        var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+        if (dist > 1) {
+            dist = 1;
+        }
+        dist = Math.acos(dist);
+        dist = dist * 180 / Math.PI;
+        dist = dist * 60 * 1.1515;
+        if (unit == "K") { dist = dist * 1.609344 }
+        if (unit == "N") { dist = dist * 0.8684 }
+        return dist;
+    }
+}
+
+function sortByKey(array, key) {
+    //https://stackoverflow.com/questions/8837454/sort-array-of-objects-by-single-key-with-date-value
+    return array.sort(function(a, b) {
+        var x = a[key];
+        var y = b[key];
+        return ((x < y) ? -1 : ((x > y) ? 1 : 0));
+    });
+}
+
+function calc_nearest(position) {
+    lat = position.coords.latitude;
+    lon = position.coords.longitude;
+    L.marker([lat, lon], { icon: you }).addTo(mymap);
+    dist_arr = []
+        //replace with combined stops array
+    $.each(null, function() {
+        b_lat = this.lon;
+        b_lon = this.lat;
+        var dist = distance(lat, lon, b_lat, b_lon, 'K');
+        var key = encodeURI(this.name);
+        dist_arr.push({ "key": key, "dist": dist });
+    });
+
+    result = sortByKey(dist_arr, "dist")[0];
+    marker_obj[result.key].openPopup();
+
 }
 
 /*
@@ -182,42 +248,42 @@ function update_map(map) {
             });
             isFirstRun = false;
         } else {
-			$.each(data.lehigh, function(){
-				// cardinality_arr[this.vid] = new Set();
-				// console.log(cardinality_arr);
-				 if(this.key == "CC") {
-					 img = cc;
-					 route_to_use = cc_routes;
-				 } else if(this.key == "PE") {
-					 img = pe;
-					 route_to_use = pe_routes;
-				 } else if(this.key == "FW") {
-					 img = fw;
-					 route_to_use = fw_routes;
-				 } else {
-					 img = lu;
-				 }
-				 var loc_list = [this.lat, this.long]
-				 var marker = (marker_obj[this.vid]);
-				 marker.setLatLng(loc_list).update();
-				});
-	
-				$.each(data.lanta, function(k,v){
-					// cardinality_arr[this.vid] = new Set();
-					// console.log(cardinality_arr);
-					 $.each(data.lanta[k], function(){
-						var loc_list = [this.Latitude, this.Longitude]
-						var marker = (marker_obj[this.VehicleId]);
-						marker.setLatLng(loc_list).update();
-						// marker_obj[this.vid] = L.marker(, {icon: lanta}).addTo(map);
-					 });
-					 
-			});
-		}
-	});
-        //NOW WE ARE OUT OF ifFirstRun
-		//TODO: fix this (doesn't account for LANTA). ATM, nothing updates after initial placement
-		//TODO: Done :)
+            $.each(data.lehigh, function() {
+                // cardinality_arr[this.vid] = new Set();
+                // console.log(cardinality_arr);
+                if (this.key == "CC") {
+                    img = cc;
+                    route_to_use = cc_routes;
+                } else if (this.key == "PE") {
+                    img = pe;
+                    route_to_use = pe_routes;
+                } else if (this.key == "FW") {
+                    img = fw;
+                    route_to_use = fw_routes;
+                } else {
+                    img = lu;
+                }
+                var loc_list = [this.lat, this.long]
+                var marker = (marker_obj[this.vid]);
+                marker.setLatLng(loc_list).update();
+            });
+
+            $.each(data.lanta, function(k, v) {
+                // cardinality_arr[this.vid] = new Set();
+                // console.log(cardinality_arr);
+                $.each(data.lanta[k], function() {
+                    var loc_list = [this.Latitude, this.Longitude]
+                    var marker = (marker_obj[this.VehicleId]);
+                    marker.setLatLng(loc_list).update();
+                    // marker_obj[this.vid] = L.marker(, {icon: lanta}).addTo(map);
+                });
+
+            });
+        }
+    });
+    //NOW WE ARE OUT OF ifFirstRun
+    //TODO: fix this (doesn't account for LANTA). ATM, nothing updates after initial placement
+    //TODO: Done :)
     //     $.each(data, function() { //
     //         // console.log(this);
     //         if (this.arrival_delta < 0.5) { //how much time for bus to get to stop (from JSON)
@@ -238,4 +304,4 @@ mymap = L.map('mapid').setView([40.604377, -75.372161], 16); //sets center of ma
 toggle_style((args.get("style") == null) ? check_dark() : args.get("style"));
 
 update_map(mymap);
-setInterval(function(mymap){update_map(mymap)}, 1000, mymap); //TODO: will update map every 'interval'
+setInterval(function(mymap) { update_map(mymap) }, 1000, mymap); //TODO: will update map every 'interval'
