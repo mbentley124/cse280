@@ -7,6 +7,7 @@ import os
 import random as rand
 import time as t
 import datetime
+import mysql.connector
 
 
 def log_error(e):
@@ -132,6 +133,34 @@ while True:
     for lanta_rid in lanta_routes:
         all_dict['lanta'].append(make_request_to_lanta(lanta_rid, meta))
         stop_dict['lanta'].append(get_lanta_stops(lanta_rid))
+
+    i = 0
+    try:
+        cnx = mysql.connector.connect(  user='busapp',
+                                        password='busapp',
+                                        host='localhost',
+                                        database='busapp',
+                                        auth_plugin='mysql_native_password')
+        cursor = cnx.cursor(prepared=True)
+        insert_lanta_data = """ INSERT INTO lantabusdata (vehicle_id,name,latitude,longitude,route_id,heading,speed,last_stop,destination,op_status,date_retrieved)
+                            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,FROM_UNIXTIME(%s))"""
+        for x in all_dict['lanta']:
+            for y in x:
+                values = (y['VehicleId'], y['Name'], y['Latitude'], y['Longitude'], y['RouteId'], y['Heading'], y['Speed'], y['LastStop'], y['Destination'], y['OpStatus'], y['unix_scrape_time'])
+                cursor.execute(insert_lanta_data, values)
+        cnx.commit()
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("Something is wrong with your user name or password")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            print("Database does not exist")
+        else:
+            print(err)
+    finally:
+        if (cnx.is_connected()):
+            cursor.close()
+            cnx.close()
+            print("Data was inserted.")
 
 # gets lehigh bus data and puts it in JSON file
     all_dict['lehigh'] = None #make_request_to_lehigh(meta)
