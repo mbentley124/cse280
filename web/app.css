@@ -1,5 +1,6 @@
 #mapid {
     height: 90%;
+    z-index: 1;
 }
 
 html,
@@ -40,6 +41,5 @@ body {
     background-color: #f35798;
     border-radius: 5px;
     text-align: center;
-    z-index: 11;
-    /* 1px higher than the overlay layer */
+    z-index: 2;
 }
