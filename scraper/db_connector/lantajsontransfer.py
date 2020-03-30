@@ -21,16 +21,15 @@ def parallelize(which):
 		data_to_be_inserted = False
 		for path, subdirs, files in os.walk(root):
 			for name in files:
-				with open (os.path.join(path, name), 'r') as f:
-					jsonfile = None
-					if f.read(2) != "[]":
+				full_path = os.path.join(path,name)
+				with open (full_path, 'r') as f:
+					if(os.path.getsize(full_path) > 0): #check for empty file
 						jsonfile = json.load(f)
 						data_to_be_inserted = True
 						for data in jsonfile:
 							values = (data['VehicleId'], data['Name'], data['Latitude'], data['Longitude'], data['RouteId'], data['Heading'], data['Speed'], data['LastStop'], data['Destination'], data['OpStatus'], data['unix_scrape_time'])
 							cursor.execute(query,values)
 		if(data_to_be_inserted == True):
-			print(fileholder)
 			cnx.commit()
 	except mysql.connector.Error as err:
 		if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
