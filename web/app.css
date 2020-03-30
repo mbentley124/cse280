@@ -1,5 +1,9 @@
 #mapid {
-    height: 90%;
+    height: calc(90% - 64px);
+}
+
+.body_dark {
+    background-color: #343a40;
 }
 
 html,
