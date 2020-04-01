@@ -50,6 +50,28 @@ if (window.innerWidth > 600) {
     icb = [96, 96]
 }
 
+
+function sync_callback(data) {
+    json = data;
+    if(!(json.ip).includes("128.180.27")) {
+        tile_style['dark'] = tile_style['light'] = tile_style['default'] = L.tileLayer(tile_server_url_mapbox, { //takes tile server URL and will return a tile
+            attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+            maxZoom: 18,
+        });
+    }
+}
+
+//determine what tileservers to load
+function check_ip() {
+    json = null;
+    $.ajax({
+        dataType: "json",
+        url: "https://api.ipify.org?format=jsonp&callback=?",
+        async: false,
+        success: sync_callback,
+      });
+      console.log(json);
+}
 //determine if we should make it dark or not.
 function check_dark() {
     var hours = new Date().getHours();
@@ -80,6 +102,15 @@ function toggle_style(style) { //use buttons to toggle dark mode on/off
 
     } else {
         console.warn("Invalid tile style selected.");
+    }
+}
+
+function do_location() {
+
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(calc_nearest);
+    } else {
+      alert("Geolocation is not supported by this browser.");
     }
 }
 
@@ -118,18 +149,31 @@ function calc_nearest(position) {
     lat = position.coords.latitude;
     lon = position.coords.longitude;
     L.marker([lat, lon], { icon: you }).addTo(mymap);
-    dist_arr = []
+    dist_arr_lu = []
+    dist_arr_lanta = []
     //replace with combined stops array
-    $.each(null, function() {
+    $.each(stops.lehigh, function() {
         b_lat = this.lon;
         b_lon = this.lat;
         var dist = distance(lat,lon, b_lat, b_lon, 'K');
-        var key = encodeURI(this.name);
-        dist_arr.push({"key":key, "dist":dist});
+        var key = this.name
+        dist_arr_lu.push({"key":key, "dist":dist});
     });
 
-    result = sortByKey(dist_arr, "dist")[0];
-    marker_obj[result.key].openPopup();
+    $.each(stops.lanta, function(k, v) { //LOOP: interates through each route for LANTA
+        $.each(stops.lanta[k], function() { //LOOP: iterates through each stop on that route
+            b_lat = this.Longitude;
+            b_lon = this.Latitude;
+            var dist = distance(lat,lon, b_lat, b_lon, 'K');
+            var key = this.Name
+            dist_arr_lanta.push({"key":key, "dist":dist});
+        });
+    });
+    result_lu = sortByKey(dist_arr_lu, "dist")[0];
+    stop_arr[result_lu.key].openPopup();
+
+    result_lanta = sortByKey(dist_arr_lanta, "dist")[0];
+    stop_arr[result_lanta.key].openPopup();
 
 }
 
@@ -138,6 +182,15 @@ function calc_nearest(position) {
 images for icons
 
 */
+
+var you = L.icon({
+    iconUrl: 'img/you.png',
+
+    iconSize: ic, // size of the icon
+    //iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+    // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+});
+
 var fw = L.icon({
     iconUrl: 'img/FW.jpeg',
 
@@ -298,6 +351,8 @@ function update_map(map) {
     //     });
     // });
 }
+
+check_ip();
 
 mymap = L.map('mapid').setView([40.604377, -75.372161], 16); //sets center of map & zoom level
 
