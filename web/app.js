@@ -165,15 +165,18 @@ function calc_nearest(position) {
             b_lat = this.Longitude;
             b_lon = this.Latitude;
             var dist = distance(lat,lon, b_lat, b_lon, 'K');
+            // console.log(dist);
             var key = this.Name
             dist_arr_lanta.push({"key":key, "dist":dist});
         });
     });
     result_lu = sortByKey(dist_arr_lu, "dist")[0];
-    stop_arr[result_lu.key].openPopup();
-
+    // stop_arr[result_lu.key].openPopup();
+    console.log(result_lu);
     result_lanta = sortByKey(dist_arr_lanta, "dist")[0];
-    stop_arr[result_lanta.key].openPopup();
+    // stop_arr[result_lanta.key].openPopup();
+    alert("Nearest Lehigh Stop: "+result_lu.key);
+    alert("Nearest LANTA Stop: "+result_lanta.key);
 
 }
 
