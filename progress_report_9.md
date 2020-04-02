@@ -43,6 +43,7 @@ Estimated time allocated this week:  Hours.
 
 ### Joe Malisov
 
-- 
+- Working on UI improvements (menubar) (most changes located in 'interface' branch)
+- Research on front-end technologies including bootstrap
 
-Estimated time allocated this week:  hours.
+Estimated time allocated this week: 2.5 hours.
