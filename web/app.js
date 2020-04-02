@@ -149,16 +149,6 @@ function calc_nearest(position) {
     lat = position.coords.latitude;
     lon = position.coords.longitude;
     L.marker([lat, lon], { icon: you }).addTo(mymap);
-<<<<<<< HEAD
-    dist_arr = []
-        //replace with combined stops array
-    $.each(null, function() {
-        b_lat = this.lon;
-        b_lon = this.lat;
-        var dist = distance(lat, lon, b_lat, b_lon, 'K');
-        var key = encodeURI(this.name);
-        dist_arr.push({ "key": key, "dist": dist });
-=======
     dist_arr_lu = []
     dist_arr_lanta = []
     //replace with combined stops array
@@ -168,7 +158,6 @@ function calc_nearest(position) {
         var dist = distance(lat,lon, b_lat, b_lon, 'K');
         var key = this.name
         dist_arr_lu.push({"key":key, "dist":dist});
->>>>>>> 7faf485c49c5f0b58aa7c77921e1140eee6628d0
     });
 
     $.each(stops.lanta, function(k, v) { //LOOP: interates through each route for LANTA
