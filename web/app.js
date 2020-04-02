@@ -76,26 +76,26 @@ function check_ip() {
 function check_dark() {
     var hours = new Date().getHours();
 
-    if( hours >= 20 || hours <= 4) {
+    if (hours >= 20 || hours <= 4) {
         $(".navbar").removeClass("bg-primary").addClass("bg-dark");
         $("body").addClass("body_dark");
         return 'dark';
-    } 
+    }
 
     return 'default';
 }
 
 function toggle_style(style) { //use buttons to toggle dark mode on/off
     console.log(style);
-    if( style in tile_style ) {
+    if (style in tile_style) {
         mymap.removeLayer(tile_style[curr_style]);
         mymap.addLayer(tile_style[style]);
         curr_style = style;
 
-        if( curr_style == "dark") {
+        if (curr_style == "dark") {
             $(".navbar").removeClass("bg-primary").addClass("bg-dark");
             $("body").addClass("body_dark");
-        } else if(curr_style == "light") {
+        } else if (curr_style == "light") {
             $(".navbar").removeClass("bg-dark").addClass("bg-primary");
             $("body").removeClass("body_dark");
         }
@@ -116,31 +116,31 @@ function do_location() {
 
 function distance(lat1, lon1, lat2, lon2, unit) {
     //https://www.geodatasource.com/developers/javascript
-	if ((lat1 == lat2) && (lon1 == lon2)) {
-		return 0;
-	}
-	else {
-		var radlat1 = Math.PI * lat1/180;
-		var radlat2 = Math.PI * lat2/180;
-		var theta = lon1-lon2;
-		var radtheta = Math.PI * theta/180;
-		var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
-		if (dist > 1) {
-			dist = 1;
-		}
-		dist = Math.acos(dist);
-		dist = dist * 180/Math.PI;
-		dist = dist * 60 * 1.1515;
-		if (unit=="K") { dist = dist * 1.609344 }
-		if (unit=="N") { dist = dist * 0.8684 }
-		return dist;
-	}
+    if ((lat1 == lat2) && (lon1 == lon2)) {
+        return 0;
+    } else {
+        var radlat1 = Math.PI * lat1 / 180;
+        var radlat2 = Math.PI * lat2 / 180;
+        var theta = lon1 - lon2;
+        var radtheta = Math.PI * theta / 180;
+        var dist = Math.sin(radlat1) * Math.sin(radlat2) + Math.cos(radlat1) * Math.cos(radlat2) * Math.cos(radtheta);
+        if (dist > 1) {
+            dist = 1;
+        }
+        dist = Math.acos(dist);
+        dist = dist * 180 / Math.PI;
+        dist = dist * 60 * 1.1515;
+        if (unit == "K") { dist = dist * 1.609344 }
+        if (unit == "N") { dist = dist * 0.8684 }
+        return dist;
+    }
 }
 
 function sortByKey(array, key) {
     //https://stackoverflow.com/questions/8837454/sort-array-of-objects-by-single-key-with-date-value
     return array.sort(function(a, b) {
-        var x = a[key]; var y = b[key];
+        var x = a[key];
+        var y = b[key];
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));
     });
 }
@@ -149,6 +149,16 @@ function calc_nearest(position) {
     lat = position.coords.latitude;
     lon = position.coords.longitude;
     L.marker([lat, lon], { icon: you }).addTo(mymap);
+<<<<<<< HEAD
+    dist_arr = []
+        //replace with combined stops array
+    $.each(null, function() {
+        b_lat = this.lon;
+        b_lon = this.lat;
+        var dist = distance(lat, lon, b_lat, b_lon, 'K');
+        var key = encodeURI(this.name);
+        dist_arr.push({ "key": key, "dist": dist });
+=======
     dist_arr_lu = []
     dist_arr_lanta = []
     //replace with combined stops array
@@ -158,6 +168,7 @@ function calc_nearest(position) {
         var dist = distance(lat,lon, b_lat, b_lon, 'K');
         var key = this.name
         dist_arr_lu.push({"key":key, "dist":dist});
+>>>>>>> 7faf485c49c5f0b58aa7c77921e1140eee6628d0
     });
 
     $.each(stops.lanta, function(k, v) { //LOOP: interates through each route for LANTA
@@ -304,42 +315,42 @@ function update_map(map) {
             });
             isFirstRun = false;
         } else {
-			$.each(data.lehigh, function(){
-				// cardinality_arr[this.vid] = new Set();
-				// console.log(cardinality_arr);
-				 if(this.key == "CC") {
-					 img = cc;
-					 route_to_use = cc_routes;
-				 } else if(this.key == "PE") {
-					 img = pe;
-					 route_to_use = pe_routes;
-				 } else if(this.key == "FW") {
-					 img = fw;
-					 route_to_use = fw_routes;
-				 } else {
-					 img = lu;
-				 }
-				 var loc_list = [this.lat, this.long]
-				 var marker = (marker_obj[this.vid]);
-				 marker.setLatLng(loc_list).update();
-				});
-	
-				$.each(data.lanta, function(k,v){
-					// cardinality_arr[this.vid] = new Set();
-					// console.log(cardinality_arr);
-					 $.each(data.lanta[k], function(){
-						var loc_list = [this.Latitude, this.Longitude]
-						var marker = (marker_obj[this.VehicleId]);
-						marker.setLatLng(loc_list).update();
-						// marker_obj[this.vid] = L.marker(, {icon: lanta}).addTo(map);
-					 });
-					 
-			});
-		}
-	});
-        //NOW WE ARE OUT OF ifFirstRun
-		//TODO: fix this (doesn't account for LANTA). ATM, nothing updates after initial placement
-		//TODO: Done :)
+            $.each(data.lehigh, function() {
+                // cardinality_arr[this.vid] = new Set();
+                // console.log(cardinality_arr);
+                if (this.key == "CC") {
+                    img = cc;
+                    route_to_use = cc_routes;
+                } else if (this.key == "PE") {
+                    img = pe;
+                    route_to_use = pe_routes;
+                } else if (this.key == "FW") {
+                    img = fw;
+                    route_to_use = fw_routes;
+                } else {
+                    img = lu;
+                }
+                var loc_list = [this.lat, this.long]
+                var marker = (marker_obj[this.vid]);
+                marker.setLatLng(loc_list).update();
+            });
+
+            $.each(data.lanta, function(k, v) {
+                // cardinality_arr[this.vid] = new Set();
+                // console.log(cardinality_arr);
+                $.each(data.lanta[k], function() {
+                    var loc_list = [this.Latitude, this.Longitude]
+                    var marker = (marker_obj[this.VehicleId]);
+                    marker.setLatLng(loc_list).update();
+                    // marker_obj[this.vid] = L.marker(, {icon: lanta}).addTo(map);
+                });
+
+            });
+        }
+    });
+    //NOW WE ARE OUT OF ifFirstRun
+    //TODO: fix this (doesn't account for LANTA). ATM, nothing updates after initial placement
+    //TODO: Done :)
     //     $.each(data, function() { //
     //         // console.log(this);
     //         if (this.arrival_delta < 0.5) { //how much time for bus to get to stop (from JSON)
@@ -362,4 +373,4 @@ mymap = L.map('mapid').setView([40.604377, -75.372161], 16); //sets center of ma
 toggle_style((args.get("style") == null) ? check_dark() : args.get("style"));
 
 update_map(mymap);
-setInterval(function(mymap){update_map(mymap)}, 1000, mymap); //TODO: will update map every 'interval'
+setInterval(function(mymap) { update_map(mymap) }, 1000, mymap); //TODO: will update map every 'interval'
