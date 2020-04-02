@@ -8,9 +8,32 @@ marker_obj = {}; //store bus markers/locations (for updating)
 route_to_use = null; //used in if statements for knowing which routes to use
 var stop_arr = {}; //holds location of each bus stop
 
+let query_string = window.location.search; //get query string from url
+let args = new URLSearchParams(query_string);
+var tile_style = {}; //holds different tile styles.
+var curr_style = "light"
+
+
+
 //routes
-var tile_server_url = "https://tileserver.codyben.me/";
-var route_server_url = "https://routeserver.codyben.me/";
+let tile_server_url_light = "https://tiles.codyben.me/styles/positron/{z}/{x}/{y}.png";
+var tile_server_url = "https://api.mapbox.com/styles/v1/bencodyoski/ck83ddg6u5xa91ipc15icdk21/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYmVuY29keW9za2kiLCJhIjoiY2s1c2s0Y2JmMHA2bzNrbzZ5djJ3bDdscyJ9.7MuHmoSKO5zAgY0IKChI8w";
+let tile_server_url_dark = "https://tiles.codyben.me/styles/dark-matter/{z}/{x}/{y}.png";
+let route_server_url = "https://routeserver.codyben.me/";
+
+
+
+tile_style['dark'] = L.tileLayer(tile_server_url_dark, { //takes tile server URL and will return a tile
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+});
+
+tile_style['light'] = L.tileLayer(tile_server_url_light, { //takes tile server URL and will return a tile
+    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+    maxZoom: 18,
+});
+
+
 
 //change window size
 if (window.innerWidth > 600) {
@@ -19,6 +42,29 @@ if (window.innerWidth > 600) {
 } else {
     ic = [128, 128]
     icb = [96, 96]
+}
+
+//determine if we should make it dark or not.
+function check_dark() {
+    var hours = new Date().getHours();
+
+    if( hours >= 20 && hours <= 4) {
+        return 'dark';
+    } 
+
+    return 'light';
+}
+
+function toggle_style(style) { //use buttons to toggle dark mode on/off
+    console.log(style);
+    if( style in tile_style ) {
+        mymap.removeLayer(tile_style[curr_style]);
+        mymap.addLayer(tile_style[style]);
+        curr_style = style;
+
+    } else {
+        console.warn("Invalid tile style selected.");
+    }
 }
 
 /*
@@ -130,7 +176,7 @@ function update_map(map) {
                 // cardinality_arr[this.vid] = new Set();
                 // console.log(cardinality_arr);
                 $.each(data.lanta[k], function() { //LOOP: initial placement of every LANTA bus
-                    marker_obj[this.vid] = L.marker([this.Latitude, this.Longitude], { icon: lanta }).addTo(map);
+                    marker_obj[this.VehicleId] = L.marker([this.Latitude, this.Longitude], { icon: lanta }).addTo(map);
                 });
 
             });
@@ -161,7 +207,7 @@ function update_map(map) {
 					// console.log(cardinality_arr);
 					 $.each(data.lanta[k], function(){
 						var loc_list = [this.Latitude, this.Longitude]
-						var marker = (marker_obj[this.vid]);
+						var marker = (marker_obj[this.VehicleId]);
 						marker.setLatLng(loc_list).update();
 						// marker_obj[this.vid] = L.marker(, {icon: lanta}).addTo(map);
 					 });
@@ -189,10 +235,7 @@ function update_map(map) {
 
 mymap = L.map('mapid').setView([40.604377, -75.372161], 16); //sets center of map & zoom level
 
-L.tileLayer(tile_server_url + 'tile/{z}/{x}/{y}.png', { //takes tile server URL and will return a tile
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    maxZoom: 18,
-}).addTo(mymap);
+toggle_style((args.get("style") == null) ? check_dark() : args.get("style"));
 
 update_map(mymap);
 setInterval(function(mymap){update_map(mymap)}, 1000, mymap); //TODO: will update map every 'interval'

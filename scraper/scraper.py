@@ -7,6 +7,7 @@ import os
 import random as rand
 import time as t
 import datetime
+import mysql.connector
 
 
 def log_error(e):
@@ -133,8 +134,36 @@ while True:
         all_dict['lanta'].append(make_request_to_lanta(lanta_rid, meta))
         stop_dict['lanta'].append(get_lanta_stops(lanta_rid))
 
+    i = 0
+    try:
+        cnx = mysql.connector.connect(  user='busapp',
+                                        password='busapp',
+                                        host='localhost',
+                                        database='busapp',
+                                        auth_plugin='mysql_native_password')
+        cursor = cnx.cursor(prepared=True)
+        insert_lanta_data = """ INSERT INTO lantabusdata (vehicle_id,name,latitude,longitude,route_id,heading,speed,last_stop,destination,op_status,date_retrieved)
+                            VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,FROM_UNIXTIME(%s))"""
+        for x in all_dict['lanta']:
+            for y in x:
+                values = (y['VehicleId'], y['Name'], y['Latitude'], y['Longitude'], y['RouteId'], y['Heading'], y['Speed'], y['LastStop'], y['Destination'], y['OpStatus'], y['unix_scrape_time'])
+                cursor.execute(insert_lanta_data, values)
+        cnx.commit()
+    except mysql.connector.Error as err:
+        if err.errno == errorcode.ER_ACCESS_DENIED_ERROR:
+            print("Something is wrong with your user name or password")
+        elif err.errno == errorcode.ER_BAD_DB_ERROR:
+            print("Database does not exist")
+        else:
+            print(err)
+    finally:
+        if (cnx.is_connected()):
+            cursor.close()
+            cnx.close()
+            print("Data was inserted.")
+
 # gets lehigh bus data and puts it in JSON file
-    all_dict['lehigh'] = make_request_to_lehigh(meta)
+    all_dict['lehigh'] = None #make_request_to_lehigh(meta)
     time_prev = time_scraped_str
     file_all_times_out = open("data/all/bus_data.json", "w+") # open file IMMEDIATELY before writing
     file_all_times_out.write(json.dumps(all_dict))
@@ -142,7 +171,7 @@ while True:
     all_dict['lehigh'] = all_dict['lanta'] = []
 
 # gets Lehigh stop data and puts it in JSON file
-    stop_dict['lehigh'] = get_lehigh_stops()
+    stop_dict['lehigh'] = None #get_lehigh_stops()
     file_all_stops_out = open("data/all/stops.json", "w+")
     file_all_stops_out.write("var stops = "+json.dumps(stop_dict)) #need to do this since we load this on page load in a simple way.
     file_all_times_out.close()
