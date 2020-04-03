@@ -42,9 +42,9 @@ Estimated time allocated this week:  2 Hours 30 Minutes.
 Estimated time allocated this week: 6 hours.
 
 ### Hansen Lukman
-- 
+- Refactored data insertion and web scraper code (bug when inserting historical data and scraper occasionally crashes)
 
-Estimated time allocated this week:  Hours.
+Estimated time allocated this week: 2 Hours.
 
 ### Joe Malisov
 
