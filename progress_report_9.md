@@ -3,10 +3,12 @@
 ## Summary of Work Completed
 - UI Improvements.
 - Met user geolocation milestone.
+- Started setup of backend system
 
 ### Goals completed this week
 - As above, met milestone to let a user find the nearest bus stop to them.
     - This is a feature absent from both the Lehigh and LANTA applications.
+- Created initial backend
 
 ### Goals not met this week
 
@@ -16,6 +18,8 @@
 
 ### Goals for next week
 - More User Interface updates including a floating panel allowing users to select routes
+- Figure out how to connect the backend to the database
+- Setup backend on server
 
 ## Individual Member Contributions
 
@@ -23,9 +27,10 @@ For each group member, list the individual contributions, and a link to proof in
 
 ### Michael Bentley
 
-- 
+- Created java maven project for the backend
+- Created route to test backend
 
-Estimated time allocated this week:  Hours.
+Estimated time allocated this week:  2 Hours 30 Minutes.
 
 ### Cody Benkoski
 - Some UI improvements (located in "interface" branch).
