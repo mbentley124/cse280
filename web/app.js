@@ -16,23 +16,23 @@ var curr_style = "light"
 
 
 //routes
-let tile_server_url_light = "https://tiles.codyben.me/styles/positron/{z}/{x}/{y}.png";
+// let tile_server_url_light = "https://tiles.codyben.me/styles/positron/{z}/{x}/{y}.png";
 var tile_server_url_mapbox = "https://api.mapbox.com/styles/v1/bencodyoski/ck83ddg6u5xa91ipc15icdk21/tiles/256/{z}/{x}/{y}@2x?access_token=pk.eyJ1IjoiYmVuY29keW9za2kiLCJhIjoiY2s1c2s0Y2JmMHA2bzNrbzZ5djJ3bDdscyJ9.7MuHmoSKO5zAgY0IKChI8w";
-let tile_server_url_dark = "https://tiles.codyben.me/styles/dark-matter/{z}/{x}/{y}.png";
-let route_server_url = "https://routeserver.codyben.me/";
+// let tile_server_url_dark = "https://tiles.codyben.me/styles/dark-matter/{z}/{x}/{y}.png";
+// let route_server_url = "https://routeserver.codyben.me/";
 let tile_server_url = "https://tiles.codyben.me/styles/osm-bright/{z}/{x}/{y}.png";
 
 
 
-tile_style['dark'] = L.tileLayer(tile_server_url_dark, { //takes tile server URL and will return a tile
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    maxZoom: 18,
-});
+// tile_style['dark'] = L.tileLayer(tile_server_url_dark, { //takes tile server URL and will return a tile
+//     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+//     maxZoom: 18,
+// });
 
-tile_style['light'] = L.tileLayer(tile_server_url_light, { //takes tile server URL and will return a tile
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    maxZoom: 18,
-});
+// tile_style['light'] = L.tileLayer(tile_server_url_light, { //takes tile server URL and will return a tile
+//     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+//     maxZoom: 18,
+// });
 
 tile_style['default'] = L.tileLayer(tile_server_url, { //takes tile server URL and will return a tile
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -86,22 +86,34 @@ function check_dark() {
 }
 
 function toggle_style(style) { //use buttons to toggle dark mode on/off
-    console.log(style);
-    if (style in tile_style) {
-        mymap.removeLayer(tile_style[curr_style]);
-        mymap.addLayer(tile_style[style]);
-        curr_style = style;
+    // console.log(style);
+    // if (style in tile_style) {
+    //     mymap.removeLayer(tile_style[curr_style]);
+    //     mymap.addLayer(tile_style[style]);
+    //     curr_style = style;
 
-        if (curr_style == "dark") {
-            $(".navbar").removeClass("bg-primary").addClass("bg-dark");
-            $("body").addClass("body_dark");
-        } else if (curr_style == "light") {
-            $(".navbar").removeClass("bg-dark").addClass("bg-primary");
-            $("body").removeClass("body_dark");
-        }
+    //     if (curr_style == "dark") {
+    //         $(".navbar").removeClass("bg-primary").addClass("bg-dark");
+    //         $("body").addClass("body_dark");
+    //     } else if (curr_style == "light") {
+    //         $(".navbar").removeClass("bg-dark").addClass("bg-primary");
+    //         $("body").removeClass("body_dark");
+    //     }
 
+    // } else {
+    //     console.warn("Invalid tile style selected.");
+    // }
+    var navbar = $(".navbar");
+    var tiles = $(".leaflet-tile-pane");
+    var body = $("body");
+    if(style.toLowerCase() === "dark" ) {
+        navbar.removeClass("bg-primary").addClass("bg-dark");
+        body.addClass("body_dark");
+        tiles.addClass("tile_dark");
     } else {
-        console.warn("Invalid tile style selected.");
+        tiles.removeClass("tile_dark");
+        body.removeClass("body_dark");
+        navbar.removeClass("bg-dark").addClass("bg-primary");
     }
 }
 
@@ -360,6 +372,6 @@ check_ip();
 mymap = L.map('mapid').setView([40.604377, -75.372161], 16); //sets center of map & zoom level
 
 toggle_style((args.get("style") == null) ? check_dark() : args.get("style"));
-
+mymap.addLayer(tile_style['default']);
 update_map(mymap);
 setInterval(function(mymap) { update_map(mymap) }, 1000, mymap); //TODO: will update map every 'interval'
