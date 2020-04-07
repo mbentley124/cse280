@@ -34,7 +34,7 @@ def get_lanta_stops(route_id):
     stop_list = []
     try:
         data = result_json.json()
-        # print(data)
+        #print(result_json)
         for stop in data.get("Stops"):
             stop_list.append(stop)
         return stop_list
@@ -74,7 +74,6 @@ def make_request_to_lanta(route_id, meta):
 
 def make_request_to_lehigh(meta): #due to how Lehigh works, we're just gonna scrape the bus endpoint and loop through that to save it
     bus_url = "https://bus.lehigh.edu/scripts/busdata.php?format=json"
-    
     temp = requests.get(bus_url)
     try:
         data = temp.json()
