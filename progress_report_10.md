@@ -28,8 +28,10 @@ Estimated time allocated this week: .
 - Modified Varnish to almost indefinitely cache a tile layer.
   - Planning on using CSS to stile the dark mode tiles instead of relying on a seperate raster.
   - Around a 30% decrease in time-to-first-byte.
+  - Better CSS dark mode transition.
+- Beginning of a front-end way to check status of required services.
 
-Estimated time allocated this week: 4.
+Estimated time allocated this week: 5.
 
 ### Hansen Lukman
 
