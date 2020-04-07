@@ -1,3 +1,11 @@
+.leaflet-tile-pane img{
+    -webkit-transition: 0.2s -webkit-filter ease-in-out;
+    -moz-transition: 0.2s -moz-filter ease-in-out;
+    -moz-transition: 0.2s filter ease-in-out;
+    -ms-transition: 0.2s -ms-filter ease-in-out;
+    -o-transition: 0.2s -o-filter ease-in-out;
+    transition: 0.2s filter ease-in-out, 0.2s -webkit-filter ease-in-out;
+}
 .tile_dark img{
     filter: invert(90%) grayscale(50%);
 }
