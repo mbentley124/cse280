@@ -10,13 +10,43 @@
     <script type="text/javascript" src="routes.json"></script>
     <script type="text/javascript" src="async.min.js"></script>
     <link rel="stylesheet" type="text/css" href="app.css">
+    <link rel="stylesheet" type="text/css" href="sidebar/side-menu.css">
 </head>
 
 <body>
+    <a href="#menu" id="menuLink" class="menu-link">
+        <!-- Hamburger icon -->
+        <span></span>
+    </a>
+
+    <div id="menu">
+        <div class="pure-menu">
+            <a class="pure-menu-heading" href="#">Lehigh University Bus Schedule</a>
+
+            <ul class="pure-menu-list">
+
+
+                <li class="pure-menu-item menu-item-divided pure-menu-selected">
+                    <a href="#" class="pure-menu-link">Services</a>
+                </li>
+
+                <li class="pure-menu-item"><a href="#" class="pure-menu-link">Routes</a></li>
+                <li class="pure-menu-item"><a href="#" class="pure-menu-link">List of Stops</a></li>
+                <li class="pure-menu-item"><a href="#" class="pure-menu-link">About</a></li>
+            </ul>
+            <ul>
+                <li><a class="my_buttons" id="darkmode" onclick="toggle_style('dark');">Click me for dark mode.</a></li>
+                <li><a class="my_buttons" id="lightmode" onclick="toggle_style('light');">Click me for light mode.</a></li>
+
+            </ul>
+        </div>
+    </div>
+
     <div id="mapid"></div>
     <script type="text/javascript" src="app.js"></script>
-    <a class="my_buttons" id="darkmode" onclick="toggle_style('dark');">Click me for dark mode.</a>
-    <a class="my_buttons" id="lightmode" onclick="toggle_style('light');">Click me for light mode.</a>
+    <script type="text/javascript" src="sidebar/ui.js"></script>
+
+
 </body>
 
 </html>
