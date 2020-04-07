@@ -1,5 +1,10 @@
+.tile_dark img{
+    filter: invert(90%) grayscale(50%);
+}
+
 #mapid {
     height: 90%;
+    z-index: 1;
 }
 
 html,
@@ -26,4 +31,19 @@ body {
     border-radius: 5px;
     margin: 5px;
     text-decoration: none;
+}
+
+.examplemodal {
+    width: 300px;
+    height: 200px;
+    line-height: 200px;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    margin-top: -100px;
+    margin-left: -150px;
+    background-color: #f35798;
+    border-radius: 5px;
+    text-align: center;
+    z-index: 2;
 }
