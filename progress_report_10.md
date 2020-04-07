@@ -24,8 +24,12 @@ For each group member, list the individual contributions, and a link to proof in
 Estimated time allocated this week: .
 
 ### Cody Benkoski
+- Did research on best way to render all points on the map.
+- Modified Varnish to almost indefinitely cache a tile layer.
+  - Planning on using CSS to stile the dark mode tiles instead of relying on a seperate raster.
+  - Around a 30% decrease in time-to-first-byte.
 
-Estimated time allocated this week: .
+Estimated time allocated this week: 4.
 
 ### Hansen Lukman
 
