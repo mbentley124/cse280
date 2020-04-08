@@ -124,6 +124,7 @@ appears on the left side of the page.
     border: none;
     background: transparent;
     width: auto;
+    border-bottom: solid 2px #eee;
 }
 
 
@@ -144,16 +145,6 @@ appears on the left side of the page.
 #menu .pure-menu li a:hover,
 #menu .pure-menu li a:focus {
     background: #333;
-}
-
-
-/*
-describing light/dark buttons in the menu
-*/
-
-#menu .pure-menu .my_buttons {
-    display: block;
-    list-style-type: none !important;
 }
 
 
@@ -184,6 +175,8 @@ describing light/dark buttons in the menu
     font-size: 130%;
     color: #000;
     padding: 5px;
+    text-align: center;
+    border-bottom: solid 2px #eee;
 }
 
 
@@ -290,4 +283,15 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         position: relative;
         left: 150px;
     }
+}
+
+
+/*
+describing light/dark buttons in the menu
+*/
+
+#menu .pure-menu .my_buttons {
+    display: block;
+    list-style-type: none !important;
+    border-bottom: none;
 }
