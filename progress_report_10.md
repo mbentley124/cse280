@@ -1,7 +1,8 @@
 # Progress Report 10
 
 ## Summary of Work Completed
-- 
+- Made front end more efficient.
+- DevOps work so backend can progress smooth.
 
 ### Goals completed this week
 - 
@@ -13,7 +14,8 @@
 
 
 ### Goals for next week
-- 
+- Work on UX for front end.
+- Figure out a way to move bus data from database to front-end efficiently.
 
 ## Individual Member Contributions
 
