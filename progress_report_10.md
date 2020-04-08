@@ -30,6 +30,7 @@ Estimated time allocated this week: .
   - Around a 30% decrease in time-to-first-byte.
   - Better CSS dark mode transition.
 - Beginning of a front-end way to check status of required services.
+- Setup NGINX to allow connections to the new backend.
 
 Estimated time allocated this week: 5.
 
