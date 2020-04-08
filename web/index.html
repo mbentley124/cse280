@@ -4,6 +4,7 @@
 <head>
     <title>Lehigh University Bus Schedule</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.1/build/pure-min.css" integrity="sha384-oAOxQR6DkCoMliIh8yFnu25d7Eq/PHS21PClpwjOTeU2jRSq11vu66rf90/cZr47" crossorigin="anonymous">
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <script src="js/status.js"></script>
     <script src="js/config.js"></script>
@@ -41,9 +42,9 @@
                 <li class="pure-menu-item"><a href="#" class="pure-menu-link">List of Stops</a></li>
                 <li class="pure-menu-item"><a href="#" class="pure-menu-link">About</a></li>
             </ul>
-            <ul>
-                <li><a class="my_buttons" id="darkmode" onclick="toggle_style('dark');">Click me for dark mode.</a></li>
-                <li><a class="my_buttons" id="lightmode" onclick="toggle_style('light');">Click me for light mode.</a></li>
+            <ul class="pure-menu-list">
+                <li class="pure-menu-item"><a class="my_buttons" id="darkmode" onclick="toggle_style('dark');">Click me for dark mode.</a></li>
+                <li class="pure-menu-item"><a class="my_buttons" id="lightmode" onclick="toggle_style('light');">Click me for light mode.</a></li>
 
             </ul>
         </div>
