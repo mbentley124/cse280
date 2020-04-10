@@ -5,10 +5,10 @@
 - DevOps work so backend can progress smoothly.
 
 ### Goals completed this week
-- 
+- Added css overlay for dark mode instead of loading new tiles
 
 ### Goals not met this week
-
+- menubar not finished
 
 ### Challenges faced this week
 
