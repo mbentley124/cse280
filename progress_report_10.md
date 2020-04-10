@@ -1,6 +1,8 @@
 # Progress Report 10
 
 ## Summary of Work Completed
+- Styled to Lehigh's colors, cleaned up overall user interface, and added webpage responsiveness.
+- Fixed overlapping of Menu and Map.
 - Used CSS styling to eliminate a redundant tile layer.
 - Configured NGINX to proxy requests to new backend.
 - Connected the Java backend to the database.
@@ -12,7 +14,7 @@
 - Created initial sql query for route determination
 
 ### Goals not met this week
-- menubar not finished
+- Menubar not finished
 
 ### Challenges faced this week
 
@@ -48,6 +50,7 @@ Estimated time allocated this week: 5.
 - Cleaned up User Interface.
 - Fixed overlapping menu and map.
 - Added responsiveness based on window size.
+- Lehigh-ified styling.
 
 Estimated time allocated this week: 3 hours.
 
