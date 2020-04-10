@@ -1,10 +1,11 @@
 # Progress Report 10
 
 ## Summary of Work Completed
-- Made front end more efficient.
-- DevOps work so backend can progress smoothly.
-- Connected backend to database
-- Created initial sql query for route determination
+- Used CSS styling to eliminate a redundant tile layer.
+- Configured NGINX to proxy requests to new backend.
+- Connected the Java backend to the database.
+- Took first steps on determining a route.
+  - Wrote SQL query to group all stops by a common route_id.
 
 ### Goals completed this week
 - Added css overlay for dark mode instead of loading new tiles
@@ -19,8 +20,8 @@
 ### Goals for next week
 - Work on UX for front end.
 - Figure out a way to move bus data from database to front-end efficiently.
-- Finish route determination for backend
-- Start determining plans for backend routes
+- Finish route determination for backend.
+- Start determining plans for backend routes.
 
 ## Individual Member Contributions
 
