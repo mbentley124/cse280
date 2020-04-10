@@ -3,9 +3,12 @@
 ## Summary of Work Completed
 - Made front end more efficient.
 - DevOps work so backend can progress smoothly.
+- Connected backend to database
+- Created initial sql query for route determination
 
 ### Goals completed this week
 - Added css overlay for dark mode instead of loading new tiles
+- Created initial sql query for route determination
 
 ### Goals not met this week
 - menubar not finished
@@ -16,14 +19,18 @@
 ### Goals for next week
 - Work on UX for front end.
 - Figure out a way to move bus data from database to front-end efficiently.
+- Finish route determination for backend
+- Start determining plans for backend routes
 
 ## Individual Member Contributions
 
 For each group member, list the individual contributions, and a link to proof in the form of a commit to your group repository. At the end, provide an estimate for how many hours these contributions took to complete.
 
 ### Michael Bentley
+- Connected backend to database from remote machine [proof](https://github.com/mbentley124/cse280/commit/82ad24caa6d3db187c328fcfc35117656f097ba4)
+- Created initial sql query to determine routes programmaticaly. Minor bugs with it still [proof](https://github.com/mbentley124/cse280/commit/801382f7a4630b857b5073d1c5b05cc07bfa2ce5)
 
-Estimated time allocated this week: .
+Estimated time allocated this week: 3.5 hours.
 
 ### Cody Benkoski
 - Did research on best way to render all points on the map.
