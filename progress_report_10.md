@@ -2,7 +2,7 @@
 
 ## Summary of Work Completed
 - Made front end more efficient.
-- DevOps work so backend can progress smooth.
+- DevOps work so backend can progress smoothly.
 
 ### Goals completed this week
 - 
@@ -41,5 +41,6 @@ Estimated time allocated this week: 5.
 Estimated time allocated this week: .
 
 ### Joe Malisov
-
-Estimated time allocated this week: .
+- Work on user-interface (mostly menu-bar)
+- look into "purecss" and tring to features to app.
+Estimated time allocated this week: 1.5.
