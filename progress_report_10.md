@@ -45,8 +45,11 @@ Estimated time allocated this week: 3.5 hours.
 Estimated time allocated this week: 5.
 
 ### Hansen Lukman
+- Cleaned up User Interface.
+- Fixed overlapping menu and map.
+- Added responsiveness based on window size.
 
-Estimated time allocated this week: .
+Estimated time allocated this week: 3 hours.
 
 ### Joe Malisov
 - Work on user-interface (mostly menu-bar)
