@@ -65,6 +65,9 @@ function check_dark() {
     return 'default';
 }
 
+function show_routes(){
+    $("#routes-list").toggle();
+}
 function toggle_style(style) { //use buttons to toggle dark mode on/off
     // console.log(style);
     // if (style in tile_style) {
@@ -355,3 +358,4 @@ toggle_style((args.get("style") == null) ? check_dark() : args.get("style"));
 mymap.addLayer(tile_style['default']);
 update_map(mymap);
 setInterval(function(mymap) { update_map(mymap) }, 1000, mymap); //TODO: will update map every 'interval'
+

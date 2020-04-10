@@ -40,8 +40,15 @@
                             <a href="#" class="pure-menu-link">Services</a>
                         </li>
                         -->
-                        <li class="pure-menu-item"><a href="#/routes" class="pure-menu-link">Routes</a></li>
-                        <li class="pure-menu-item"><a href="#/stops" class="pure-menu-link">List of Stops</a></li>
+                        <li class="pure-menu-item">
+                            <a href="#/routes" class="pure-menu-link" onclick="show_routes()">Routes</a>
+                            <ul class="pure-menu-list" id="routes-list" style="display: none; color: black; background-color: cornflowerblue; font-size: 15px;">
+                                <a href="#/routes" class="pure-menu-link">Campus Connector</a>
+                                <a href="#/routes" class="pure-menu-link">Founders Way</a>
+                                <a href="#/routes" class="pure-menu-link">Packer Express</a>
+                            </ul>
+                        </li>
+                        <li class="pure-menu-item" id="stops-list"><a href="#/stops" class="pure-menu-link" onclick="show_stops()">List of Stops</a></li>
                         <li class="pure-menu-item"><a href="#/about" class="pure-menu-link">About</a></li>
                     </ul>
                     <ul class="pure-menu-list">
