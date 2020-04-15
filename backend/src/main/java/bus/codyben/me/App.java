@@ -24,7 +24,16 @@ public class App {
         } catch (ClassNotFoundException e1) {
             e1.printStackTrace();
         }
-        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/busapp?serverTimezone=UTC", "busapp", "busapp");) {
+
+        if(args.length == 0 || args.length > 2) {
+            System.out.println("Invalid number of arguments.");
+            System.out.println("Use: routeparser <username> <password>");
+            System.exit(126); //failed to start.
+        }
+        username = args[0];
+        password = args[1];
+
+        try (Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/busapp?serverTimezone=UTC", username, password);) {
             PreparedStatement preparedStatement = conn.prepareStatement("select distinct route_id from lehighbusdata");
             ResultSet results = preparedStatement.executeQuery();
             while (results.next()) {
