@@ -139,12 +139,6 @@ class routeparser{
                     route_map.put(rid, new ArrayList<String>());
                 } 
 
-                for(int s = 0; s < deduped.size() - 1; s++) {
-
-                    route_str += s+", "; 
-                    
-                    System.out.print(s+", ");
-                }
                 ArrayList<String> temp = route_map.get(rid);
                 temp.add(route_str);
                 System.out.println("\n--------------------------------------------");
