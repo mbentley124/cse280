@@ -120,6 +120,7 @@ class routeparser{
             while (results.next()) {
                 System.out.println();
                 String big_stop_str = results.getString("GROUP_CONCAT(current_stop)");
+                System.out.println(big_stop_str);
                 String big_stop_arr[] = big_stop_str.split(",");
                 ArrayList<String> deduped = dedup_adjacent(big_stop_arr);
                 int rid = results.getInt("route_id");
@@ -141,9 +142,10 @@ class routeparser{
 
                 for(int s = 0; s < deduped.size() - 1; s++) {
 
-                    route_str += s+", "; 
+                    String stop = deduped.get(s);
+                    route_str += stop+", "; 
                     
-                    System.out.print(s+", ");
+                    System.out.print(stop+", ");
                 }
                 ArrayList<String> temp = route_map.get(rid);
                 temp.add(route_str);
