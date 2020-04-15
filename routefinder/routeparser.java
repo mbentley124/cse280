@@ -115,7 +115,7 @@ class routeparser{
         }
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://"+host+":3306/busapp?serverTimezone=UTC", username, password);) {
             
-            PreparedStatement preparedStatement = conn.prepareStatement("SELECT route_id,GROUP_CONCAT(current_stop), GROUP_CONCAT(retrieved), GROUP_CONCAT(latitude), GROUP_CONCAT(longitude) from `lehighbusdata` WHERE current_stop is not null AND current_stop != 'NULL' AND latitude is not nULL and longitude is not null GROUP BY route_id, vehicle_id");
+            PreparedStatement preparedStatement = conn.prepareStatement("SELECT route_id,GROUP_CONCAT(current_stop), GROUP_CONCAT(retrieved), GROUP_CONCAT(latitude), GROUP_CONCAT(longitude) from `lehighbusdata` WHERE current_stop is not null AND current_stop != 'NULL' AND latitude is not nULL and longitude is not null GROUP BY route_id, vehicle_id,DATEDIFF(CURDATE(), retrieved)");
             ResultSet results = preparedStatement.executeQuery();
             while (results.next()) {
                 System.out.println();
@@ -140,6 +140,13 @@ class routeparser{
                     route_map.put(rid, new ArrayList<String>());
                 } 
 
+                for(int s = 0; s < deduped.size() - 1; s++) {
+
+                    String stop = deduped.get(s); //if you just us
+                    route_str += stop+", "; 
+                    
+                    System.out.print(stop+", ");
+                }
                 ArrayList<String> temp = route_map.get(rid);
                 temp.add(route_str);
                 System.out.println("\n--------------------------------------------");
