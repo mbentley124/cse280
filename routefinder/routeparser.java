@@ -139,7 +139,7 @@ class routeparser{
                     route_map.put(rid, new ArrayList<String>());
                 } 
 
-                for(String s : deduped) {
+                for(int s = 0; s < deduped.size() - 1; s++) {
 
                     route_str += s+", "; 
                     
