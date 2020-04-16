@@ -5,25 +5,27 @@
 
 ### Goals completed this week
 - Basic route determination.
+- Planned backend routes
 
 ### Goals not met this week
 - 
 
 ### Challenges faced this week
-- 
-
+- Issues with the data for the stops in the Campus Connector route (missing stops inconsistently)
 
 ### Goals for next week
-- 
+- Implement beginnings of backend routes
 
 ## Individual Member Contributions
 
 For each group member, list the individual contributions, and a link to proof in the form of a commit to your group repository. At the end, provide an estimate for how many hours these contributions took to complete.
 
 ### Michael Bentley
-- 
+- Worked on sql query to determine routes more effectively [proof](https://github.com/mbentley124/cse280/commit/4a197a031b29f7a5367011e21bc5c44a35f1e067)
+- Figured out issues with the Campus Connector Route
+- Planned which routes will be present for the backend [proof](https://docs.google.com/spreadsheets/u/1/d/17lR5FlTsYbo87M1uTOx2IZoOEFg6FXfB-inhyK-SEQY/edit?usp=drive_web&ouid=105008229592885867707)
 
-Estimated time allocated this week: hours.
+Estimated time allocated this week: 3.5 hours.
 
 ### Cody Benkoski
 - Fixed https error on sites.
