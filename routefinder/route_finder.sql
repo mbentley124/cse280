@@ -1,0 +1,3 @@
+SELECT route_id,GROUP_CONCAT(current_stop), GROUP_CONCAT(retrieved), GROUP_CONCAT(latitude), GROUP_CONCAT(longitude) from `lehighbusdata` WHERE current_stop is not null AND current_stop != "NULL" AND latitude is not nULL and longitude is not null GROUP BY route_id, vehicle_id
+
+SELECT route_id,GROUP_CONCAT(destination), GROUP_CONCAT(date_retrieved), GROUP_CONCAT(latitude), GROUP_CONCAT(longitude) from `lantabusdata` WHERE destination is not null AND destination != "NULL" AND latitude is not nULL and longitude is not null GROUP BY route_id, vehicle_id
