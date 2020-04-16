@@ -1,3 +1,7 @@
 scraper/data/*
 stress_test/*
 scraper/*.log
+android/*
+images/*
+scraper/*
+web/*
