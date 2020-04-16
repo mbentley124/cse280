@@ -1,3 +1,10 @@
 scraper/data/*
 stress_test/*
 scraper/*.log
+scraper/*
+backend/*
+routefinder/*
+images/*
+stress_test/*
+android/*
+
