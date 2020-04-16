@@ -255,7 +255,7 @@ var lanta = L.icon({
 
 function draw_stops(map) {
     $.each(stops.lehigh, function() { //LOOP: gets all stops for lehigh and places them on map
-        L.circleMarker([this.lat, this.long], { color: "#68310A" }).addTo(map);
+        L.circleMarker([this.lat, this.long], { color: "#68310A" }).bindPopup(this.name).addTo(map);
         stop_arr[this.name] = [this.lat, this.long];
 
         //  console.log(cardinality_arr);
@@ -263,7 +263,7 @@ function draw_stops(map) {
 
     $.each(stops.lanta, function(k, v) { //LOOP: interates through each route for LANTA
         $.each(stops.lanta[k], function() { //LOOP: iterates through each stop on that route
-            L.circleMarker([this.Latitude, this.Longitude], {color: "#004BBD" }).addTo(map);
+            L.circleMarker([this.Latitude, this.Longitude], {color: "#004BBD" }).bindPopup(this.Name).addTo(map);
             stop_arr[this.Name] = [this.Latitude, this.Longitude];
         });
     });
@@ -354,9 +354,8 @@ check_ip();
 mymap = L.map('mapid', leaflet_config).setView([40.604377, -75.372161], 16); //sets center of map & zoom level
 
 draw_stops(mymap);
-update_map(mymap);
-
 toggle_style((args.get("style") == null) ? check_dark() : args.get("style"));
 mymap.addLayer(tile_style['default']);
+update_map(mymap);
 setInterval(function(mymap) { update_map(mymap) }, 1000, mymap); //TODO: will update map every 'interval'
 
