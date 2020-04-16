@@ -22,8 +22,8 @@ if (window.innerWidth > 600) {
     ic = [48, 48] //bus icon
     icb = [32, 32] //bus stop icon
 } else {
-    ic = [128, 128]
-    icb = [96, 96]
+    ic = [32, 32]
+    icb = [20, 20]
 }
 
 /* END */
@@ -214,7 +214,7 @@ var lu_stop = L.icon({
 });
 
 var lanta_stop = L.icon({
-    iconUrl: 'img/lanta_stop.png',
+    iconUrl: 'img/bus.svg',
 
     iconSize: icb, // size of the icon
     //iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
@@ -253,23 +253,25 @@ var lanta = L.icon({
     // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
 });
 
+function draw_stops(map) {
+    $.each(stops.lehigh, function() { //LOOP: gets all stops for lehigh and places them on map
+        L.circleMarker([this.lat, this.long], { color: "#68310A" }).addTo(map);
+        stop_arr[this.name] = [this.lat, this.long];
+
+        //  console.log(cardinality_arr);
+    });
+
+    $.each(stops.lanta, function(k, v) { //LOOP: interates through each route for LANTA
+        $.each(stops.lanta[k], function() { //LOOP: iterates through each stop on that route
+            L.circleMarker([this.Latitude, this.Longitude], {color: "#004BBD" }).addTo(map);
+            stop_arr[this.Name] = [this.Latitude, this.Longitude];
+        });
+    });
+}
+
 function update_map(map) {
     //console.log(map)
     $.getJSON("bus_data.json", function(data) { //gets data from JSON file which was created by scraper
-        if (isFirstRun) { //checks so that you don't need to load the map everytime you update bus locations
-            $.each(stops.lehigh, function() { //LOOP: gets all stops for lehigh and places them on map
-                L.marker([this.lat, this.long], { icon: lu_stop }).addTo(map);
-                stop_arr[this.name] = [this.lat, this.long];
-
-                //  console.log(cardinality_arr);
-            });
-
-            $.each(stops.lanta, function(k, v) { //LOOP: interates through each route for LANTA
-                $.each(stops.lanta[k], function() { //LOOP: iterates through each stop on that route
-                    L.marker([this.Latitude, this.Longitude], { icon: lanta_stop }).addTo(map);
-                    stop_arr[this.Name] = [this.Latitude, this.Longitude];
-                });
-            });
             $.each(data.lehigh, function() { //LOOP: loops through every Lehigh bus and 
                 //places it initially on map
                 // cardinality_arr[this.vid] = new Set();
@@ -297,8 +299,6 @@ function update_map(map) {
                 });
 
             });
-            isFirstRun = false;
-        } else {
             $.each(data.lehigh, function() {
                 // cardinality_arr[this.vid] = new Set();
                 // console.log(cardinality_arr);
@@ -330,7 +330,6 @@ function update_map(map) {
                 });
 
             });
-        }
     });
     //NOW WE ARE OUT OF ifFirstRun
     //TODO: fix this (doesn't account for LANTA). ATM, nothing updates after initial placement
@@ -352,10 +351,12 @@ function update_map(map) {
 
 check_ip();
 
-mymap = L.map('mapid').setView([40.604377, -75.372161], 16); //sets center of map & zoom level
+mymap = L.map('mapid', leaflet_config).setView([40.604377, -75.372161], 16); //sets center of map & zoom level
+
+draw_stops(mymap);
+update_map(mymap);
 
 toggle_style((args.get("style") == null) ? check_dark() : args.get("style"));
 mymap.addLayer(tile_style['default']);
-update_map(mymap);
 setInterval(function(mymap) { update_map(mymap) }, 1000, mymap); //TODO: will update map every 'interval'
 

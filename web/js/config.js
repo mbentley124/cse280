@@ -13,6 +13,10 @@ let args = new URLSearchParams(query_string);
 var tile_style = {}; //holds different tile styles.
 var curr_style = "light"
 
+/* leaflet configuration */
+leaflet_config = {
+    preferCanvas: true,
+};
 
 
 //routes
