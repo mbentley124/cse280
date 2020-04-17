@@ -15,6 +15,7 @@
 
 ### Goals for next week
 - Implement beginnings of backend routes
+- Implement dynamic routes and stops lists on front end.
 
 ## Individual Member Contributions
 
@@ -39,9 +40,10 @@ Estimated time allocated this week: 3.5 hours.
 Estimated time allocated this week: 6 hours.
 
 ### Hansen Lukman
-- 
+- Worked on User Interface
+- Laid out skeleton for routes and stops API call to backend
 
-Estimated time allocated this week: hours.
+Estimated time allocated this week: 1 hour.
 
 ### Joe Malisov
 - 
