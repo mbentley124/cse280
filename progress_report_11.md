@@ -46,5 +46,7 @@ Estimated time allocated this week: 6 hours.
 Estimated time allocated this week: 1 hour.
 
 ### Joe Malisov
-- 
-Estimated time allocated this week: hours.
+- Discussed reasonaly refresh rates and serverside issues with Cody.
+- Worked on writing SQL to determine routes with Cody, and discussed how to parse it.
+- Worked with Cody on the routing PoC.
+Estimated time allocated this week: 2.5 hours.
