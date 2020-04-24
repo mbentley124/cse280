@@ -6,6 +6,7 @@
 ### Goals completed this week
 - Discussed end of semester goals, and set a plan to make progres on them.
 - Discussed architecture of backend, and planned needed calls.
+- Started programming routes for backend. 
 
 ### Goals not met this week
 - Implement dynamic routes and stops lists on front end.
