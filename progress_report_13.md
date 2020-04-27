@@ -26,8 +26,12 @@ Estimated time allocated this week: hours.
 
 ### Cody Benkoski
 - Configured firewall with more granular permissions since most systems are stood up.
+- Added small popup to buses for easier debugging.
+- Looking into a better/faster tileserver.
+  - Or maybe we'll go back to Mapbox.
+- Added Lehigh stops back to scraper.
 
-Estimated time allocated this week: 1 hour.
+Estimated time allocated this week: 2 hour.
 
 ### Hansen Lukman
 - 
