@@ -288,14 +288,14 @@ function update_map(map) {
                 } else {
                     img = lu;
                 }
-                marker_obj[this.vid] = L.marker([this.lat, this.long], { icon: img }).addTo(map);
+                marker_obj[this.vid] = L.marker([this.lat, this.long], { icon: img }).bindPopup("System: LU-TPS<br>"+"VID: "+this.vid).addTo(map);
             });
 
             $.each(data.lanta, function(k, v) { //LOOP: goes through every route for LANTA
                 // cardinality_arr[this.vid] = new Set();
                 // console.log(cardinality_arr);
                 $.each(data.lanta[k], function() { //LOOP: initial placement of every LANTA bus
-                    marker_obj[this.VehicleId] = L.marker([this.Latitude, this.Longitude], { icon: lanta }).addTo(map);
+                    marker_obj[this.VehicleId] = L.marker([this.Latitude, this.Longitude], { icon: lanta }).bindPopup("System: LANTA<br>"+"VID: "+this.VehicleId).addTo(map);
                 });
 
             });
