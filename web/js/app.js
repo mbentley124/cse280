@@ -16,9 +16,6 @@ tile_style['default'] = L.tileLayer(tile_server_url, { //takes tile server URL a
     maxZoom: 18,
 });
 
-var mymap;
-var ic, icb;
-
 
 //change window size
 if (window.innerWidth > 600) {
@@ -275,33 +272,7 @@ function draw_stops(map) {
 function update_map(map) {
     //console.log(map)
     $.getJSON("bus_data.json", function(data) { //gets data from JSON file which was created by scraper
-            $.each(data.lehigh, function() { //LOOP: loops through every Lehigh bus and 
-                //places it initially on map
-                // cardinality_arr[this.vid] = new Set();
-                // console.log(cardinality_arr);
-                if (this.key == "CC") {
-                    img = cc;
-                    route_to_use = cc_routes;
-                } else if (this.key == "PE") {
-                    img = pe;
-                    route_to_use = pe_routes;
-                } else if (this.key == "FW") {
-                    img = fw;
-                    route_to_use = fw_routes;
-                } else {
-                    img = lu;
-                }
-                marker_obj[this.vid] = L.marker([this.lat, this.long], { icon: img }).bindPopup("System: LU-TPS<br>"+"VID: "+this.vid).addTo(map);
-            });
-
-            $.each(data.lanta, function(k, v) { //LOOP: goes through every route for LANTA
-                // cardinality_arr[this.vid] = new Set();
-                // console.log(cardinality_arr);
-                $.each(data.lanta[k], function() { //LOOP: initial placement of every LANTA bus
-                    marker_obj[this.VehicleId] = L.marker([this.Latitude, this.Longitude], { icon: lanta }).bindPopup("System: LANTA<br>"+"VID: "+this.VehicleId).addTo(map);
-                });
-
-            });
+            
             $.each(data.lehigh, function() {
                 // cardinality_arr[this.vid] = new Set();
                 // console.log(cardinality_arr);
@@ -354,6 +325,40 @@ function update_map(map) {
     // });
 }
 
+function update_initial() {
+    $.getJSON("bus_data.json", function(data) { //gets data from JSON file which was created by scraper
+        $.each(data.lehigh, function() { //LOOP: loops through every Lehigh bus and 
+            //places it initially on map
+            // cardinality_arr[this.vid] = new Set();
+            // console.log(cardinality_arr);
+            if (this.key == "CC") {
+                img = cc;
+                route_to_use = cc_routes;
+            } else if (this.key == "PE") {
+                img = pe;
+                route_to_use = pe_routes;
+            } else if (this.key == "FW") {
+                img = fw;
+                route_to_use = fw_routes;
+            } else {
+                img = lu;
+            }
+            marker_obj[this.vid] = L.marker([this.lat, this.long], { icon: img }).bindPopup("System: LU-TPS<br>"+"VID: "+this.vid).addTo(map);
+        });
+
+        $.each(data.lanta, function(k, v) { //LOOP: goes through every route for LANTA
+            // cardinality_arr[this.vid] = new Set();
+            // console.log(cardinality_arr);
+            $.each(data.lanta[k], function() { //LOOP: initial placement of every LANTA bus
+                marker_obj[this.VehicleId] = L.marker([this.Latitude, this.Longitude], { icon: lanta }).bindPopup("System: LANTA<br>"+"VID: "+this.VehicleId).addTo(map);
+            });
+
+        });
+        data = null;
+    });
+}
+
+update_initial();
 check_ip();
 
 mymap = L.map('mapid', leaflet_config).setView([40.604377, -75.372161], 16); //sets center of map & zoom level
