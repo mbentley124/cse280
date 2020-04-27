@@ -1,3 +1,4 @@
+'use strict';
 /* DEFINE TILE LAYERS */
 
 // tile_style['dark'] = L.tileLayer(tile_server_url_dark, { //takes tile server URL and will return a tile
@@ -15,6 +16,8 @@ tile_style['default'] = L.tileLayer(tile_server_url, { //takes tile server URL a
     maxZoom: 18,
 });
 
+var mymap;
+var ic, icb;
 
 
 //change window size
@@ -32,7 +35,7 @@ if (window.innerWidth > 600) {
 /* DRAW THE MAP */
 
 function sync_callback(data) {
-    json = data;
+    var json = data;
     if(!(json.ip).includes("128.180.27")) {
         tile_style['dark'] = tile_style['light'] = tile_style['default'] = L.tileLayer(tile_server_url_mapbox, { //takes tile server URL and will return a tile
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -43,7 +46,7 @@ function sync_callback(data) {
 
 //determine what tileservers to load
 function check_ip() {
-    json = null;
+    var json = null;
     $.ajax({
         dataType: "json",
         url: "https://api.ipify.org?format=jsonp&callback=?",
@@ -330,6 +333,8 @@ function update_map(map) {
                 });
 
             });
+
+        data = null;
     });
     //NOW WE ARE OUT OF ifFirstRun
     //TODO: fix this (doesn't account for LANTA). ATM, nothing updates after initial placement
