@@ -271,7 +271,7 @@ function draw_stops(map) {
 
 function update_map(map) {
     //console.log(map)
-    $.getJSON("bus_data.json", function(data) { //gets data from JSON file which was created by scraper
+    $.getJSON("https://bus.codyben.me/bus_data.json", function(data) { //gets data from JSON file which was created by scraper
             
             $.each(data.lehigh, function() {
                 // cardinality_arr[this.vid] = new Set();
@@ -326,7 +326,7 @@ function update_map(map) {
 }
 
 function update_initial() {
-    $.getJSON("bus_data.json", function(data) { //gets data from JSON file which was created by scraper
+    $.getJSON("https://bus.codyben.me/bus_data.json", function(data) { //gets data from JSON file which was created by scraper
         $.each(data.lehigh, function() { //LOOP: loops through every Lehigh bus and 
             //places it initially on map
             // cardinality_arr[this.vid] = new Set();
@@ -358,10 +358,10 @@ function update_initial() {
     });
 }
 
-update_initial();
 check_ip();
 
 mymap = L.map('mapid', leaflet_config).setView([40.604377, -75.372161], 16); //sets center of map & zoom level
+update_initial();
 
 draw_stops(mymap);
 toggle_style((args.get("style") == null) ? check_dark() : args.get("style"));
