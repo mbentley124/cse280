@@ -325,7 +325,7 @@ function update_map(map) {
     // });
 }
 
-function update_initial() {
+function update_initial(map) {
     $.getJSON("https://bus.codyben.me/bus_data.json", function(data) { //gets data from JSON file which was created by scraper
         $.each(data.lehigh, function() { //LOOP: loops through every Lehigh bus and 
             //places it initially on map
@@ -361,7 +361,7 @@ function update_initial() {
 check_ip();
 
 mymap = L.map('mapid', leaflet_config).setView([40.604377, -75.372161], 16); //sets center of map & zoom level
-update_initial();
+update_initial(mymap);
 
 draw_stops(mymap);
 toggle_style((args.get("style") == null) ? check_dark() : args.get("style"));
