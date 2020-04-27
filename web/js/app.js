@@ -288,7 +288,14 @@ function update_map(map) {
                 } else {
                     img = lu;
                 }
-                var loc_list = [this.lat, this.long]
+                var vid = this.vid;
+                var loc_list = [this.lat, this.long];
+                if(!(vid in marker_obj)) {
+                    marker_obj[vid] = L.marker(loc_list, { icon: lehigh }).bindPopup("System: LU-TPS<br>"+"VID: "+vid).addTo(map);
+                } else {
+                    var marker = (marker_obj[vid]);
+                    marker.setLatLng(loc_list).update();
+                }
                 var marker = (marker_obj[this.vid]);
                 marker.setLatLng(loc_list).update();
             });
@@ -297,9 +304,16 @@ function update_map(map) {
                 // cardinality_arr[this.vid] = new Set();
                 // console.log(cardinality_arr);
                 $.each(data.lanta[k], function() {
+                    var vid = this.VehicleId;
                     var loc_list = [this.Latitude, this.Longitude]
-                    var marker = (marker_obj[this.VehicleId]);
-                    marker.setLatLng(loc_list).update();
+                    
+                    if(!(vid in marker_obj)) {
+                        marker_obj[vid] = L.marker(loc_list, { icon: lanta }).bindPopup("System: LANTA<br>"+"VID: "+vid).addTo(map);
+                    } else {
+                        var marker = (marker_obj[vid]);
+                        marker.setLatLng(loc_list).update();
+                    }
+                   
                     // marker_obj[this.vid] = L.marker(, {icon: lanta}).addTo(map);
                 });
 
