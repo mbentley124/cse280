@@ -30,8 +30,10 @@ Estimated time allocated this week: hours.
 - Looking into a better/faster tileserver.
   - Or maybe we'll go back to Mapbox.
 - Added Lehigh stops back to scraper.
+- Fixed nasty memory/logic error.
+  - Map should be significantly more performant/responsive.
 
-Estimated time allocated this week: 2 hour.
+Estimated time allocated this week: 5 hours.
 
 ### Hansen Lukman
 - 
