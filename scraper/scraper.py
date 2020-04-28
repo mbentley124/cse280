@@ -134,6 +134,20 @@ while True:
         stop_dict['lanta'].append(get_lanta_stops(lanta_rid))
 
     i = 0
+    # gets lehigh bus data and puts it in JSON file
+    all_dict['lehigh'] = None #make_request_to_lehigh(meta)
+    time_prev = time_scraped_str
+    file_all_times_out = open("data/all/bus_data.json", "w+") # open file IMMEDIATELY before writing
+    file_all_times_out.write(json.dumps(all_dict))
+    file_all_times_out.close()
+    all_dict['lehigh'] = all_dict['lanta'] = []
+
+# gets Lehigh stop data and puts it in JSON file
+    stop_dict['lehigh'] = get_lehigh_stops()
+    file_all_stops_out = open("data/all/stops.json", "w+")
+    file_all_stops_out.write("var stops = "+json.dumps(stop_dict)) #need to do this since we load this on page load in a simple way.
+    file_all_times_out.close()
+    stop_dict['lehigh'] = stop_dict['lanta'] = []
     try:
         cnx = mysql.connector.connect(  user='busapp',
                                         password='busapp',
@@ -161,17 +175,3 @@ while True:
             cnx.close()
             print("Data was inserted.")
 
-# gets lehigh bus data and puts it in JSON file
-    all_dict['lehigh'] = None #make_request_to_lehigh(meta)
-    time_prev = time_scraped_str
-    file_all_times_out = open("data/all/bus_data.json", "w+") # open file IMMEDIATELY before writing
-    file_all_times_out.write(json.dumps(all_dict))
-    file_all_times_out.close()
-    all_dict['lehigh'] = all_dict['lanta'] = []
-
-# gets Lehigh stop data and puts it in JSON file
-    stop_dict['lehigh'] = get_lehigh_stops()
-    file_all_stops_out = open("data/all/stops.json", "w+")
-    file_all_stops_out.write("var stops = "+json.dumps(stop_dict)) #need to do this since we load this on page load in a simple way.
-    file_all_times_out.close()
-    stop_dict['lehigh'] = stop_dict['lanta'] = []
