@@ -50,14 +50,14 @@ function sync_callback(data) {
 
 //determine what tileservers to load
 function check_ip() {
-    var json = null;
-    $.ajax({
-        dataType: "json",
-        url: "https://api.ipify.org?format=jsonp&callback=?",
-        async: false,
-        success: sync_callback,
-      });
-      console.log(json);
+    // var json = null;
+    // $.ajax({
+    //     dataType: "json",
+    //     url: "https://api.ipify.org?format=jsonp&callback=?",
+    //     async: false,
+    //     success: sync_callback,
+    //   });
+    //   console.log(json);
 }
 //determine if we should make it dark or not.
 function check_dark() {
@@ -114,6 +114,7 @@ function do_location() {
     } else {
       alert("Geolocation is not supported by this browser.");
     }
+    // draw_stops(mymap);
 }
 
 function distance(lat1, lon1, lat2, lon2, unit) {
@@ -143,42 +144,67 @@ function sortByKey(array, key) {
     return array.sort(function(a, b) {
         var x = a[key];
         var y = b[key];
+        // console.log(x);
+        // console.log(y);
         return ((x < y) ? -1 : ((x > y) ? 1 : 0));
     });
 }
 
 function calc_nearest(position) {
-    lat = position.coords.latitude;
-    lon = position.coords.longitude;
-    L.marker([lat, lon], { icon: you }).addTo(mymap);
-    dist_arr_lu = []
-    dist_arr_lanta = []
+    var lat = position.coords.latitude;
+    var lon = position.coords.longitude;
+    L.circleMarker([lat, lon], { color: "#34eb34" }).bindPopup("My location.").addTo(mymap);
+    var dist_arr_lu = []
+    var dist_arr_lanta = []
     //replace with combined stops array
     $.each(stops.lehigh, function() {
-        b_lat = this.lon;
-        b_lon = this.lat;
-        var dist = distance(lat,lon, b_lat, b_lon, 'K');
-        var key = this.name
-        dist_arr_lu.push({"key":key, "dist":dist});
+        var b_lat = parseFloat(this.lat);
+        var b_lon = parseFloat(this.long);
+        var dist = distance(lat,lon, b_lat, b_lon, 'M');
+        var key = this.name;
+        if(isNaN(dist)) {
+            dist = 9999999999999;
+        }
+        dist_arr_lu.push({"key":key, "dist":dist, "r":dist.toString()});
     });
 
     $.each(stops.lanta, function(k, v) { //LOOP: interates through each route for LANTA
         $.each(stops.lanta[k], function() { //LOOP: iterates through each stop on that route
-            b_lat = this.Longitude;
-            b_lon = this.Latitude;
-            var dist = distance(lat,lon, b_lat, b_lon, 'K');
+            var b_lon = this.Longitude;
+            var b_lat = this.Latitude;
+            var dist = distance(lat,lon, b_lat, b_lon, 'M');
             // console.log(dist);
+            if(isNaN(dist)) {
+                dist = 9999999999999;
+            }
             var key = this.Name
-            dist_arr_lanta.push({"key":key, "dist":dist});
+            dist_arr_lanta.push({"key":key, "dist":dist, "r":dist.toString()});
+            // console.log(dist_arr_lanta);
         });
     });
-    result_lu = sortByKey(dist_arr_lu, "dist")[0];
+    var result_lu = sortByKey(dist_arr_lu, "dist")[0];
     // stop_arr[result_lu.key].openPopup();
     console.log(result_lu);
-    result_lanta = sortByKey(dist_arr_lanta, "dist")[0];
+    var result_lanta = sortByKey(dist_arr_lanta, "dist")[0];
+    console.log(result_lanta);
     // stop_arr[result_lanta.key].openPopup();
-    alert("Nearest Lehigh Stop: "+result_lu.key);
-    alert("Nearest LANTA Stop: "+result_lanta.key);
+    var close_key = result_lu.key;
+    var close_dist= result_lu.dist;
+    if(result_lanta.dist < result_lu.dist) {
+        close_key = result_lanta.key;
+        close_dist = result_lanta.dist;
+    }
+    console.log(close_key);
+    var data_str;
+    var popup = stop_arr[close_key].getPopup();
+    data_str= popup.getContent();
+    stop_arr[close_key].openPopup();
+    popup.setContent(data_str+"<br>~"+close_dist.toFixed(2)+" miles")
+    // 
+
+    
+    // alert("Nearest Lehigh Stop: "+result_lu.key);
+    // alert("Nearest LANTA Stop: "+result_lanta.key);
 
 }
 
@@ -247,16 +273,16 @@ var lanta = L.icon({
 
 function draw_stops(map) {
     $.each(stops.lehigh, function() { //LOOP: gets all stops for lehigh and places them on map
-        L.circleMarker([this.lat, this.long], { color: "#68310A" }).bindPopup(this.name).addTo(map);
-        stop_arr[this.name] = [this.lat, this.long];
+        
+        stop_arr[this.name] = L.circleMarker([this.lat, this.long], { color: "#68310A" }).bindPopup(this.name).addTo(map);
 
         //  console.log(cardinality_arr);
     });
 
     $.each(stops.lanta, function(k, v) { //LOOP: interates through each route for LANTA
         $.each(stops.lanta[k], function() { //LOOP: iterates through each stop on that route
-            L.circleMarker([this.Latitude, this.Longitude], {color: "#004BBD" }).bindPopup(this.Name).addTo(map);
-            stop_arr[this.Name] = [this.Latitude, this.Longitude];
+            
+            stop_arr[this.Name] = L.circleMarker([this.Latitude, this.Longitude], {color: "#004BBD" }).bindPopup(this.Name).addTo(map);
         });
     });
 }
