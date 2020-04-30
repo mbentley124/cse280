@@ -199,7 +199,9 @@ function calc_nearest(position) {
     var popup = stop_arr[close_key].getPopup();
     data_str= popup.getContent();
     stop_arr[close_key].openPopup();
-    popup.setContent(data_str+"<br>~"+close_dist.toFixed(2)+" miles")
+    if(!data_str.includes("miles")){
+        popup.setContent(data_str+"<br>~"+close_dist.toFixed(2)+" miles");
+    }
     // 
 
     
