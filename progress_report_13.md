@@ -41,5 +41,7 @@ Estimated time allocated this week: 5 hours.
 Estimated time allocated this week: hour.
 
 ### Joe Malisov
-- 
-Estimated time allocated this week: hours.
+- Looking into android development and best way to carry over our app
+- Discussed caching techniques with Cody
+- Discussed best ways to obtain routes from backend 
+Estimated time allocated this week: 2 hours.
