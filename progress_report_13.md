@@ -41,9 +41,10 @@ Estimated time allocated this week: 2 hours.
 Estimated time allocated this week: 5 hours.
 
 ### Hansen Lukman
-- 
+- Assisted final presentation creation
+- Some UI work and bug fixes
 
-Estimated time allocated this week: hour.
+Estimated time allocated this week: 1.5 hour.
 
 ### Joe Malisov
 - Looking into android development and best way to carry over our app
