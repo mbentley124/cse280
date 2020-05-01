@@ -1,7 +1,10 @@
 # Progress Report 13
 
 ## Summary of Work Completed
-- 
+- more catching
+- research into several aspects (other tile servers, android dev)
+- firewall update
+
 
 ### Goals completed this week
 - 
@@ -10,10 +13,10 @@
 - 
 
 ### Challenges faced this week
-- 
+- generally overwhelmed with different assignments
 
 ### Goals for next week
-- 
+- complete document describing work so far (manual) and goals for next semester
 
 ## Individual Member Contributions
 
@@ -43,5 +46,6 @@ Estimated time allocated this week: hour.
 ### Joe Malisov
 - Looking into android development and best way to carry over our app
 - Discussed caching techniques with Cody
-- Discussed best ways to obtain routes from backend 
+- Discussed best ways to obtain routes from backend
+
 Estimated time allocated this week: 2 hours.
