@@ -23,9 +23,11 @@
 For each group member, list the individual contributions, and a link to proof in the form of a commit to your group repository. At the end, provide an estimate for how many hours these contributions took to complete.
 
 ### Michael Bentley
-- 
+- Created final presentation for project
+- Discussed plans for backend
+- Thought through future plans
 
-Estimated time allocated this week: hours.
+Estimated time allocated this week: 2 hours.
 
 ### Cody Benkoski
 - Configured firewall with more granular permissions since most systems are stood up.
