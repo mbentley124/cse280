@@ -21,11 +21,12 @@ The goal of this project is to integrate the bus tracking system of Lehigh Unive
 
 ## Technology Used:
 - Python script for web scraping from Lehigh & LANTA bus websites
-- MapBox, Leaflet, Javascript for displaying map
+- Leaflet for map display.
+- Self hosted MapTiles tileserver.
 - PureCSS for User Interface styling
 - SQL database
-- Javaspark backend
-- scraped data is put in JSON files (which are then put in database)
+- Spark (Java) backend.
+- Scraped data is put in JSON files (which are then put in database)
 
 ## Team member contributions
 
