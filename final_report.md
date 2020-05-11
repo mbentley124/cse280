@@ -10,6 +10,9 @@ The goal of this project is to integrate the bus tracking system of Lehigh Unive
 ### Joseph Malisov
 
 ### Michael Bentley
+Most of this semester was spent setting up the backend for the website to use. Currently the website uses the backend directly from lehigh and lanta. The backend, which I am currently in the process of creating, will replace this. It is setup using Maven, with all the depency's managed within that. These depencies include jdbc, which is used to make the database queries, and spark, which is used to manage the backend routes (both of which were used in CSE 216). There is an intial route setup on the backend which retreives the routes that a bus travels. There is a minor issue with the campus connector route since sometimes stops are missing from the data (should be able to fix it once buses are back up and running). The specifics of the route determination code was written by Cody and Joe. 
+
+In order to run the code on one's own machine there is a script called ssh_forwarding.sh. This forwards the proper port to the database so that jdbc is able to connect to the mysql database properly. This script should not be required for running backend on the server, but only on your personal device. In terms of future plans there are list of backend routes (in the team drive) which are planned to be setup. There are some routes in that list which are stretch goals (i.e. route highlighting file). In the future in addition to setting up these planned routes the backend needs to be integrated with the frontend and the backend needs to be setup on the server. 
 
 ### Cody Benkoski
 Overall this semester I spent a lot of time on getting our tileservers and doing a lot of behind the scenes devops work. Despite taking a bit of time, it was a great learning experience to stand everything up from nothing. Currently, we have a few VCLs to handle expiring tiles, along with handling some relatively static routes. 
