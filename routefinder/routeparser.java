@@ -109,7 +109,7 @@ class routeparser{
         password = args[1];
         HashMap<Integer, ArrayList<String>> route_map = new HashMap<>();
         try {
-            Class.forName("com.mysql.jdbc.Driver"); 
+            Class.forName("com.mysql.cj.jdbc.Driver"); 
         } catch (ClassNotFoundException e1) {
             e1.printStackTrace();
         }

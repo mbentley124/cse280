@@ -20,7 +20,7 @@ import spark.Route;
 public class App {
     public static void main(String[] args) {
         try {
-            Class.forName("com.mysql.jdbc.Driver"); 
+            Class.forName("com.mysql.cj.jdbc.Driver"); 
         } catch (ClassNotFoundException e1) {
             e1.printStackTrace();
         }
