@@ -3,11 +3,13 @@ import random as rand
 from BusRoute import BusRoute
 from BusStop import BusStop
 from Bus import Bus
+import time as t
 class LANTAScraper:
     routes = []
     cleaned_routes = []
     buses = []
     stops = []
+    last_stops = t.time()
     def __init__(self, routes = []):
         self.routes = routes #init with predetermined route numbers if needed
         print("Initialized LANTAScraper | PID: {}".format(os.getpid()))
@@ -89,9 +91,14 @@ class LANTAScraper:
         return bus_list
 
     def request_stops(self, url = "https://realtimelanta.availtec.com/InfoPoint/rest/RouteDetails/Get/{}", processing = None, return_data = False):
+        curr_time = t.time()
+        if (self.last_stops - curr_time > 900) or (not self.stops):
+            self.last_stops = t.time()
+        else:
+            return self.stops
+        # print(self.cleaned_routes)
         new_stops = []
         no_cache = str(rand.randrange(879006685))
-        # print(self.cleaned_routes)
         for route in self.cleaned_routes:
             rid = route["route_id"]
             # print(url.format(str(rid)))

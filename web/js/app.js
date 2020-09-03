@@ -158,8 +158,8 @@ function calc_nearest(position) {
     var dist_arr_lanta = []
     //replace with combined stops array
     $.each(stops.lehigh, function() {
-        var b_lat = parseFloat(this.lat);
-        var b_lon = parseFloat(this.long);
+        var b_lat = parseFloat(this.latitude);
+        var b_lon = parseFloat(this.longitude);
         var dist = distance(lat,lon, b_lat, b_lon, 'M');
         var key = this.name;
         if(isNaN(dist)) {
@@ -265,7 +265,7 @@ var cc = L.icon({
     // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
 });
 
-var lanta = L.icon({
+const lanta = L.icon({
     iconUrl: make_icon_bus("#FFFFFF", "#1500ff"),
 
     iconSize: ic, // size of the icon
@@ -273,73 +273,147 @@ var lanta = L.icon({
     // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
 });
 
+const lehigh = L.icon({
+    iconUrl: make_icon_bus("#FFFFFF", "#68310A"),
+
+    iconSize: ic, // size of the icon
+    //iconAnchor:   [22, 94], // point of the icon which will correspond to marker's location
+    // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
+});
+
+const new_position = L.icon(
+    {
+        iconUrl: make_icon_bus("#dbddde7d", "#dbddde"),
+        iconSize: ic,
+    }
+);
+
 function draw_stops(map) {
     $.each(stops.lehigh, function() { //LOOP: gets all stops for lehigh and places them on map
         
-        stop_arr[this.name] = L.circleMarker([this.lat, this.long], { color: "#68310A" }).bindPopup(this.name).addTo(map);
+        stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#68310A" }).bindPopup(this.name).addTo(map);
 
         //  console.log(cardinality_arr);
     });
 
-    $.each(stops.lanta, function(k, v) { //LOOP: interates through each route for LANTA
-        $.each(stops.lanta[k], function() { //LOOP: iterates through each stop on that route
-            
-            stop_arr[this.Name] = L.circleMarker([this.Latitude, this.Longitude], {color: "#004BBD" }).bindPopup(this.Name).addTo(map);
-        });
+    $.each(stops.lanta, function() { //LOOP: gets all stops for lehigh and places them on map
+        
+        stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#004BBD" }).bindPopup(this.name).addTo(map);
+
+        //  console.log(cardinality_arr);
     });
+
 }
 
 function update_map(map) {
     //console.log(map)
-    $.getJSON("https://bus.codyben.me/bus_data.json", function(data) { //gets data from JSON file which was created by scraper
+    $.getJSON("bus_data.json", function(data) { //gets data from JSON file which was created by scraper
             
             $.each(data.lehigh, function() {
                 // cardinality_arr[this.vid] = new Set();
                 // console.log(cardinality_arr);
-                if (this.key == "CC") {
-                    img = cc;
-                    route_to_use = cc_routes;
-                } else if (this.key == "PE") {
-                    img = pe;
-                    route_to_use = pe_routes;
-                } else if (this.key == "FW") {
-                    img = fw;
-                    route_to_use = fw_routes;
-                } else {
-                    img = lu;
-                }
-                var vid = this.vid;
-                var loc_list = [this.lat, this.long];
+                // let img = lu;
+                // if (this.key == "CC") {
+                //     img = cc;
+                //     route_to_use = cc_routes;
+                // } else if (this.key == "PE") {
+                //     img = pe;
+                //     route_to_use = pe_routes;
+                // } else if (this.key == "FW") {
+                //     img = fw;
+                //     route_to_use = fw_routes;
+                // }
+                const vid = this.bus_id;
+                var loc_list = [this.latitude, this.longitude];
+                const lc = L.LatLng(this.latitude, this.longitude);
                 if(!(vid in marker_obj)) {
-                    marker_obj[vid] = L.marker(loc_list, { icon: lehigh }).bindPopup("System: LU-TPS<br>"+"VID: "+vid).addTo(map);
-                } else {
-                    var marker = (marker_obj[vid]);
-                    marker.setLatLng(loc_list).update();
+                    marker_obj[vid] = L.Marker.movingMarker([loc_list, loc_list],[29000000000],{ icon: lehigh }).bindPopup("System: LU-TPS<br>"+"VID: "+vid).addTo(map);
+                    return 1;
                 }
-                var marker = (marker_obj[this.vid]);
-                marker.setLatLng(loc_list).update();
+                let marker = (marker_obj[vid]);
+                const {lat, lng} = marker.getLatLng();
+
+                if((lat === loc_list[0]) && (lng === loc_list[1])) {
+                    return 1;
+                } else if(marker.isRunning()) {
+                    return 1;
+                }
+                $.getJSON(`https://routeserver.codyben.me/route/v1/driving/${loc_list[1]},${loc_list[0]};${lng},${lat}?overview=full`, function(response) {
+                const pairs = polyline.decode(response.routes[0].geometry);
+                // console.log(marker.isEnded());
+                map.removeLayer(marker);
+                marker =  L.Marker.movingMarker([[lat, lng], loc_list],[1000000000],{ icon: lehigh }).bindPopup("System: LU-TPS<br>"+"VID: "+vid).addTo(map);
+                marker.moveTo(pairs[pairs.length - 1], 1);
+                $.each(pairs.reverse(), function(){
+                    // console.log(this);
+                    marker.addLatLng(this, [1400]);
+                });
+                marker_obj[vid] = marker;
+                marker.start();
+                if(vid in old_pairs) {
+                    old_pairs[vid].removeFrom(map);
+                }
+                // console.log(marker.isEnded());
+                const poly = L.polyline(polyline.decode(response.routes[0].geometry));
+                    // console.log(poly);
+                poly.addTo(map);
+                old_pairs[vid] = poly;
+                // });
+
+                });
+                // console.log(marker.isRunning());
+                // marker.setLatLng(loc_list).update();
+                // var marker = (marker_obj[this.vid]);
+                // marker.setLatLng(loc_list).update();
             });
 
-            $.each(data.lanta, function(k, v) {
+            $.each(data.lanta, function() {
                 // cardinality_arr[this.vid] = new Set();
                 // console.log(cardinality_arr);
-                $.each(data.lanta[k], function() {
-                    var vid = this.VehicleId;
-                    var loc_list = [this.Latitude, this.Longitude]
-                    
-                    if(!(vid in marker_obj)) {
-                        marker_obj[vid] = L.marker(loc_list, { icon: lanta }).bindPopup("System: LANTA<br>"+"VID: "+vid).addTo(map);
-                    } else {
-                        var marker = (marker_obj[vid]);
-                        marker.setLatLng(loc_list).update();
-                    }
-                   
-                    // marker_obj[this.vid] = L.marker(, {icon: lanta}).addTo(map);
+                const vid = this.bus_id;
+                var loc_list = [this.latitude, this.longitude];
+
+                
+                // const vid = this.bus_id;
+                var loc_list = [this.latitude, this.longitude];
+                const lc = L.LatLng(this.latitude, this.longitude);
+                if(!(vid in marker_obj)) {
+                    marker_obj[vid] = L.Marker.movingMarker([loc_list, loc_list],[29000000000],{ icon: lanta }).bindPopup("System: LANTA<br>"+"VID: "+vid).addTo(map);
+                    return 1;
+                }
+                let marker = (marker_obj[vid]);
+                const {lat, lng} = marker.getLatLng();
+
+                if((lat === loc_list[0]) && (lng === loc_list[1])) {
+                    return 1;
+                } else if(marker.isRunning()) {
+                    return 1;
+                }
+                $.getJSON(`https://routeserver.codyben.me/route/v1/driving/${loc_list[1]},${loc_list[0]};${lng},${lat}?overview=full`, function(response) {
+                const pairs = polyline.decode(response.routes[0].geometry);
+                // console.log(marker.isEnded());
+                // marker.removeFrom(map);
+                // marker = L.Marker.movingMarker([[lat, lng], loc_list],[1000000000],{ icon: lanta }).bindPopup("System: LANTA<br>"+"VID: "+vid).addTo(map);
+                marker.moveTo(pairs[pairs.length - 1], 1);
+
+                // old_pairs[vid] = L.marker(loc_list,{ icon: new_position }).addTo(map);
+                $.each(pairs.reverse(), function(){
+                    // console.log(this);
+                    marker.addLatLng(this, [1400]);
                 });
+                marker_obj[vid] = marker;
+                marker.start();
+                if(vid in old_pairs) {
+                    old_pairs[vid].removeFrom(map);
+                }
+                // console.log(marker.isEnded());
+                const poly = L.polyline(polyline.decode(response.routes[0].geometry));
+                    // console.log(poly);
+                poly.addTo(map);
+                old_pairs[vid] = poly;
+                // marker_obj[this.vid] = L.marker(, {icon: lanta}).addTo(map);
 
             });
-
-        data = null;
     });
     //NOW WE ARE OUT OF ifFirstRun
     //TODO: fix this (doesn't account for LANTA). ATM, nothing updates after initial placement
@@ -356,51 +430,51 @@ function update_map(map) {
     //         marker.setLatLng([this.lat, this.long]).update();
     //         marker.bindPopup("<b>" + this.key + "</b><br>" + "Going to " + this.next_stop + " in " + this.arrival_delta);
     //     });
-    // });
-}
-
-function update_initial(map) {
-    $.getJSON("https://bus.codyben.me/bus_data.json", function(data) { //gets data from JSON file which was created by scraper
-        $.each(data.lehigh, function() { //LOOP: loops through every Lehigh bus and 
-            //places it initially on map
-            // cardinality_arr[this.vid] = new Set();
-            // console.log(cardinality_arr);
-            if (this.key == "CC") {
-                img = cc;
-                route_to_use = cc_routes;
-            } else if (this.key == "PE") {
-                img = pe;
-                route_to_use = pe_routes;
-            } else if (this.key == "FW") {
-                img = fw;
-                route_to_use = fw_routes;
-            } else {
-                img = lu;
-            }
-            marker_obj[this.vid] = L.marker([this.lat, this.long], { icon: img }).bindPopup("System: LU-TPS<br>"+"VID: "+this.vid).addTo(map);
-        });
-
-        $.each(data.lanta, function(k, v) { //LOOP: goes through every route for LANTA
-            // cardinality_arr[this.vid] = new Set();
-            // console.log(cardinality_arr);
-            $.each(data.lanta[k], function() { //LOOP: initial placement of every LANTA bus
-                marker_obj[this.VehicleId] = L.marker([this.Latitude, this.Longitude], { icon: lanta }).bindPopup("System: LANTA<br>"+"VID: "+this.VehicleId).addTo(map);
-            });
-
-        });
-        data = null;
     });
 }
+
+// function update_initial(map) {
+//     $.getJSON("https://bus.codyben.me/bus_data.json", function(data) { //gets data from JSON file which was created by scraper
+//         $.each(data.lehigh, function() { //LOOP: loops through every Lehigh bus and 
+//             //places it initially on map
+//             // cardinality_arr[this.vid] = new Set();
+//             // console.log(cardinality_arr);
+//             if (this.key == "CC") {
+//                 img = cc;
+//                 route_to_use = cc_routes;
+//             } else if (this.key == "PE") {
+//                 img = pe;
+//                 route_to_use = pe_routes;
+//             } else if (this.key == "FW") {
+//                 img = fw;
+//                 route_to_use = fw_routes;
+//             } else {
+//                 img = lu;
+//             }
+//             marker_obj[this.vid] = L.marker([this.lat, this.long], { icon: img }).bindPopup("System: LU-TPS<br>"+"VID: "+this.vid).addTo(map);
+//         });
+
+//         $.each(data.lanta, function(k, v) { //LOOP: goes through every route for LANTA
+//             // cardinality_arr[this.vid] = new Set();
+//             // console.log(cardinality_arr);
+//             $.each(data.lanta[k], function() { //LOOP: initial placement of every LANTA bus
+//                 marker_obj[this.VehicleId] = L.marker([this.Latitude, this.Longitude], { icon: lanta }).bindPopup("System: LANTA<br>"+"VID: "+this.VehicleId).addTo(map);
+//             });
+
+//         });
+//         data = null;
+//     });
+// }
 
 check_ip();
 
 mymap = L.map('mapid', leaflet_config).setView([40.604377, -75.372161], 16); //sets center of map & zoom level
 draw_stops(mymap);
-update_initial(mymap);
+// update_initial(mymap);
 
 
 toggle_style((args.get("style") == null) ? check_dark() : args.get("style"));
 mymap.addLayer(tile_style['default']);
 update_map(mymap);
-setInterval(function(mymap) { update_map(mymap) }, 1000, mymap); //TODO: will update map every 'interval'
+setInterval(function(mymap) { update_map(mymap) }, 2000, mymap); //TODO: will update map every 'interval'
 

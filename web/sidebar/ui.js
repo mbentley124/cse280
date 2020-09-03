@@ -51,8 +51,6 @@
         //Figure out a way to not expose URL, unless it's fine
         fetch(url)
         .then(response)
-        .then(data){
-            //Do something with json, probably store the routes
-        }
+        .then(data => {})
     }
 }(this, this.document));
