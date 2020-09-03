@@ -1,5 +1,7 @@
 service_status = {"tileserver":false, "routeserver":false};
-
+const ez_error = function (xhr, textStatus, errorThrown) {
+	console.error(textStatus);
+}
 
 
 function populate_true(service) {
@@ -12,6 +14,7 @@ function check_tileserver() {
 	  success: function() {
 	  	populate_true('tileserver');
 	  },
+	  error: ez_error,
 	});
 }
 
@@ -21,6 +24,7 @@ function check_routeserver() {
 	  success: function() {
 	  	populate_true('tileserver');
 	  },
+	  error: ez_error,
 	});
 }
 
