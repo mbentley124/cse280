@@ -1,3 +1,7 @@
+/**
+ * Finds bus routes by querying DB and then parsing repeating patterns
+ */
+
 import java.sql.*;  
 import java.io.*;
 import java.util.*;
@@ -51,7 +55,11 @@ class routeparser{
         return res;
     }
 
-
+    /**
+     * Deduplicate adjacent stops
+     * @param big_arr
+     * @return
+     */
     private static ArrayList<String> dedup_adjacent(String[] big_arr) {
         ArrayList<String> ret = new ArrayList<>();
         String old = big_arr[0];
@@ -100,6 +108,7 @@ class routeparser{
     }
 
     public static void main(String args[]) {
+        //check that there's only 2 args
         if(args.length == 0 || args.length > 2) {
             System.out.println("Invalid number of arguments.");
             System.out.println("Use: routeparser <username> <password>");
@@ -113,6 +122,8 @@ class routeparser{
         } catch (ClassNotFoundException e1) {
             e1.printStackTrace();
         }
+
+        //contect to DB
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://"+host+":3306/busapp?serverTimezone=UTC", username, password);) {
             
             PreparedStatement preparedStatement = conn.prepareStatement("SELECT route_id,GROUP_CONCAT(current_stop), GROUP_CONCAT(retrieved), GROUP_CONCAT(latitude), GROUP_CONCAT(longitude) from `lehighbusdata` WHERE current_stop is not null AND current_stop != 'NULL' AND latitude is not nULL and longitude is not null GROUP BY route_id, vehicle_id,DATEDIFF(CURDATE(), retrieved)");
