@@ -291,14 +291,14 @@ const new_position = L.icon(
 function draw_stops(map) {
     $.each(stops.lehigh, function() { //LOOP: gets all stops for lehigh and places them on map
         
-        stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#68310A" }).bindPopup(this.name).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
+        stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#68310A" }).bindPopup(this.name).addTo(map).on('click', function(e) { console.log(this.name); map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
 
         //  console.log(cardinality_arr);
     });
 
-    $.each(stops.lanta, function() { //LOOP: gets all stops for lehigh and places them on map
+    $.each(stops.lanta, function() { //LOOP: gets all stops for lanta and places them on map
         
-        stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#004BBD" }).bindPopup(this.name).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });;
+        stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#004BBD" }).bindPopup(this.name, {maxWidth: '500px'}).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
 
         //  console.log(cardinality_arr);
     });
