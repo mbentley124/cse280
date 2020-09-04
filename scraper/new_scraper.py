@@ -13,7 +13,7 @@ def write_to_db(data, service):
 
 def log_error(e):
     curr_time = str(datetime.datetime.now())
-    print(curr_time+"\t"+e)
+    print(curr_time+"\t"+str(e))
 
 lehigh = LehighScraper()
 lanta = LANTAScraper()
