@@ -36,7 +36,7 @@ while True:
     try:
         stops = {"lanta": lanta.get_stops(), "lehigh": lehigh.get_stops()}
         buses = {"lanta": lanta.get_buses(), "lehigh": lehigh.get_buses()}
-        routes = {"lanta": [], "lehigh": lehigh.get_routes()}
+        routes = {"lanta": [], "lehigh": lehigh.request_routes(return_data=True)}
         dict_end = t.time()
         with open("data/all/stops.json", "w+") as st:
             st.write("const stops = "+json.dumps(stops)+";")
