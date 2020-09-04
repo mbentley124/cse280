@@ -36,11 +36,14 @@ while True:
     try:
         stops = {"lanta": lanta.get_stops(), "lehigh": lehigh.get_stops()}
         buses = {"lanta": lanta.get_buses(), "lehigh": lehigh.get_buses()}
+        routes = {"lanta": [], "lehigh": lehigh.get_routes()}
         dict_end = t.time()
-        with open("data/all/stops.json", "w") as st:
+        with open("data/all/stops.json", "w+") as st:
             st.write("const stops = "+json.dumps(stops)+";")
-        with open("data/all/bus_data.json", "w") as bu:
+        with open("data/all/bus_data.json", "w+") as bu:
             json.dump(fp=bu, obj=buses)
+        with open("data/all/routes.json", "w+") as ro:
+            json.dump(fp=ro, obj=routes)
     except Exception as e:
         dict_end = -1
         log_error(e)
