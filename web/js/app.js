@@ -166,19 +166,17 @@ function calc_nearest(position) {
         dist_arr_lu.push({"key":key, "dist":dist, "r":dist.toString()});
     });
 
-    $.each(stops.lanta, function(k, v) { //LOOP: interates through each route for LANTA
-        $.each(stops.lanta[k], function() { //LOOP: iterates through each stop on that route
-            var b_lon = this.Longitude;
-            var b_lat = this.Latitude;
-            var dist = distance(lat,lon, b_lat, b_lon, 'M');
-            // console.log(dist);
-            if(isNaN(dist)) {
-                dist = 9999999999999;
-            }
-            var key = this.Name
-            dist_arr_lanta.push({"key":key, "dist":dist, "r":dist.toString()});
+    $.each(stops.lanta, function() { //LOOP: interates through each route for LANTA
+        var b_lon = this.longitude;
+        var b_lat = this.latitude;
+        var dist = distance(lat,lon, b_lat, b_lon, 'M');
+        // console.log(dist);
+        if(isNaN(dist)) {
+            dist = 9999999999999;
+        }
+        var key = this.Name
+        dist_arr_lanta.push({"key":key, "dist":dist, "r":dist.toString()});
             // console.log(dist_arr_lanta);
-        });
     });
     var result_lu = sortByKey(dist_arr_lu, "dist")[0];
     // stop_arr[result_lu.key].openPopup();
@@ -305,7 +303,7 @@ function draw_stops(map) {
 
 function update_map(map) {
     //console.log(map)
-    $.getJSON("bus_data.json", function(data) { //gets data from JSON file which was created by scraper
+    $.getJSON("https://bus.codyben.me/bus_data.json", function(data) { //gets data from JSON file which was created by scraper
             
             $.each(data.lehigh, function() {
                 // cardinality_arr[this.vid] = new Set();
@@ -323,28 +321,40 @@ function update_map(map) {
                 // }
                 const vid = this.bus_id;
                 var loc_list = [this.latitude, this.longitude];
-                const lc = L.LatLng(this.latitude, this.longitude);
+                // const lc = L.LatLng(this.latitude, this.longitude);
                 if(!(vid in marker_obj)) {
                     marker_obj[vid] = L.Marker.movingMarker([loc_list, loc_list],[29000000000],{ icon: lehigh }).bindPopup("System: LU-TPS<br>"+"VID: "+vid).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
-                    return 1;
                 }
                 let marker = (marker_obj[vid]);
                 const {lat, lng} = marker.getLatLng();
+
 
                 if((lat === loc_list[0]) && (lng === loc_list[1])) {
                     return 1;
                 } else if(marker.isRunning()) {
                     return 1;
                 }
-                $.getJSON(`https://routeserver.codyben.me/route/v1/driving/${loc_list[1]},${loc_list[0]};${lng},${lat}?overview=full`, function(response) {
+
+                const proj_lat = this.projected_coords.lat;
+                const proj_long = this.projected_coords.long;
+
+                if(!proj_long || !proj_lat) {
+                    return 1;
+                }
+                $.getJSON(`https://routeserver.codyben.me/route/v1/driving/${proj_long},${proj_lat};${lng},${lat}?overview=full`, function(response) {
+                // if(response.routes[0].duration > 30) {
+                //     marker.moveTo(loc_list, [500]);
+                //     return 1; //abort on long running trips.
+                // }
                 const pairs = polyline.decode(response.routes[0].geometry);
                 // console.log(marker.isEnded());
+                marker.moveTo(loc_list, [500]);
                 map.removeLayer(marker);
                 marker =  L.Marker.movingMarker([[lat, lng], loc_list],[1000000000],{ icon: lehigh }).bindPopup("System: LU-TPS<br>"+"VID: "+vid).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
                 marker.moveTo(pairs[pairs.length - 1], 1);
                 $.each(pairs.reverse(), function(){
                     // console.log(this);
-                    marker.addLatLng(this, [1400]);
+                    marker.addLatLng(this, [1100]);
                 });
                 marker_obj[vid] = marker;
                 marker.start();
@@ -352,7 +362,7 @@ function update_map(map) {
                     old_pairs[vid].removeFrom(map);
                 }
                 // console.log(marker.isEnded());
-                const poly = L.polyline(polyline.decode(response.routes[0].geometry));
+                const poly = L.polyline(polyline.decode(response.routes[0].geometry), {color:"gray"});
                     // console.log(poly);
                 poly.addTo(map);
                 old_pairs[vid] = poly;
@@ -371,13 +381,13 @@ function update_map(map) {
                 const vid = this.bus_id;
                 var loc_list = [this.latitude, this.longitude];
 
-                
+                const proj_lat = this.projected_coords.lat;
+                const proj_long = this.projected_coords.long;
                 // const vid = this.bus_id;
                 var loc_list = [this.latitude, this.longitude];
-                const lc = L.LatLng(this.latitude, this.longitude);
+                // const lc = L.LatLng(this.latitude, this.longitude);
                 if(!(vid in marker_obj)) {
                     marker_obj[vid] = L.Marker.movingMarker([loc_list, loc_list],[29000000000],{ icon: lanta }).bindPopup("System: LANTA<br>"+"VID: "+vid).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
-                    return 1;
                 }
                 let marker = (marker_obj[vid]);
                 const {lat, lng} = marker.getLatLng();
@@ -387,7 +397,11 @@ function update_map(map) {
                 } else if(marker.isRunning()) {
                     return 1;
                 }
-                $.getJSON(`https://routeserver.codyben.me/route/v1/driving/${loc_list[1]},${loc_list[0]};${lng},${lat}?overview=full`, function(response) {
+
+                if(!proj_long || !proj_lat) {
+                    return 1;
+                }
+                $.getJSON(`https://routeserver.codyben.me/route/v1/driving/${proj_long},${proj_lat};${lng},${lat}?overview=full`, function(response) {
                 const pairs = polyline.decode(response.routes[0].geometry);
                 // console.log(marker.isEnded());
                 // marker.removeFrom(map);

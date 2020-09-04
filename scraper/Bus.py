@@ -28,7 +28,7 @@ class Bus:
     def to_dict(self):
         return self.__dict__
 
-    def compute_projection():
+    def compute_projection(self):
         cursor = cnx.cursor(prepared=True)
         cursor.execute(prepared_statement, (self.latitude, self.longitude))
         res = cursor.fetchone()
