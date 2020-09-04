@@ -6,9 +6,21 @@ import time as t
 import datetime
 from LehighScraper import LehighScraper
 from LANTAScraper import LANTAScraper
+import mysql.connector
+
+cnx = mysql.connector.connect(  user='busapp',
+                                        password='busapp',
+                                        host='localhost',
+                                        database='busapp',
+                                        auth_plugin='mysql_native_password')
+cursor = cnx.cursor(prepared=True)
+prepared_statement = """INSERT INTO transient_bus (bus_id,short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, bus_service)
+                                            VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
 def write_to_db(data, service):
-    pass
+    for bus in data:
+        bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, _ = bus 
+        cursor.execute(prepared_statement, (bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, service))
 
 
 def log_error(e):
@@ -36,11 +48,15 @@ while True:
     try:
         stops = {"lanta": lanta.get_stops(), "lehigh": lehigh.get_stops()}
         buses = {"lanta": lanta.get_buses(), "lehigh": lehigh.get_buses()}
+        routes = {"lanta": [], "lehigh": lehigh.request_routes(return_data=True)}
+        write_to_db(buses['lehigh'], "Lehigh")
         dict_end = t.time()
-        with open("data/all/stops.json", "w") as st:
+        with open("data/all/stops.json", "w+") as st:
             st.write("const stops = "+json.dumps(stops)+";")
-        with open("data/all/bus_data.json", "w") as bu:
+        with open("data/all/bus_data.json", "w+") as bu:
             json.dump(fp=bu, obj=buses)
+        with open("data/all/routes.json", "w+") as ro:
+            ro.write("const routes = "+json.dumps(routes)+";")
     except Exception as e:
         dict_end = -1
         log_error(e)
