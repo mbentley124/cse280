@@ -135,6 +135,7 @@ appears on the left side of the page.
     border: none;
     background: transparent;
     width: auto;
+    margin-block-start: 0;
 }
 
 
@@ -174,7 +175,7 @@ describing light/dark buttons in the menu
     */
 
 #topbar {
-    padding: 5px 0px 5px 16px;
+    padding: 8.25px 0px 8.25px 16px;
     background-color:#4B2913;
     border-bottom: 1px solid white;
 }
