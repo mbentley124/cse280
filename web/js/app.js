@@ -72,9 +72,7 @@ function check_dark() {
     return 'default';
 }
 
-function show_routes(){
-    $("#routes-list").toggle();
-}
+
 function toggle_style(style) { //use buttons to toggle dark mode on/off
     // console.log(style);
     // if (style in tile_style) {
@@ -478,3 +476,17 @@ mymap.addLayer(tile_style['default']);
 update_map(mymap);
 setInterval(function(mymap) { update_map(mymap) }, 2000, mymap); //TODO: will update map every 'interval'
 
+// Populate side-menu on render
+$('#stops').append('<ul class="pure-menu-list transportation-list" style="display: none; background-color: rgb(107, 46, 3); font-size: 15px;"></ul>');
+
+const keys = Object.keys(stops);
+
+$.each(keys, function(){
+    const bus = this;
+    $('.transportation-list').append('<a id="transportation-item" class="pure-menu-link" onclick="show_stops(\''+this+'\')">' + this.charAt(0).toUpperCase() + this.slice(1) + '</a>');
+    $('.transportation-list').append('<ul class="pure-menu-list" id="stops-list-'+this+'" style="display: none; background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height:125px"></ul>');
+    $.each(stops[this], function(){
+        $('#stops-list-' + bus).append('<li><a id="stops-item" class="pure-menu-link">'+this.name+'</a></li>')
+        console.log(this.name);
+    })
+})

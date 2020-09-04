@@ -99,7 +99,7 @@ appears on the left side of the page.
     bottom: 0;
     z-index: 1000;
     /* so the menu or its navicon stays above all content */
-    background: rgb(114, 67, 34);
+    background-color: #4B2913;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overflow: hidden;
@@ -117,8 +117,12 @@ appears on the left side of the page.
     /* padding: 0.6em 0 0.6em 0.6em; */
 }
 
+#menu .pure-menu-link:hover {
+    cursor: pointer;
+}
+
 #routes-item{
-    color: rgb(204, 203, 203);
+    background: rgb(102, 58, 26);
 }
 
 
@@ -171,7 +175,8 @@ describing light/dark buttons in the menu
 
 #topbar {
     padding: 5px 0px 5px 16px;
-    background-color:rgb(104, 49, 10);
+    background-color:#4B2913;
+    border-bottom: 1px solid white;
 }
 #topbar-home {
     font-size: 130%;
@@ -183,15 +188,20 @@ describing light/dark buttons in the menu
     color: rgb(230, 214, 203);
 }
 
+#stops-item {
+    height: fit-content;
+}
 
-/* -- Dynamic Button For Responsive Menu -------------------------------------*/
+/* Hide scrollbar for Chrome, Safari and Opera */
+.pure-menu-list::-webkit-scrollbar {
+  display: none;
+}
 
-
-/*
-The button to open/close the Menu is custom-made and not part of Pure. Here's
-how it works:
-*/
-
+/* Hide scrollbar for IE, Edge and Firefox */
+.pure-menu-list {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
 
 /*
 `.menu-link` represents the responsive menu toggle that shows/hides on
@@ -306,7 +316,7 @@ Hides the menu at `48em`, but modify this based on your app's needs.
     }
     #menu {
         width: 150px;
-        margin-top: 41px;
+        margin-top: 42px;
         display: block;
         left: 150px;
     }
