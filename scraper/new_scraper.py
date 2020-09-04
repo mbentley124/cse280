@@ -43,7 +43,7 @@ while True:
         with open("data/all/bus_data.json", "w+") as bu:
             json.dump(fp=bu, obj=buses)
         with open("data/all/routes.json", "w+") as ro:
-            json.dump(fp=ro, obj=routes)
+            ro.write("const routes = "+json.dumps(routes)+";")
     except Exception as e:
         dict_end = -1
         log_error(e)

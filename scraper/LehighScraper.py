@@ -7,6 +7,7 @@ class LehighScraper:
     response_data = []
     stops = []
     last_stops = t.time()
+    routes = []
     def __init__(self, scraping_url = "https://lehigh.doublemap.com/map/v2/buses"):
         self.scraping_url = scraping_url
         print("Initialized LehighScraper | PID: {}".format(os.getpid()))
@@ -85,7 +86,7 @@ class LehighScraper:
             )
         return new_stops
 
-    def request_routes(self, url = "https://lehigh.doublemap.com/map/v2/routes", processor = None, return_data = False):
+    def request_routes(self, url = "https://lehigh.doublemap.com/map/v2/routes", processing = None, return_data = False):
         # https://lehigh.doublemap.com/map/v2/routes
         curr_time = t.time()
         if (self.last_stops - curr_time > 2700) or (not self.routes):
@@ -103,7 +104,7 @@ class LehighScraper:
         if processing:
             results = processing(results)
         
-        self.routes = results.get("stops")
+        self.routes = results
 
         if return_data:
             return results
