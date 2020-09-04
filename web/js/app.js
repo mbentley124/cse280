@@ -327,7 +327,7 @@ function update_map(map) {
                 var loc_list = [this.latitude, this.longitude];
                 const lc = L.LatLng(this.latitude, this.longitude);
                 if(!(vid in marker_obj)) {
-                    marker_obj[vid] = L.Marker.movingMarker([loc_list, loc_list],[29000000000],{ icon: lehigh }).bindPopup("System: LU-TPS<br>"+"VID: "+vid).addTo(map);
+                    marker_obj[vid] = L.Marker.movingMarker([loc_list, loc_list],[29000000000],{ icon: lehigh }).bindPopup("System: LU-TPS<br>"+"VID: "+vid).addTo(map).on('click', (e) => { console.log(e.getLatLng()); map.setZoom(18) });
                     return 1;
                 }
                 let marker = (marker_obj[vid]);
@@ -342,7 +342,7 @@ function update_map(map) {
                 const pairs = polyline.decode(response.routes[0].geometry);
                 // console.log(marker.isEnded());
                 map.removeLayer(marker);
-                marker =  L.Marker.movingMarker([[lat, lng], loc_list],[1000000000],{ icon: lehigh }).bindPopup("System: LU-TPS<br>"+"VID: "+vid).addTo(map);
+                marker =  L.Marker.movingMarker([[lat, lng], loc_list],[1000000000],{ icon: lehigh }).bindPopup("System: LU-TPS<br>"+"VID: "+vid).addTo(map).on('click', (e) => { console.log(e.getLatLng()); map.setZoom(18) });;
                 marker.moveTo(pairs[pairs.length - 1], 1);
                 $.each(pairs.reverse(), function(){
                     // console.log(this);
@@ -378,7 +378,7 @@ function update_map(map) {
                 var loc_list = [this.latitude, this.longitude];
                 const lc = L.LatLng(this.latitude, this.longitude);
                 if(!(vid in marker_obj)) {
-                    marker_obj[vid] = L.Marker.movingMarker([loc_list, loc_list],[29000000000],{ icon: lanta }).bindPopup("System: LANTA<br>"+"VID: "+vid).addTo(map);
+                    marker_obj[vid] = L.Marker.movingMarker([loc_list, loc_list],[29000000000],{ icon: lanta }).bindPopup("System: LANTA<br>"+"VID: "+vid).addTo(map).on('click', (e) => { console.log(e.getLatLng()); map.setZoom(18) });;
                     return 1;
                 }
                 let marker = (marker_obj[vid]);
