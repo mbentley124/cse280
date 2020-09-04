@@ -46,7 +46,8 @@ class LehighScraper:
                 last_stop=last_stop,
                 latitude=lat,
                 longitude=lon,
-                route_id=route
+                route_id=route,
+                do_projection=True
                 ).to_dict()
             )
         return bus_list
