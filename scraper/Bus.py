@@ -33,5 +33,7 @@ class Bus:
         cursor.execute(prepared_statement, (self.latitude, self.longitude))
         res = cursor.fetchone()
         projection = res[3]
-        lat, lng = res
+        if projection is None:
+            return {"lat": None, "long": None}
+        lat, lng = projection.split(",")
         return {"lat": float(lat), "long":float(lng)}
