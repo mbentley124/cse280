@@ -18,9 +18,13 @@ prepared_statement = """INSERT INTO transient_bus (bus_id,short_name, last_stop,
                                             VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
 def write_to_db(data, service):
+    print(data)
     for bus in data:
-        bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, _ = bus 
+        bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, _ = bus.values()
+        print((bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, service)) 
         cursor.execute(prepared_statement, (bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, service))
+    
+    cnx.commit()
 
 
 def log_error(e):
@@ -50,6 +54,7 @@ while True:
         buses = {"lanta": lanta.get_buses(), "lehigh": lehigh.get_buses()}
         routes = {"lanta": [], "lehigh": lehigh.request_routes(return_data=True)}
         write_to_db(buses['lehigh'], "Lehigh")
+        write_to_db(buses['lanta'], "LANTA")
         dict_end = t.time()
         with open("data/all/stops.json", "w+") as st:
             st.write("const stops = "+json.dumps(stops)+";")
