@@ -216,7 +216,7 @@ small screens.
     top: 0;
     left: 0;
     /* "#menu width" */
-    background: lightgray;
+    background: white;
     font-size: 9.5px;
     /* change this value to increase/decrease button size */
     z-index: 10;
@@ -226,13 +226,13 @@ small screens.
 }
 
 .menu-link:hover {
-    background: rgb(134, 93, 63);
+    background: rgb(201, 196, 192);
 }
 
 .bar1, .bar2, .bar3 {
     width: 20px;
     height: 2px;
-    background-color: #333;
+    background-color: #4B2913;
     margin: 4px 0;
     transition: 0.4s;
 }
@@ -352,7 +352,7 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         width: fit-content;
     }
     #menuLink.container{
-        height: 24.8px;
+        height: 24.2px;
         padding: 8.5px;
     }
     #topbar{
