@@ -1,4 +1,4 @@
-import json
+import json, mysql.connector
 class Bus:
     cnx = mysql.connector.connect(  user='busapp',
                                         password='busapp',
