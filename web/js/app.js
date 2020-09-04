@@ -490,3 +490,10 @@ $.each(keys, function(){
         console.log(this.name);
     })
 })
+
+// Animate Hamburger Icon on smaller screens
+function animateHamburger(elem){
+    console.log("HERE")
+    elem.classList.toggle("change");
+
+}
