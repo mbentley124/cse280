@@ -18,7 +18,7 @@ prepared_statement = """INSERT INTO transient_bus (bus_id,short_name, last_stop,
                                             VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
 
 def write_to_db(data, service):
-    for bus in service:
+    for bus in data:
         bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, _ = bus 
         cursor.execute(prepared_statement, (bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, service))
 
