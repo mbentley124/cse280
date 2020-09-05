@@ -8,20 +8,19 @@ from LehighScraper import LehighScraper
 from LANTAScraper import LANTAScraper
 import mysql.connector
 
-cnx = mysql.connector.connect(  user='busapp',
+def write_to_db(data, service):
+    # print(data)
+    cnx = mysql.connector.connect(  user='busapp',
                                         password='busapp',
                                         host='localhost',
                                         database='busapp',
                                         auth_plugin='mysql_native_password')
-cursor = cnx.cursor(prepared=True)
-prepared_statement = """INSERT INTO transient_bus (bus_id,short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, bus_service)
-                                            VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-
-def write_to_db(data, service):
-    print(data)
+    cursor = cnx.cursor(prepared=True)
+    prepared_statement = """INSERT INTO transient_bus (bus_id,short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, bus_service)
+                                                VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
     for bus in data:
         bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, _,__ = bus.values()
-        print((bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, service)) 
+        # print((bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, service)) 
         cursor.execute(prepared_statement, (bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, service))
     
     cnx.commit()
