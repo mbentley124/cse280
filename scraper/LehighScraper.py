@@ -29,7 +29,7 @@ class LehighScraper:
         if return_data:
             return results
 
-    def get_buses(self):
+    def get_buses(self, cnx):
         if not self.response_data:
             self.response_data = self.request_buses()
         bus_list = []
@@ -47,7 +47,8 @@ class LehighScraper:
                 latitude=lat,
                 longitude=lon,
                 route_id=route,
-                do_projection=True
+                do_projection=True,
+                cnx=cnx
                 ).to_dict()
             )
         return bus_list

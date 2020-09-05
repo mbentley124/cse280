@@ -8,18 +8,13 @@ from LehighScraper import LehighScraper
 from LANTAScraper import LANTAScraper
 import mysql.connector
 
-def write_to_db(data, service):
+def write_to_db(data, service, cnx):
     # print(data)
-    cnx = mysql.connector.connect(  user='busapp',
-                                        password='busapp',
-                                        host='localhost',
-                                        database='busapp',
-                                        auth_plugin='mysql_native_password')
     cursor = cnx.cursor(prepared=True)
     prepared_statement = """INSERT INTO transient_bus (bus_id,short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, bus_service)
                                                 VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
     for bus in data:
-        bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, _,__, _cnx, stmt = bus.values()
+        bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, _,__ = bus.values()
         # print((bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, service)) 
         cursor.execute(prepared_statement, (bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, service))
     
@@ -34,6 +29,11 @@ lehigh = LehighScraper()
 lanta = LANTAScraper()
 
 while True:
+    cnx = mysql.connector.connect(  user='busapp',
+                                        password='busapp',
+                                        host='localhost',
+                                        database='busapp',
+                                        auth_plugin='mysql_native_password')
     begin = t.time()
     begin_lanta = t.time()
     lanta.request_routes()
@@ -50,10 +50,12 @@ while True:
     dict_begin = t.time()
     try:
         stops = {"lanta": lanta.get_stops(), "lehigh": lehigh.get_stops()}
-        buses = {"lanta": lanta.get_buses(), "lehigh": lehigh.get_buses()}
+        buses = {"lanta": lanta.get_buses(cnx), "lehigh": lehigh.get_buses(cnx)}
+        cnx.commit()
         routes = {"lanta": [], "lehigh": lehigh.request_routes(return_data=True)}
-        write_to_db(buses['lehigh'], "Lehigh")
-        write_to_db(buses['lanta'], "LANTA")
+        write_to_db(buses['lehigh'], "Lehigh", cnx)
+        write_to_db(buses['lanta'], "LANTA", cnx)
+        cnx.close()
         dict_end = t.time()
         with open("data/all/stops.json", "w+") as st:
             st.write("const stops = "+json.dumps(stops)+";")

@@ -70,7 +70,7 @@ class LANTAScraper:
         if return_data:
             return results
 
-    def get_buses(self):
+    def get_buses(self, cnx):
         bus_list = []
         for bus in self.buses:
             bus_id = bus.get("VehicleId")
@@ -86,7 +86,8 @@ class LANTAScraper:
                 latitude=lat,
                 longitude=lon,
                 route_id=route,
-                do_projection=True
+                do_projection=True,
+                cnx=cnx
                 ).to_dict()
             )
         return bus_list
