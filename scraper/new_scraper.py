@@ -72,7 +72,7 @@ while True:
     print("LANTA:  {}".format(str(lanta_time)))
     print("Lehigh: {}".format(str(lu_time)))
     print("Dict:   {}".format(str(dict_end - dict_begin)))
-    t.sleep(6)
+    t.sleep(4)
 
 
 # lanta.request_routes()
