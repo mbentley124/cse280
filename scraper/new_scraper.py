@@ -19,7 +19,7 @@ def write_to_db(data, service):
     prepared_statement = """INSERT INTO transient_bus (bus_id,short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, bus_service)
                                                 VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
     for bus in data:
-        bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, _,__ = bus.values()
+        bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, _,__, cnx, stmt = bus.values()
         # print((bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, service)) 
         cursor.execute(prepared_statement, (bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, service))
     
