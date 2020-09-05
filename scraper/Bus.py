@@ -31,8 +31,8 @@ class Bus:
     def compute_projection(self):
         cursor = self.cnx.cursor(prepared=True)
         cursor.execute(self.prepared_statement, (self.latitude, self.longitude))
-        self.cnx.commit()
         res = cursor.fetchone()
+        self.cnx.commit()
         projection = res[3]
         if projection is None:
             return {"lat": None, "long": None}
