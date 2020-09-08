@@ -22,3 +22,4 @@ The server should now be running and can be accessed through localhost:4567
 3. Determine how to go about predicting bus arrival times
 4. Implement bus arrival time prediction method (need to wait until enough data in table)
 5. Setup backend on the machine that will host the rest of the website
+6. Add some form of caching to the queries to Lehigh and Lanta
