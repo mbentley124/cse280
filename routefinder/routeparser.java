@@ -2,13 +2,13 @@
  * Finds bus routes by querying DB and then parsing repeating patterns
  */
 
+ //imports
 import java.sql.*;  
 import java.io.*;
 import java.util.*;
 import java.util.function.BooleanSupplier;
 
-
-class routeparser{  
+class routeparser{
 
     private static String username;
     private static String password;
@@ -17,9 +17,14 @@ class routeparser{
     private final static String FALLBACK_PIVOT = "Whitaker Lab"; //use this pivot is an error happens with the first one.
 
     
+    /**
+     * naively determine routes
+     */
     private static HashMap<Integer, ArrayList<String>> naive_route_determ(HashMap<Integer, ArrayList<String>> routemap) {
+        
         HashMap<Integer, ArrayList<String>> good_routes = new HashMap<>();
-        for(int rid : routemap.keySet()) {
+        
+        for(int rid : routemap.keySet()) { //for every route id in the routemap
             System.out.print("\nFinding naive route for: "+rid+" ");
             
             good_routes.put(rid, find_same_route(routemap.get(rid)));
@@ -31,8 +36,10 @@ class routeparser{
 
     }
 
+    /**
+     * helper method for naive_route_determ
+     */
     private static ArrayList<String> find_same_route(ArrayList<String> routes) {
-        int counts = 0;
         String recent = "";
         ArrayList<String> res = new ArrayList<>();
         for(int i = 0; i < routes.size(); i++) {
@@ -76,6 +83,12 @@ class routeparser{
         return pivot_unwrap(ret, PIVOT); //PICK A PIVOT THAT ISN'T A LOOP STOP (i.e Taylor College, Farrington Square)
     }
 
+    /**
+     * helper for dedup_adjacent
+     * @param deduped
+     * @param pivot
+     * @return
+     */
     private static ArrayList<String> pivot_unwrap(ArrayList<String> deduped, String pivot) {
         ArrayList<String> ret = new ArrayList<>();
         boolean hitPivot = false;
@@ -107,8 +120,12 @@ class routeparser{
         }
     }
 
+    /**
+     * main
+     * parse arguments, connect to db
+     */
     public static void main(String args[]) {
-        //check that there's only 2 args
+        //Parse args
         if(args.length == 0 || args.length > 2) {
             System.out.println("Invalid number of arguments.");
             System.out.println("Use: routeparser <username> <password>");
@@ -116,7 +133,11 @@ class routeparser{
         }
         username = args[0];
         password = args[1];
+        
+        
         HashMap<Integer, ArrayList<String>> route_map = new HashMap<>();
+
+        //connect jdbc driver
         try {
             Class.forName("com.mysql.cj.jdbc.Driver"); 
         } catch (ClassNotFoundException e1) {
@@ -126,8 +147,11 @@ class routeparser{
         //contect to DB
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://"+host+":3306/busapp?serverTimezone=UTC", username, password);) {
             
+            //prepare and execute our SQL query
             PreparedStatement preparedStatement = conn.prepareStatement("SELECT route_id,GROUP_CONCAT(current_stop), GROUP_CONCAT(retrieved), GROUP_CONCAT(latitude), GROUP_CONCAT(longitude) from `lehighbusdata` WHERE current_stop is not null AND current_stop != 'NULL' AND latitude is not nULL and longitude is not null GROUP BY route_id, vehicle_id,DATEDIFF(CURDATE(), retrieved)");
             ResultSet results = preparedStatement.executeQuery();
+
+            //iterate through bus routes
             while (results.next()) {
                 System.out.println();
                 String big_stop_str = results.getString("GROUP_CONCAT(current_stop)");
@@ -169,7 +193,9 @@ class routeparser{
             e.printStackTrace();
         }
 
+        // get the routes naively (by simply iterating throught the list of stops)
         HashMap<Integer, ArrayList<String>> potentials = naive_route_determ(route_map);
+
         for(int rid : potentials.keySet()) {
             System.out.println("Potential routes for: "+rid);
             if((potentials.get(rid)).size() == 0) {
