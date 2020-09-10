@@ -66,4 +66,3 @@ function show_transportation(){
 function show_stops(bus){
     $("#stops-list-" + bus).toggle();
 }
-

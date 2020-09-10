@@ -2,9 +2,12 @@ from BusStop import BusStop
 from Bus import Bus
 from BusRoute import BusRoute
 import requests, os
+import time as t
 class LehighScraper:
     response_data = []
     stops = []
+    last_stops = t.time()
+    routes = []
     def __init__(self, scraping_url = "https://lehigh.doublemap.com/map/v2/buses"):
         self.scraping_url = scraping_url
         print("Initialized LehighScraper | PID: {}".format(os.getpid()))
@@ -26,7 +29,7 @@ class LehighScraper:
         if return_data:
             return results
 
-    def get_buses(self):
+    def get_buses(self, cnx):
         if not self.response_data:
             self.response_data = self.request_buses()
         bus_list = []
@@ -43,7 +46,9 @@ class LehighScraper:
                 last_stop=last_stop,
                 latitude=lat,
                 longitude=lon,
-                route_id=route
+                route_id=route,
+                do_projection=True,
+                cnx=cnx
                 ).to_dict()
             )
         return bus_list
@@ -83,9 +88,28 @@ class LehighScraper:
             )
         return new_stops
 
-    def request_routes():
+    def request_routes(self, url = "https://lehigh.doublemap.com/map/v2/routes", processing = None, return_data = False):
         # https://lehigh.doublemap.com/map/v2/routes
-        pass
+        curr_time = t.time()
+        if (self.last_stops - curr_time > 2700) or (not self.routes):
+            self.last_stops = t.time()
+        else:
+            return self.routes
+        response = requests.get(url)
+
+        if response.status_code != 200:
+            response.raise_for_status()
+        
+        results = response.json() #let the caller handle exceptions
+
+
+        if processing:
+            results = processing(results)
+        
+        self.routes = results
+
+        if return_data:
+            return results
 
 
         

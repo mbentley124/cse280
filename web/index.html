@@ -30,16 +30,18 @@
 <body>
     <div id="content">
         <div id="topbar">
-            <a id="topbar-home" href="">Lehigh University Bus Schedule</a>
+            <a href="#menu" id="menuLink" class="menu-link">
+                <div class="container menu-link" id="menuLink" onclick="animateHamburger(this)">
+                    <div class="bar1"></div>
+                    <div class="bar2"></div>
+                    <div class="bar3"></div>
+                </div>
+            </a>
+            <a id="topbar-home" href="">Lehigh University Bus Tracker</a>
         </div>
         <div id="layout">
-            <a href="#menu" id="menuLink" class="menu-link">
-                <!-- Hamburger icon -->
-                <span></span>
-            </a>
             <div id="menu">
                 <div class="pure-menu">
-
                     <ul class="pure-menu-list">
 
                         <!--Not sure what this is for, commented out for now
@@ -79,7 +81,9 @@
                         <li class="pure-menu-item"><a class="my_buttons" id="darkmode" onclick="toggle_style('dark');">Dark mode</a></li>
                         <li class="pure-menu-item"><a class="my_buttons" id="lightmode" onclick="toggle_style('light');">Light mode</a></li>
                     </ul>
-                    <div style="font-size: 12px; color: cadetblue; margin-left: 4px;">Icons made by <a href="https://www.flaticon.com/authors/those-icons" title="Those Icons">Those Icons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
+                </div>
+                <div style="position: fixed; bottom: 0; width: 150px; background-color:darkgray">
+                    <div style="font-size: 12px; color: white; margin-left: 4px; margin-bottom: 4px;">Icons made by <a href="https://www.flaticon.com/authors/those-icons" title="Those Icons">Those Icons</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a></div>
                 </div>
             </div>
             <div id="map">

@@ -1,5 +1,6 @@
 body {
     color: #777;
+    background-color: #4B2913;
 }
 
 .pure-img-responsive {
@@ -135,6 +136,7 @@ appears on the left side of the page.
     border: none;
     background: transparent;
     width: auto;
+    margin-block-start: 0;
 }
 
 
@@ -174,7 +176,7 @@ describing light/dark buttons in the menu
     */
 
 #topbar {
-    padding: 5px 0px 5px 16px;
+    padding: 8.25px 0px 8.25px 16px;
     background-color:#4B2913;
     border-bottom: 1px solid white;
 }
@@ -219,39 +221,33 @@ small screens.
     font-size: 9.5px;
     /* change this value to increase/decrease button size */
     z-index: 10;
-    width: 4em;
     height: auto;
     padding: 2.11em 1.6em;
+    padding-right:10px;
 }
 
 .menu-link:hover {
-    background: rgb(134, 93, 63);
+    background: rgb(201, 196, 192);
 }
 
-.menu-link span {
-    position: relative;
-    display: block;
-}
-
-.menu-link span,
-.menu-link span:before,
-.menu-link span:after {
-    background-color: rgb(139,69,19);
+.bar1, .bar2, .bar3 {
     width: 20px;
-    height: 0.2em;
-    margin-left: -7px;
+    height: 2px;
+    background-color: #4B2913;
+    margin: 4px 0;
+    transition: 0.4s;
 }
-
-.menu-link span:before,
-.menu-link span:after {
-    position: absolute;
-    margin-top: -0.6em;
-    content: " ";
-    margin-left: 0px;
+  
+.change .bar1 {
+    -webkit-transform: rotate(-45deg) translate(-4px, 4px);
+    transform: rotate(-45deg) translate(-4px, 4px);
 }
-
-.menu-link span:after {
-    margin-top: 0.6em;
+  
+.change .bar2 {opacity: 0;}
+  
+.change .bar3 {
+    -webkit-transform: rotate(45deg) translate(-4px, -5px);
+    transform: rotate(45deg) translate(-4px, -5px);
 }
 
 #darkmode {
@@ -301,7 +297,7 @@ small screens.
 Hides the menu at `48em`, but modify this based on your app's needs.
 */
 
-@media (min-width: 48em) {
+@media (min-width: 769px) {
     .header,
     .content {
         padding-left: 2em;
@@ -319,6 +315,7 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         margin-top: 42px;
         display: block;
         left: 150px;
+        height: calc(100% - 42px);
     }
     #map{
         display: block;
@@ -334,7 +331,7 @@ Hides the menu at `48em`, but modify this based on your app's needs.
     }
 }
 
-@media (max-width: 48em) {
+@media (max-width: 768px) {
     /* Only apply this when the window is small. Otherwise, the following
     case results in extra padding on the left:
         * Make the window small.
@@ -348,7 +345,21 @@ Hides the menu at `48em`, but modify this based on your app's needs.
     #topbar.active{
         padding-left: 200px;
     }
+    #topbar.active .menu-link {
+        left: 150px;
+        
+    }
+    #topbar-home{
+        width: fit-content;
+    }
+    #menuLink.container{
+        height: 24.2px;
+        padding: 8.5px;
+    }
     #topbar{
         padding-left: 50px;
+        transition: 0.25s;
+        max-height: 24.8px;
+        width: calc(100% + 200px);
     }
 }
