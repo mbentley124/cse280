@@ -298,6 +298,9 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 */
 
 @media (min-width: 769px) {
+    #icon-cred-container {
+        width: 335px;
+    }
     .header,
     .content {
         padding-left: 2em;
@@ -340,6 +343,9 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         * Tap the menu to trigger the active state.
         * Make the window large again.
     */
+    #icon-cred-container {
+        width: calc(100vw - 37px);
+    }
     #menu {
         margin-left: calc(-100vw + 37px);
         width: calc(100vw - 37px);
@@ -347,6 +353,9 @@ Hides the menu at `48em`, but modify this based on your app's needs.
     #layout.active {
         position: relative;
         left: 150px;
+    }
+    #layout.active #menu{
+        height: 100vh;
     }
     #topbar.active{
         padding-left: 375px;

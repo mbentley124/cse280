@@ -490,8 +490,13 @@ mymap.addLayer(tile_style['default']);
 update_map(mymap);
 setInterval(function(mymap) { update_map(mymap) }, 2000, mymap); //TODO: will update map every 'interval'
 
+// Center map view on click from the stops list
+function find_stop(lat,lng){
+    mymap.setView([lat, lng], 16);
+}
+
 // Populate side-menu on render
-$('#stops').append('<ul class="pure-menu-list transportation-list" style="display: none; background-color: rgb(107, 46, 3); font-size: 15px;"></ul>');
+$('#stops').append('<ul class="pure-menu-list" id="init-stop-list" style="display: none; background-color: rgb(107, 46, 3); font-size: 15px;"></ul>');
 
 const keys = Object.keys(stops);
 
@@ -499,11 +504,11 @@ $.each(keys, function(){
     const bus = this;
     let stops_tracker = new Map();
     var count = 0;
-    $('.transportation-list').append('<a id="transportation-item" class="pure-menu-link" onclick="show_stops(\''+this+'\')">' + this.charAt(0).toUpperCase() + this.slice(1) + '</a>');
-    $('.transportation-list').append('<ul class="pure-menu-list" id="stops-list-'+this+'" style="display: none; background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height:49vh"></ul>');
+    $('#init-stop-list').append('<a id="transportation-item" class="pure-menu-link" onclick="show_stops(\''+this+'\')">' + this.charAt(0).toUpperCase() + this.slice(1) + '</a>');
+    $('#init-stop-list').append('<ul class="pure-menu-list" id="stops-list-'+this+'" style="display: none; background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height: 52.2vh;"></ul>');
     $.each(stops[this], function(){
         if(!stops_tracker.has(this.name)){
-            $('#stops-list-' + bus).append('<li><a id="stops-item" class="pure-menu-link">'+this.name+'</a></li>');
+            $('#stops-list-' + bus).append('<li><a class="pure-menu-link stops-item" onclick="find_stop('+this.latitude+','+this.longitude+')">'+this.name+'</a></li>');
             count++;
             stops_tracker.set(this.name,true);
         }
