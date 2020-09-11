@@ -53,12 +53,13 @@ while True:
         stops = {"lanta": lanta.get_stops(), "lehigh": lehigh.get_stops()}
         buses = {"lanta": lanta.get_buses(cnx), "lehigh": lehigh.get_buses(cnx)}
         projection_end = t.time()
-        projection_total = projection_begin - projection_end
+        projection_total = projection_end - projection_begin
         cnx.commit()
         routes = {"lanta": [], "lehigh": lehigh.request_routes(return_data=True)}
         historical_begin = t.time()
         write_to_db(buses['lehigh'], "Lehigh", cnx)
         write_to_db(buses['lanta'], "LANTA", cnx)
+        total_buses = len(buses['lehigh']) + len(buses['lanta'])
         historical_end = t.time()
         historical_total = historical_end - historical_begin
         cnx.close()
@@ -76,11 +77,16 @@ while True:
     end = t.time()
     print("sleeping...")
     print("Completed in: {} seconds".format(str(end - begin)))
+    print("Total Buses: {}".format(str(total_buses)))
     print("Retrieve Data: {}".format(str(lanta_time + lu_time)))
     print("\tLANTA:  {}".format(str(lanta_time)))
     print("\tLehigh: {}".format(str(lu_time)))
     print("Data Parsing: {}".format(str(dict_end - dict_begin)))
     print("\tBus Projections: {}".format(str(projection_total)))
+    print("\t\tSeconds per bus: {}".format(
+            str(round(projection_total/total_buses, 2))
+        )
+    )
     print("\tStoring Data:    {}".format(str(historical_total)))
     t.sleep(4)
 
