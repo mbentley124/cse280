@@ -49,12 +49,18 @@ while True:
     lu_time = end_lu - begin_lu
     dict_begin = t.time()
     try:
+        projection_begin = t.time()
         stops = {"lanta": lanta.get_stops(), "lehigh": lehigh.get_stops()}
         buses = {"lanta": lanta.get_buses(cnx), "lehigh": lehigh.get_buses(cnx)}
+        projection_end = t.time()
+        projection_total = projection_end - projection_end
         cnx.commit()
         routes = {"lanta": [], "lehigh": lehigh.request_routes(return_data=True)}
+        historical_begin = t.time()
         write_to_db(buses['lehigh'], "Lehigh", cnx)
         write_to_db(buses['lanta'], "LANTA", cnx)
+        historical_end = t.time()
+        historical_total = historical_end - historical_begin
         cnx.close()
         dict_end = t.time()
         with open("data/all/stops.json", "w+") as st:
@@ -70,9 +76,12 @@ while True:
     end = t.time()
     print("sleeping...")
     print("Completed in: {} seconds".format(str(end - begin)))
-    print("LANTA:  {}".format(str(lanta_time)))
-    print("Lehigh: {}".format(str(lu_time)))
-    print("Dict:   {}".format(str(dict_end - dict_begin)))
+    print("Retrieve Data: {}".format(str(lanta_time + lu_time)))
+    print("\tLANTA:  {}".format(str(lanta_time)))
+    print("\tLehigh: {}".format(str(lu_time)))
+    print("Data Parsing: {}".format(str(dict_end - dict_begin)))
+    print("\tBus Projections: {}".format(str(projection_total)))
+    print("\tStoring Data:    {}".format(str(historical_total)))
     t.sleep(4)
 
 
