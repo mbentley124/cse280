@@ -497,17 +497,21 @@ const keys = Object.keys(stops);
 
 $.each(keys, function(){
     const bus = this;
+    let stops_tracker = new Map();
+    var count = 0;
     $('.transportation-list').append('<a id="transportation-item" class="pure-menu-link" onclick="show_stops(\''+this+'\')">' + this.charAt(0).toUpperCase() + this.slice(1) + '</a>');
-    $('.transportation-list').append('<ul class="pure-menu-list" id="stops-list-'+this+'" style="display: none; background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height:125px"></ul>');
+    $('.transportation-list').append('<ul class="pure-menu-list" id="stops-list-'+this+'" style="display: none; background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height:49vh"></ul>');
     $.each(stops[this], function(){
-        $('#stops-list-' + bus).append('<li><a id="stops-item" class="pure-menu-link">'+this.name+'</a></li>')
-        console.log(this.name);
+        if(!stops_tracker.has(this.name)){
+            $('#stops-list-' + bus).append('<li><a id="stops-item" class="pure-menu-link">'+this.name+'</a></li>');
+            count++;
+            stops_tracker.set(this.name,true);
+        }
     })
+    console.log(this+ " " + count);
 })
 
 // Animate Hamburger Icon on smaller screens
 function animateHamburger(elem){
-    console.log("HERE")
     elem.classList.toggle("change");
-
 }
