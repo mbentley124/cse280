@@ -35,7 +35,7 @@ This is the parent `<div>` that contains the menu and the content area.
 }
 
 #layout.active #menu {
-    left: 150px;
+    left: calc(100vw - 37px);
     min-width: 150px;
     overflow: hidden;
 }
@@ -91,9 +91,9 @@ appears on the left side of the page.
 */
 
 #menu {
-    margin-left: -150px;
+    margin-left: calc(-100vw + 37px);
     /* "#menu" width */
-    width: 150px;
+    width: calc(100vw - 37px);
     position: fixed;
     top: 0;
     left: 0;
@@ -311,10 +311,11 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         left: 0;
     }
     #menu {
-        width: 150px;
+        width: 335px;
+        margin-left: -335px;
         margin-top: 42px;
         display: block;
-        left: 150px;
+        left: 335px;
         height: calc(100% - 42px);
     }
     #map{
@@ -338,15 +339,19 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         * Tap the menu to trigger the active state.
         * Make the window large again.
     */
+    #menu {
+        margin-left: calc(-100vw + 37px);
+        width: calc(100vw - 37px);
+    }
     #layout.active {
         position: relative;
         left: 150px;
     }
     #topbar.active{
-        padding-left: 200px;
+        padding-left: 375px;
     }
     #topbar.active .menu-link {
-        left: 150px;
+        left: calc(100vw - 40px);
         
     }
     #topbar-home{
