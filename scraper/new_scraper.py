@@ -53,7 +53,7 @@ while True:
         stops = {"lanta": lanta.get_stops(), "lehigh": lehigh.get_stops()}
         buses = {"lanta": lanta.get_buses(cnx), "lehigh": lehigh.get_buses(cnx)}
         projection_end = t.time()
-        projection_total = projection_end - projection_end
+        projection_total = projection_begin - projection_end
         cnx.commit()
         routes = {"lanta": [], "lehigh": lehigh.request_routes(return_data=True)}
         historical_begin = t.time()
