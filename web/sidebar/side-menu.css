@@ -36,16 +36,6 @@ This is the parent `<div>` that contains the menu and the content area.
     width:100%
 }
 
-#layout.active #menu {
-    left: calc(100vw - 37px);
-    min-width: 150px;
-    overflow: hidden;
-}
-
-#layout.active .menu-link {
-    left: 150px;
-}
-
 
 /*
 The content `<div>` is where all your content goes.
@@ -346,6 +336,15 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         * Tap the menu to trigger the active state.
         * Make the window large again.
     */
+    #layout.active #menu {
+        left: calc(100vw - 37px);
+        min-width: 150px;
+        overflow: hidden;
+    }
+    
+    #layout.active .menu-link {
+        left: 150px;
+    }
     #icon-cred-container {
         width: calc(100vw - 37px);
     }
@@ -355,7 +354,7 @@ Hides the menu at `48em`, but modify this based on your app's needs.
     }
     #layout.active {
         position: relative;
-        left: 335px;
+        left: calc(100vw - 37px);
     }
     #layout.active #menu{
         height: 100vh;
@@ -378,6 +377,6 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         padding-left: 50px;
         transition: 0.25s;
         max-height: 24.8px;
-        width: calc(100% + 200px);
+        width: auto;
     }
 }
