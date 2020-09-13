@@ -71,7 +71,7 @@ while True:
     try:
         projection_begin = t.time()
         stops = {"lanta": lanta.get_stops(), "lehigh": lehigh.get_stops()}
-        buses = {"lanta": lanta.get_buses(projection=preds), "lehigh": lehigh.get_buses(projection=preds)}
+        buses = {"lanta": lanta.get_buses(projection=False), "lehigh": lehigh.get_buses(projection=preds)}
         projection_end = t.time()
         projection_total = projection_end - projection_begin
         routes = {"lanta": [], "lehigh": lehigh.request_routes(return_data=True)}
