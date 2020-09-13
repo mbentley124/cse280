@@ -4,6 +4,7 @@ from BusRoute import BusRoute
 from BusStop import BusStop
 from Bus import Bus
 import time as t
+from multiprocessing import Pool
 class LANTAScraper:
     routes = []
     cleaned_routes = []
@@ -70,28 +71,32 @@ class LANTAScraper:
         if return_data:
             return results
 
-    def get_buses(self, cnx):
+    def get_buses(self, projection=True):
         bus_list = []
-        for bus in self.buses:
-            bus_id = bus.get("VehicleId")
-            name = bus.get("name")
-            lat = bus.get("Latitude")
-            lon = bus.get("Longitude")
-            route = bus.get("RouteId")
-            last_stop = bus.get("LastStop")
-            bus_list.append(Bus(
-                bus_id=bus_id,
-                short_name=name,
-                last_stop=last_stop,
-                latitude=lat,
-                longitude=lon,
-                route_id=route,
-                do_projection=True,
-                cnx=cnx
-                ).to_dict()
-            )
+        self.projection = projection
+        with Pool(len(self.buses)) as p:
+            bus_list = list(p.map(self._multi_bus, self.buses))
+                
         return bus_list
 
+    def _multi_bus(self, bus):
+        bus_id = bus.get("VehicleId")
+        name = bus.get("name")
+        lat = bus.get("Latitude")
+        lon = bus.get("Longitude")
+        route = bus.get("RouteId")
+        last_stop = bus.get("LastStop")
+        return Bus(
+            bus_id=bus_id,
+            short_name=name,
+            last_stop=last_stop,
+            latitude=lat,
+            longitude=lon,
+            route_id=route,
+            do_projection=self.projection,
+            service="LANTA",
+            ).to_dict()
+        
     def request_stops(self, url = "https://realtimelanta.availtec.com/InfoPoint/rest/RouteDetails/Get/{}", processing = None, return_data = False):
         curr_time = t.time()
         if (self.last_stops - curr_time > 900) or (not self.stops):
