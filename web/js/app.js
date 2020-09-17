@@ -16,7 +16,8 @@ tile_style['default'] = L.tileLayer(tile_server_url, { //takes tile server URL a
     maxZoom: 18,
 });
 
-
+//needs a lot of class refactoring.
+let polyline_global = {};
 //change window size
 if (window.innerWidth > 600) {
     ic = [48, 48] //bus icon
@@ -300,6 +301,54 @@ function draw_stops(map) {
 
 }
 
+async function draw_polyline_sample(map) {
+    const routes = await fetch("temp_routes_lu.json")
+    .then((data) => data.json())
+    .then(
+        (parsed) => {
+            const routes = [];
+
+            $.each(parsed, function(){
+                console.log(this);
+                const {color, path, name} = this;
+                routes.push({color: color, path:path, name:name});
+            });            
+
+            return routes;
+        }
+    );
+    const polylines = {};
+
+    $.each(routes, function(){
+        const polyline = [];
+        for(let i = 0; i < this.path.length; i += 2) {
+            polyline.push(new L.LatLng(this.path[i], this.path[i+1]));
+        }
+        const leaflet_line = new L.polyline(
+            polyline,
+            {
+                color: this.color,
+                smoothFactor: 2,
+            }
+        );
+        if(this.name == "Campus Connnector") {
+            this.name = "Campus Connector";
+        }
+        polylines[this.name] = {
+            color: this.color,
+            path: polyline,
+            leaflet_obj: leaflet_line,
+            onmap: false,
+        }
+        // leaflet_line.addTo(map);
+    });
+        
+    polyline_global = polylines;
+    return polylines;
+
+
+}
+
 function update_map(map) {
     //console.log(map)
     $.getJSON("https://bus.codyben.me/bus_data.json", function(data) { //gets data from JSON file which was created by scraper
@@ -427,59 +476,25 @@ function update_map(map) {
                 // marker_obj[this.vid] = L.marker(, {icon: lanta}).addTo(map);
 
             });
-        });
-        //NOW WE ARE OUT OF ifFirstRun
-        //TODO: fix this (doesn't account for LANTA). ATM, nothing updates after initial placement
-        //TODO: Done :)
-        //     $.each(data, function() { //
-        //         // console.log(this);
-        //         if (this.arrival_delta < 0.5) { //how much time for bus to get to stop (from JSON)
-        //             this.arrival_delta = "Arriving soon"; //if less then 30sec
-        //         } else {
-        //             this.arrival_delta = this.arrival_delta + " minutes"; //TODO: change to sec for 30sec to 1 min
-        //         }
-        //         console.log("Bus (VID:" + this.vid + ") and (Num:" + this.fleetnum + ") is going from " + this.last_stop + " to " + this.next_stop + " in " + this.arrival_delta);
-        //         var marker = (marker_obj[this.vid]);
-        //         marker.setLatLng([this.lat, this.long]).update();
-        //         marker.bindPopup("<b>" + this.key + "</b><br>" + "Going to " + this.next_stop + " in " + this.arrival_delta);
-        //     });
+        } );
+
     });
 }
 
-// function update_initial(map) {
-//     $.getJSON("https://bus.codyben.me/bus_data.json", function(data) { //gets data from JSON file which was created by scraper
-//         $.each(data.lehigh, function() { //LOOP: loops through every Lehigh bus and 
-//             //places it initially on map
-//             // cardinality_arr[this.vid] = new Set();
-//             // console.log(cardinality_arr);
-//             if (this.key == "CC") {
-//                 img = cc;
-//                 route_to_use = cc_routes;
-//             } else if (this.key == "PE") {
-//                 img = pe;
-//                 route_to_use = pe_routes;
-//             } else if (this.key == "FW") {
-//                 img = fw;
-//                 route_to_use = fw_routes;
-//             } else {
-//                 img = lu;
-//             }
-//             marker_obj[this.vid] = L.marker([this.lat, this.long], { icon: img }).bindPopup("System: LU-TPS<br>"+"VID: "+this.vid).addTo(map);
-//         });
-
-//         $.each(data.lanta, function(k, v) { //LOOP: goes through every route for LANTA
-//             // cardinality_arr[this.vid] = new Set();
-//             // console.log(cardinality_arr);
-//             $.each(data.lanta[k], function() { //LOOP: initial placement of every LANTA bus
-//                 marker_obj[this.VehicleId] = L.marker([this.Latitude, this.Longitude], { icon: lanta }).bindPopup("System: LANTA<br>"+"VID: "+this.VehicleId).addTo(map);
-//             });
-
-//         });
-//         data = null;
-//     });
-// }
-
-check_ip();
+function toggle_polylines_sample(name) {
+    if(name in polyline_global) {
+        const {leaflet_obj, onmap} = polyline_global[name];
+        if(onmap) {
+            leaflet_obj.removeFrom(mymap);
+            polyline_global[name].onmap = false;
+            return false;
+        } else {
+            polyline_global[name].onmap = true;
+            leaflet_obj.addTo(mymap);
+            return true;
+        }
+    }
+}
 
 mymap = L.map('mapid', leaflet_config).setView([40.604377, -75.372161], 16); //sets center of map & zoom level
 draw_stops(mymap);
@@ -495,7 +510,7 @@ setInterval(function(mymap) { update_map(mymap) }, 2000, mymap); //TODO: will up
 function find_stop(lat, lng) {
     mymap.setView([lat, lng], 16);
 }
-
+const poly_func = draw_polyline_sample(mymap);
 // Populate side-menu on render
 $('#stops').append('<ul class="pure-menu-list" id="init-stop-list" style="display: none; background-color: rgb(107, 46, 3); font-size: 15px;"></ul>');
 
@@ -517,30 +532,7 @@ $.each(keys, function() {
     console.log(this + " " + count);
 })
 
-// Create array of lat,lon points.
-var line_points = [
-    [38.893596444352134, -77.0381498336792],
-    [38.89337933372204, -77.03792452812195],
-    [38.89316222242831, -77.03761339187622],
-    [38.893028615148424, -77.03731298446655],
-    [38.892920059048464, -77.03691601753235],
-    [38.892903358095296, -77.03637957572937],
-    [38.89301191422077, -77.03592896461487],
-    [38.89316222242831, -77.03549981117249],
-    [38.89340438498248, -77.03514575958252],
-    [38.893596444352134, -77.0349633693695]
-];
 
-// Define polyline options
-// http://leafletjs.com/reference.html#polyline
-var polyline_options = {
-    color: '#000'
-};
-
-// Defining a polygon here instead of a polyline will connect the
-// endpoints and fill the path.
-// http://leafletjs.com/reference.html#polygon
-var polyline = L.polyline(line_points, polyline_options).addTo(map);
 
 // Animate Hamburger Icon on smaller screens
 function animateHamburger(elem) {
