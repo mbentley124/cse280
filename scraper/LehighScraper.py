@@ -3,8 +3,9 @@ from Bus import Bus
 from BusRoute import BusRoute
 import requests, os
 import time as t
+from multiprocessing import Pool
 class LehighScraper:
-    response_data = []
+    buses = []
     stops = []
     last_stops = t.time()
     routes = []
@@ -24,34 +25,36 @@ class LehighScraper:
         if processing:
             results = processing(results)
         
-        self.response_data = results
+        self.buses = results
 
         if return_data:
             return results
 
-    def get_buses(self, cnx):
-        if not self.response_data:
-            self.response_data = self.request_buses()
+    def get_buses(self, projection=True):
         bus_list = []
-        for bus in self.response_data:
-            bus_id = bus.get("id")
-            name = bus.get("name")
-            lat = bus.get("lat")
-            lon = bus.get("lon")
-            route = bus.get("route")
-            last_stop = bus.get("lastStop")
-            bus_list.append(Bus(
-                bus_id=bus_id,
-                short_name=name,
-                last_stop=last_stop,
-                latitude=lat,
-                longitude=lon,
-                route_id=route,
-                do_projection=True,
-                cnx=cnx
-                ).to_dict()
-            )
+        self.projection = projection
+        with Pool(len(self.buses)) as p:
+            bus_list = list(p.map(self._multi_bus, self.buses))
+                
         return bus_list
+
+    def _multi_bus(self, bus):
+        bus_id = bus.get("id")
+        name = bus.get("name")
+        lat = bus.get("lat")
+        lon = bus.get("lon")
+        route = bus.get("route")
+        last_stop = bus.get("lastStop")
+        return Bus(
+            bus_id=bus_id,
+            short_name=name,
+            last_stop=last_stop,
+            latitude=lat,
+            longitude=lon,
+            route_id=route,
+            do_projection=self.projection,
+            service="Lehigh"
+            ).to_dict()
 
     def request_stops(self, url = "https://lehigh.doublemap.com/map/v2/stops", processing = None, return_data = False):
         

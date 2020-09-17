@@ -1,4 +1,5 @@
-
+var bus_opened = null;
+var opened = null;
 
 var layout = document.getElementById('layout'),
     menu = document.getElementById('menu'),
@@ -55,14 +56,41 @@ function getRoutes() {
 }
 // Show route dropdown on sidebar
 function show_routes(){
-    $("#routes-list").toggle();
+    $('.list-opened').toggle();
+    $('.list-opened').removeClass('list-opened');
+    if(opened!='routes'){
+        $("#routes-list").toggle();
+        $("#routes-list").addClass("list-opened");
+        opened = 'routes';
+    } else {
+        opened = null;
+    }
 }
 
 // Show transportation methods on side bar
-function show_transportation(){
-    $(".transportation-list").toggle();
+function show_init_stop_list(){
+    $('.list-opened').toggle();
+    $('.list-opened').removeClass('list-opened');
+    if(opened!='stops'){
+        $("#init-stop-list").toggle();
+        $("#init-stop-list").addClass("list-opened");
+        opened = 'stops';
+    } else {
+        opened = null;
+    }
 }
 // Show stops for a transportation on sidebar
 function show_stops(bus){
-    $("#stops-list-" + bus).toggle();
+    if(bus_opened!=null){
+        $("#stops-list-" + bus_opened).toggle();
+        if(bus_opened!=bus){
+            $("#stops-list-" + bus).toggle();
+            bus_opened = bus;
+        } else {
+            bus_opened = null;
+        }
+    } else {
+        $("#stops-list-" + bus).toggle();
+        bus_opened = bus;
+    }
 }

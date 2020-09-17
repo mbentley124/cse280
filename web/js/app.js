@@ -31,8 +31,8 @@ if (window.innerWidth > 600) {
 /* Make a bus icon */
 
 function make_icon_bus(fill, background) {
-    var svg_str = '<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="300.000000pt" height="314.000000pt" viewBox="0 0 300.000000 314.000000" preserveAspectRatio="xMidYMid meet"> <metadata> Created by potrace 1.10, written by Peter Selinger 2001-2011 </metadata> <circle r="49%" cx="50%" cy="50%" fill="'+background+'"/> <g transform="translate(0.000000,314.000000) scale(0.050000,-0.050000)" fill="'+fill+'" stroke="none"> <path d="M2590 5950 c-1750 -308 -2821 -2026 -2308 -3700 269 -875 991 -1602 1877 -1889 l189 -61 729 0 728 0 205 69 c771 258 1368 786 1726 1526 l114 235 -2 970 -1 970 -71 160 c-375 850 -1119 1466 -2036 1684 -265 63 -885 83 -1150 36z m1073 -929 c382 -85 753 -246 828 -360 156 -235 268 -2728 133 -2945 -46 -73 -213 -176 -288 -176 -33 0 -36 -23 -36 -257 0 -336 -16 -363 -220 -363 -204 0 -220 27 -220 363 l0 257 -778 0 -779 0 -6 -270 c-9 -333 -25 -360 -219 -360 -194 0 -218 41 -218 367 l0 255 -93 25 c-274 73 -286 111 -287 953 -1 1035 82 1998 185 2151 200 296 1349 503 1998 360z"/> <path d="M2269 4651 c-31 -31 -49 -72 -49 -111 0 -39 18 -80 49 -111 l49 -49 762 0 762 0 49 49 c67 67 65 158 -4 222 l-53 49 -758 0 -758 0 -49 -49z"/> <path d="M1904 4210 c-93 -41 -114 -109 -153 -502 -37 -381 -32 -426 53 -498 l59 -50 1214 0 c1520 0 1388 -56 1325 558 -42 411 -59 463 -166 501 -103 35 -2248 27 -2332 -9z"/> <path d="M1796 2542 c-140 -125 -47 -342 146 -342 115 0 198 84 198 200 0 183 -204 267 -344 142z"/> <path d="M4076 2542 c-140 -125 -47 -342 146 -342 115 0 198 84 198 200 0 183 -204 267 -344 142z"/> </g> </svg>';
-    return 'data:image/svg+xml;base64,'+btoa(svg_str);
+    var svg_str = '<svg version="1.0" xmlns="http://www.w3.org/2000/svg" width="300.000000pt" height="314.000000pt" viewBox="0 0 300.000000 314.000000" preserveAspectRatio="xMidYMid meet"> <metadata> Created by potrace 1.10, written by Peter Selinger 2001-2011 </metadata> <circle r="49%" cx="50%" cy="50%" fill="' + background + '"/> <g transform="translate(0.000000,314.000000) scale(0.050000,-0.050000)" fill="' + fill + '" stroke="none"> <path d="M2590 5950 c-1750 -308 -2821 -2026 -2308 -3700 269 -875 991 -1602 1877 -1889 l189 -61 729 0 728 0 205 69 c771 258 1368 786 1726 1526 l114 235 -2 970 -1 970 -71 160 c-375 850 -1119 1466 -2036 1684 -265 63 -885 83 -1150 36z m1073 -929 c382 -85 753 -246 828 -360 156 -235 268 -2728 133 -2945 -46 -73 -213 -176 -288 -176 -33 0 -36 -23 -36 -257 0 -336 -16 -363 -220 -363 -204 0 -220 27 -220 363 l0 257 -778 0 -779 0 -6 -270 c-9 -333 -25 -360 -219 -360 -194 0 -218 41 -218 367 l0 255 -93 25 c-274 73 -286 111 -287 953 -1 1035 82 1998 185 2151 200 296 1349 503 1998 360z"/> <path d="M2269 4651 c-31 -31 -49 -72 -49 -111 0 -39 18 -80 49 -111 l49 -49 762 0 762 0 49 49 c67 67 65 158 -4 222 l-53 49 -758 0 -758 0 -49 -49z"/> <path d="M1904 4210 c-93 -41 -114 -109 -153 -502 -37 -381 -32 -426 53 -498 l59 -50 1214 0 c1520 0 1388 -56 1325 558 -42 411 -59 463 -166 501 -103 35 -2248 27 -2332 -9z"/> <path d="M1796 2542 c-140 -125 -47 -342 146 -342 115 0 198 84 198 200 0 183 -204 267 -344 142z"/> <path d="M4076 2542 c-140 -125 -47 -342 146 -342 115 0 198 84 198 200 0 183 -204 267 -344 142z"/> </g> </svg>';
+    return 'data:image/svg+xml;base64,' + btoa(svg_str);
 }
 
 
@@ -40,7 +40,7 @@ function make_icon_bus(fill, background) {
 
 function sync_callback(data) {
     var json = data;
-    if(!(json.ip).includes("128.180.27")) {
+    if (!(json.ip).includes("128.180.27")) {
         tile_style['dark'] = tile_style['light'] = tile_style['default'] = L.tileLayer(tile_server_url_mapbox, { //takes tile server URL and will return a tile
             attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
             maxZoom: 18,
@@ -94,7 +94,7 @@ function toggle_style(style) { //use buttons to toggle dark mode on/off
     var navbar = $(".navbar");
     var tiles = $(".leaflet-tile-pane");
     var body = $("body");
-    if(style.toLowerCase() === "dark" ) {
+    if (style.toLowerCase() === "dark") {
         navbar.removeClass("bg-primary").addClass("bg-dark");
         body.addClass("body_dark");
         tiles.addClass("tile_dark");
@@ -108,9 +108,9 @@ function toggle_style(style) { //use buttons to toggle dark mode on/off
 function do_location() {
 
     if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(calc_nearest);
+        navigator.geolocation.getCurrentPosition(calc_nearest);
     } else {
-      alert("Geolocation is not supported by this browser.");
+        alert("Geolocation is not supported by this browser.");
     }
     // draw_stops(mymap);
 }
@@ -154,29 +154,29 @@ function calc_nearest(position) {
     L.circleMarker([lat, lon], { color: "#34eb34" }).bindPopup("My location.").addTo(mymap);
     var dist_arr_lu = []
     var dist_arr_lanta = []
-    //replace with combined stops array
+        //replace with combined stops array
     $.each(stops.lehigh, function() {
         var b_lat = parseFloat(this.latitude);
         var b_lon = parseFloat(this.longitude);
-        var dist = distance(lat,lon, b_lat, b_lon, 'M');
+        var dist = distance(lat, lon, b_lat, b_lon, 'M');
         var key = this.name;
-        if(isNaN(dist)) {
+        if (isNaN(dist)) {
             dist = 9999999999999;
         }
-        dist_arr_lu.push({"key":key, "dist":dist, "r":dist.toString()});
+        dist_arr_lu.push({ "key": key, "dist": dist, "r": dist.toString() });
     });
 
     $.each(stops.lanta, function() { //LOOP: interates through each route for LANTA
         var b_lon = this.longitude;
         var b_lat = this.latitude;
-        var dist = distance(lat,lon, b_lat, b_lon, 'M');
+        var dist = distance(lat, lon, b_lat, b_lon, 'M');
         // console.log(dist);
-        if(isNaN(dist)) {
+        if (isNaN(dist)) {
             dist = 9999999999999;
         }
         var key = this.Name
-        dist_arr_lanta.push({"key":key, "dist":dist, "r":dist.toString()});
-            // console.log(dist_arr_lanta);
+        dist_arr_lanta.push({ "key": key, "dist": dist, "r": dist.toString() });
+        // console.log(dist_arr_lanta);
     });
     var result_lu = sortByKey(dist_arr_lu, "dist")[0];
     // stop_arr[result_lu.key].openPopup();
@@ -185,22 +185,22 @@ function calc_nearest(position) {
     console.log(result_lanta);
     // stop_arr[result_lanta.key].openPopup();
     var close_key = result_lu.key;
-    var close_dist= result_lu.dist;
-    if(result_lanta.dist < result_lu.dist) {
+    var close_dist = result_lu.dist;
+    if (result_lanta.dist < result_lu.dist) {
         close_key = result_lanta.key;
         close_dist = result_lanta.dist;
     }
     console.log(close_key);
     var data_str;
     var popup = stop_arr[close_key].getPopup();
-    data_str= popup.getContent();
+    data_str = popup.getContent();
     stop_arr[close_key].openPopup();
-    if(!data_str.includes("miles")){
-        popup.setContent(data_str+"<br>~"+close_dist.toFixed(2)+" miles");
+    if (!data_str.includes("miles")) {
+        popup.setContent(data_str + "<br>~" + close_dist.toFixed(2) + " miles");
     }
     // 
 
-    
+
     // alert("Nearest Lehigh Stop: "+result_lu.key);
     // alert("Nearest LANTA Stop: "+result_lanta.key);
 
@@ -277,24 +277,23 @@ const lehigh = L.icon({
     // popupAnchor:  [-3, -76] // point from which the popup should open relative to the iconAnchor
 });
 
-const new_position = L.icon(
-    {
-        iconUrl: make_icon_bus("#dbddde7d", "#dbddde"),
-        iconSize: ic,
-    }
-);
+const new_position = L.icon({
+    iconUrl: make_icon_bus("#dbddde7d", "#dbddde"),
+    iconSize: ic,
+});
 
 function draw_stops(map) {
     $.each(stops.lehigh, function() { //LOOP: gets all stops for lehigh and places them on map
-        
-        stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#68310A" }).bindPopup(this.name).addTo(map).on('click', function(e) { console.log(this.name); map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
+
+        stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#68310A" }).bindPopup(this.name).addTo(map).on('click', function(e) { console.log(this.name);
+            map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
 
         //  console.log(cardinality_arr);
     });
 
     $.each(stops.lanta, function() { //LOOP: gets all stops for lanta and places them on map
-        
-        stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#004BBD" }).bindPopup(this.name, {maxWidth: '500px'}).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
+
+        stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#004BBD" }).bindPopup(this.name, { maxWidth: '500px' }).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
 
         //  console.log(cardinality_arr);
     });
@@ -304,44 +303,44 @@ function draw_stops(map) {
 function update_map(map) {
     //console.log(map)
     $.getJSON("https://bus.codyben.me/bus_data.json", function(data) { //gets data from JSON file which was created by scraper
-            
-            $.each(data.lehigh, function() {
-                // cardinality_arr[this.vid] = new Set();
-                // console.log(cardinality_arr);
-                // let img = lu;
-                // if (this.key == "CC") {
-                //     img = cc;
-                //     route_to_use = cc_routes;
-                // } else if (this.key == "PE") {
-                //     img = pe;
-                //     route_to_use = pe_routes;
-                // } else if (this.key == "FW") {
-                //     img = fw;
-                //     route_to_use = fw_routes;
-                // }
-                const vid = this.bus_id;
-                var loc_list = [this.latitude, this.longitude];
-                // const lc = L.LatLng(this.latitude, this.longitude);
-                if(!(vid in marker_obj)) {
-                    marker_obj[vid] = L.Marker.movingMarker([loc_list, loc_list],[29000000000],{ icon: lehigh }).bindPopup("System: LU-TPS<br>"+"VID: "+vid).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
-                }
-                let marker = (marker_obj[vid]);
-                const {lat, lng} = marker.getLatLng();
+
+        $.each(data.lehigh, function() {
+            // cardinality_arr[this.vid] = new Set();
+            // console.log(cardinality_arr);
+            // let img = lu;
+            // if (this.key == "CC") {
+            //     img = cc;
+            //     route_to_use = cc_routes;
+            // } else if (this.key == "PE") {
+            //     img = pe;
+            //     route_to_use = pe_routes;
+            // } else if (this.key == "FW") {
+            //     img = fw;
+            //     route_to_use = fw_routes;
+            // }
+            const vid = this.bus_id;
+            var loc_list = [this.latitude, this.longitude];
+            // const lc = L.LatLng(this.latitude, this.longitude);
+            if (!(vid in marker_obj)) {
+                marker_obj[vid] = L.Marker.movingMarker([loc_list, loc_list], [29000000000], { icon: lehigh }).bindPopup("System: LU-TPS<br>" + "VID: " + vid).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
+            }
+            let marker = (marker_obj[vid]);
+            const { lat, lng } = marker.getLatLng();
 
 
-                if((lat === loc_list[0]) && (lng === loc_list[1])) {
-                    return 1;
-                } else if(marker.isRunning()) {
-                    return 1;
-                }
+            if ((lat === loc_list[0]) && (lng === loc_list[1])) {
+                return 1;
+            } else if (marker.isRunning()) {
+                return 1;
+            }
 
-                const proj_lat = this.projected_coords.lat;
-                const proj_long = this.projected_coords.long;
+            const proj_lat = this.projected_coords.lat;
+            const proj_long = this.projected_coords.long;
 
-                if(!proj_long || !proj_lat) {
-                    return 1;
-                }
-                $.getJSON(`https://routeserver.codyben.me/route/v1/driving/${proj_long},${proj_lat};${lng},${lat}?overview=full`, function(response) {
+            if (!proj_long || !proj_lat) {
+                return 1;
+            }
+            $.getJSON(`https://routeserver.codyben.me/route/v1/driving/${proj_long},${proj_lat};${lng},${lat}?overview=full`, function(response) {
                 // if(response.routes[0].duration > 30) {
                 //     marker.moveTo(loc_list, [500]);
                 //     return 1; //abort on long running trips.
@@ -350,58 +349,60 @@ function update_map(map) {
                 // console.log(marker.isEnded());
                 marker.moveTo(loc_list, [500]);
                 map.removeLayer(marker);
-                marker =  L.Marker.movingMarker([[lat, lng], loc_list],[1000000000],{ icon: lehigh }).bindPopup("System: LU-TPS<br>"+"VID: "+vid).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
+                marker = L.Marker.movingMarker([
+                    [lat, lng], loc_list
+                ], [1000000000], { icon: lehigh }).bindPopup("System: LU-TPS<br>" + "VID: " + vid).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
                 marker.moveTo(pairs[pairs.length - 1], 1);
-                $.each(pairs.reverse(), function(){
+                $.each(pairs.reverse(), function() {
                     // console.log(this);
                     marker.addLatLng(this, [1100]);
                 });
                 marker_obj[vid] = marker;
                 marker.start();
-                if(vid in old_pairs) {
+                if (vid in old_pairs) {
                     old_pairs[vid].removeFrom(map);
                 }
                 // console.log(marker.isEnded());
-                const poly = L.polyline(polyline.decode(response.routes[0].geometry), {color:"gray"});
-                    // console.log(poly);
+                const poly = L.polyline(polyline.decode(response.routes[0].geometry), { color: "gray" });
+                // console.log(poly);
                 poly.addTo(map);
                 old_pairs[vid] = poly;
                 // });
 
-                });
-                // console.log(marker.isRunning());
-                // marker.setLatLng(loc_list).update();
-                // var marker = (marker_obj[this.vid]);
-                // marker.setLatLng(loc_list).update();
             });
+            // console.log(marker.isRunning());
+            // marker.setLatLng(loc_list).update();
+            // var marker = (marker_obj[this.vid]);
+            // marker.setLatLng(loc_list).update();
+        });
 
-            $.each(data.lanta, function() {
-                // cardinality_arr[this.vid] = new Set();
-                // console.log(cardinality_arr);
-                const vid = this.bus_id;
-                var loc_list = [this.latitude, this.longitude];
+        $.each(data.lanta, function() {
+            // cardinality_arr[this.vid] = new Set();
+            // console.log(cardinality_arr);
+            const vid = this.bus_id;
+            var loc_list = [this.latitude, this.longitude];
 
-                const proj_lat = this.projected_coords.lat;
-                const proj_long = this.projected_coords.long;
-                // const vid = this.bus_id;
-                var loc_list = [this.latitude, this.longitude];
-                // const lc = L.LatLng(this.latitude, this.longitude);
-                if(!(vid in marker_obj)) {
-                    marker_obj[vid] = L.Marker.movingMarker([loc_list, loc_list],[29000000000],{ icon: lanta }).bindPopup("System: LANTA<br>"+"VID: "+vid).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
-                }
-                let marker = (marker_obj[vid]);
-                const {lat, lng} = marker.getLatLng();
+            const proj_lat = this.projected_coords.lat;
+            const proj_long = this.projected_coords.long;
+            // const vid = this.bus_id;
+            var loc_list = [this.latitude, this.longitude];
+            // const lc = L.LatLng(this.latitude, this.longitude);
+            if (!(vid in marker_obj)) {
+                marker_obj[vid] = L.Marker.movingMarker([loc_list, loc_list], [29000000000], { icon: lanta }).bindPopup("System: LANTA<br>" + "VID: " + vid).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
+            }
+            let marker = (marker_obj[vid]);
+            const { lat, lng } = marker.getLatLng();
 
-                if((lat === loc_list[0]) && (lng === loc_list[1])) {
-                    return 1;
-                } else if(marker.isRunning()) {
-                    return 1;
-                }
+            if ((lat === loc_list[0]) && (lng === loc_list[1])) {
+                return 1;
+            } else if (marker.isRunning()) {
+                return 1;
+            }
 
-                if(!proj_long || !proj_lat) {
-                    return 1;
-                }
-                $.getJSON(`https://routeserver.codyben.me/route/v1/driving/${proj_long},${proj_lat};${lng},${lat}?overview=full`, function(response) {
+            if (!proj_long || !proj_lat) {
+                return 1;
+            }
+            $.getJSON(`https://routeserver.codyben.me/route/v1/driving/${proj_long},${proj_lat};${lng},${lat}?overview=full`, function(response) {
                 const pairs = polyline.decode(response.routes[0].geometry);
                 // console.log(marker.isEnded());
                 // marker.removeFrom(map);
@@ -409,39 +410,39 @@ function update_map(map) {
                 marker.moveTo(pairs[pairs.length - 1], 1);
 
                 // old_pairs[vid] = L.marker(loc_list,{ icon: new_position }).addTo(map);
-                $.each(pairs.reverse(), function(){
+                $.each(pairs.reverse(), function() {
                     // console.log(this);
                     marker.addLatLng(this, [1400]);
                 });
                 marker_obj[vid] = marker;
                 marker.start();
-                if(vid in old_pairs) {
+                if (vid in old_pairs) {
                     old_pairs[vid].removeFrom(map);
                 }
                 // console.log(marker.isEnded());
                 const poly = L.polyline(polyline.decode(response.routes[0].geometry));
-                    // console.log(poly);
+                // console.log(poly);
                 poly.addTo(map);
                 old_pairs[vid] = poly;
                 // marker_obj[this.vid] = L.marker(, {icon: lanta}).addTo(map);
 
             });
-    });
-    //NOW WE ARE OUT OF ifFirstRun
-    //TODO: fix this (doesn't account for LANTA). ATM, nothing updates after initial placement
-    //TODO: Done :)
-    //     $.each(data, function() { //
-    //         // console.log(this);
-    //         if (this.arrival_delta < 0.5) { //how much time for bus to get to stop (from JSON)
-    //             this.arrival_delta = "Arriving soon"; //if less then 30sec
-    //         } else {
-    //             this.arrival_delta = this.arrival_delta + " minutes"; //TODO: change to sec for 30sec to 1 min
-    //         }
-    //         console.log("Bus (VID:" + this.vid + ") and (Num:" + this.fleetnum + ") is going from " + this.last_stop + " to " + this.next_stop + " in " + this.arrival_delta);
-    //         var marker = (marker_obj[this.vid]);
-    //         marker.setLatLng([this.lat, this.long]).update();
-    //         marker.bindPopup("<b>" + this.key + "</b><br>" + "Going to " + this.next_stop + " in " + this.arrival_delta);
-    //     });
+        });
+        //NOW WE ARE OUT OF ifFirstRun
+        //TODO: fix this (doesn't account for LANTA). ATM, nothing updates after initial placement
+        //TODO: Done :)
+        //     $.each(data, function() { //
+        //         // console.log(this);
+        //         if (this.arrival_delta < 0.5) { //how much time for bus to get to stop (from JSON)
+        //             this.arrival_delta = "Arriving soon"; //if less then 30sec
+        //         } else {
+        //             this.arrival_delta = this.arrival_delta + " minutes"; //TODO: change to sec for 30sec to 1 min
+        //         }
+        //         console.log("Bus (VID:" + this.vid + ") and (Num:" + this.fleetnum + ") is going from " + this.last_stop + " to " + this.next_stop + " in " + this.arrival_delta);
+        //         var marker = (marker_obj[this.vid]);
+        //         marker.setLatLng([this.lat, this.long]).update();
+        //         marker.bindPopup("<b>" + this.key + "</b><br>" + "Going to " + this.next_stop + " in " + this.arrival_delta);
+        //     });
     });
 }
 
@@ -490,24 +491,58 @@ mymap.addLayer(tile_style['default']);
 update_map(mymap);
 setInterval(function(mymap) { update_map(mymap) }, 2000, mymap); //TODO: will update map every 'interval'
 
+// Center map view on click from the stops list
+function find_stop(lat, lng) {
+    mymap.setView([lat, lng], 16);
+}
+
 // Populate side-menu on render
-$('#stops').append('<ul class="pure-menu-list transportation-list" style="display: none; background-color: rgb(107, 46, 3); font-size: 15px;"></ul>');
+$('#stops').append('<ul class="pure-menu-list" id="init-stop-list" style="display: none; background-color: rgb(107, 46, 3); font-size: 15px;"></ul>');
 
 const keys = Object.keys(stops);
 
-$.each(keys, function(){
+$.each(keys, function() {
     const bus = this;
-    $('.transportation-list').append('<a id="transportation-item" class="pure-menu-link" onclick="show_stops(\''+this+'\')">' + this.charAt(0).toUpperCase() + this.slice(1) + '</a>');
-    $('.transportation-list').append('<ul class="pure-menu-list" id="stops-list-'+this+'" style="display: none; background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height:125px"></ul>');
-    $.each(stops[this], function(){
-        $('#stops-list-' + bus).append('<li><a id="stops-item" class="pure-menu-link">'+this.name+'</a></li>')
-        console.log(this.name);
+    let stops_tracker = new Map();
+    var count = 0;
+    $('#init-stop-list').append('<a id="transportation-item" class="pure-menu-link" onclick="show_stops(\'' + this + '\')">' + this.charAt(0).toUpperCase() + this.slice(1) + '</a>');
+    $('#init-stop-list').append('<ul class="pure-menu-list" id="stops-list-' + this + '" style="display: none; background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height: 52.2vh;"></ul>');
+    $.each(stops[this], function() {
+        if (!stops_tracker.has(this.name)) {
+            $('#stops-list-' + bus).append('<li><a class="pure-menu-link stops-item" onclick="find_stop(' + this.latitude + ',' + this.longitude + ')">' + this.name + '</a></li>');
+            count++;
+            stops_tracker.set(this.name, true);
+        }
     })
+    console.log(this + " " + count);
 })
 
-// Animate Hamburger Icon on smaller screens
-function animateHamburger(elem){
-    console.log("HERE")
-    elem.classList.toggle("change");
+// Create array of lat,lon points.
+var line_points = [
+    [38.893596444352134, -77.0381498336792],
+    [38.89337933372204, -77.03792452812195],
+    [38.89316222242831, -77.03761339187622],
+    [38.893028615148424, -77.03731298446655],
+    [38.892920059048464, -77.03691601753235],
+    [38.892903358095296, -77.03637957572937],
+    [38.89301191422077, -77.03592896461487],
+    [38.89316222242831, -77.03549981117249],
+    [38.89340438498248, -77.03514575958252],
+    [38.893596444352134, -77.0349633693695]
+];
 
+// Define polyline options
+// http://leafletjs.com/reference.html#polyline
+var polyline_options = {
+    color: '#000'
+};
+
+// Defining a polygon here instead of a polyline will connect the
+// endpoints and fill the path.
+// http://leafletjs.com/reference.html#polygon
+var polyline = L.polyline(line_points, polyline_options).addTo(map);
+
+// Animate Hamburger Icon on smaller screens
+function animateHamburger(elem) {
+    elem.classList.toggle("change");
 }

@@ -32,16 +32,8 @@ This is the parent `<div>` that contains the menu and the content area.
     position: relative;
     left: 0;
     padding-left: 0;
-}
-
-#layout.active #menu {
-    left: 150px;
-    min-width: 150px;
-    overflow: hidden;
-}
-
-#layout.active .menu-link {
-    left: 150px;
+    height:100%;
+    width:100%
 }
 
 
@@ -51,9 +43,8 @@ The content `<div>` is where all your content goes.
 
 .content {
     margin: 0 auto;
-    padding: 0 2em;
-    max-width: 800px;
-    margin-bottom: 50px;
+    width:100%;
+    height:100%;
     line-height: 1.6em;
 }
 
@@ -91,9 +82,9 @@ appears on the left side of the page.
 */
 
 #menu {
-    margin-left: -150px;
+    margin-left: calc(-100vw + 37px);
     /* "#menu" width */
-    width: 150px;
+    width: calc(100vw - 37px);
     position: fixed;
     top: 0;
     left: 0;
@@ -298,27 +289,34 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 */
 
 @media (min-width: 769px) {
+    #icon-cred-container {
+        width: 335px;
+    }
     .header,
     .content {
         padding-left: 2em;
         padding-right: 2em;
+        width:100%;
+        height:100%;
     }
     #layout {
         display: flex;
         flex-direction: row;
-        padding-left: 150px;
         /* left col width "#menu" */
-        left: 0;
+        left: 335px;
+        width: calc(100vw - 335px);
     }
     #menu {
-        width: 150px;
+        width: 335px;
+        margin-left: -335px;
         margin-top: 42px;
         display: block;
-        left: 150px;
+        left: 335px;
         height: calc(100% - 42px);
     }
     #map{
         display: block;
+        height:100%;
     }
     .menu-link {
         position: fixed;
@@ -333,20 +331,39 @@ Hides the menu at `48em`, but modify this based on your app's needs.
 
 @media (max-width: 768px) {
     /* Only apply this when the window is small. Otherwise, the following
-    case results in extra padding on the left:
+    	* case results in extra padding on the left:
         * Make the window small.
         * Tap the menu to trigger the active state.
         * Make the window large again.
     */
+    #layout.active #menu {
+        left: calc(100vw - 37px);
+        min-width: 150px;
+        overflow: hidden;
+    }
+    
+    #layout.active .menu-link {
+        left: 150px;
+    }
+    #icon-cred-container {
+        width: calc(100vw - 37px);
+    }
+    #menu {
+        margin-left: calc(-100vw + 37px);
+        width: calc(100vw - 37px);
+    }
     #layout.active {
         position: relative;
-        left: 150px;
+        left: calc(100vw - 37px);
+    }
+    #layout.active #menu{
+        height: 100vh;
     }
     #topbar.active{
-        padding-left: 200px;
+        padding-left: 375px;
     }
     #topbar.active .menu-link {
-        left: 150px;
+        left: calc(100vw - 37px);
         
     }
     #topbar-home{
@@ -360,6 +377,6 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         padding-left: 50px;
         transition: 0.25s;
         max-height: 24.8px;
-        width: calc(100% + 200px);
+        width: auto;
     }
 }
