@@ -160,7 +160,7 @@ function calc_nearest(position) {
         var b_lat = parseFloat(this.latitude);
         var b_lon = parseFloat(this.longitude);
         var dist = distance(lat, lon, b_lat, b_lon, 'M');
-        var key = this.name;
+        var key = this.stop_id;
         if (isNaN(dist)) {
             dist = 9999999999999;
         }
@@ -175,7 +175,7 @@ function calc_nearest(position) {
         if (isNaN(dist)) {
             dist = 9999999999999;
         }
-        var key = this.Name
+        var key = this.stop_id;
         dist_arr_lanta.push({ "key": key, "dist": dist, "r": dist.toString() });
         // console.log(dist_arr_lanta);
     });
