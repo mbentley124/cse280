@@ -285,16 +285,17 @@ const new_position = L.icon({
 
 function draw_stops(map) {
     $.each(stops.lehigh, function() { //LOOP: gets all stops for lehigh and places them on map
-<<<<<<< HEAD
+        <<
+        << << < HEAD
 
         stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#68310A" }).bindPopup(this.name).addTo(map).on('click', function(e) {
             console.log(this.name);
             map.setView([this.getLatLng().lat, this.getLatLng().lng], 16);
-        });
-=======
-        
-        stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#68310A" }).bindPopup(this.name).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
->>>>>>> bb24e26e85ce40e698c9fd3be5336986fe46305c
+        }); ===
+        === =
+
+        stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#68310A" }).bindPopup(this.name).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); }); >>>
+        >>> > bb24e26e85ce40e698c9fd3be5336986fe46305c
 
         //  console.log(cardinality_arr);
     });
@@ -513,7 +514,7 @@ update_map(mymap);
 setInterval(function(mymap) { update_map(mymap) }, 2000, mymap); //TODO: will update map every 'interval'
 
 // Center map view on click from the stops list
-function find_stop(lat,lng,name){
+function find_stop(lat, lng, name) {
     mymap.setView([lat, lng], 16);
     stop_arr[name].openPopup();
 }
@@ -527,11 +528,11 @@ $.each(keys, function() {
     const bus = this;
     let stops_tracker = new Map();
     var count = 0;
-    $('#init-stop-list').append('<a id="transportation-item" class="pure-menu-link" onclick="show_stops(\''+this+'\')">' + this.charAt(0).toUpperCase() + this.slice(1) + '</a>');
-    $('#init-stop-list').append('<ul class="pure-menu-list" id="stops-list-'+this+'" style="display: none; background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height: 52.2vh;"></ul>');
-    $.each(stops[this], function(){
-        if(!stops_tracker.has(this.name)){
-            $('#stops-list-' + bus).append('<li><a class="pure-menu-link stops-item" onclick="find_stop('+this.latitude+','+this.longitude+',\''+this.name+'\')">'+this.name+'</a></li>');
+    $('#init-stop-list').append('<a id="transportation-item" class="pure-menu-link" onclick="show_stops(\'' + this + '\')">' + this.charAt(0).toUpperCase() + this.slice(1) + '</a>');
+    $('#init-stop-list').append('<ul class="pure-menu-list" id="stops-list-' + this + '" style="display: none; background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height: 52.2vh;"></ul>');
+    $.each(stops[this], function() {
+        if (!stops_tracker.has(this.name)) {
+            $('#stops-list-' + bus).append('<li><a class="pure-menu-link stops-item" onclick="find_stop(' + this.latitude + ',' + this.longitude + ',\'' + this.name + '\')">' + this.name + '</a></li>');
             count++;
             stops_tracker.set(this.name, true);
         }
@@ -546,11 +547,13 @@ function animateHamburger(elem) {
     elem.classList.toggle("change");
 }
 
+//show about page
 function showAbout() {
     $("#about").toggle()
     $("#map").toggle()
 }
 
+//string from about page
 var html_string = `<div id="about" style="padding: 2%;">
     <h1>About</h1>
     <p>This bus tracker is a Lehigh University CSE Capstone project by Cody Benkowski, Hansen Lukman, Michael Bentley, and Joseph Malisov.</p>
@@ -571,8 +574,6 @@ var html_string = `<div id="about" style="padding: 2%;">
     </ul>
     <p>Created in 2020.</p>
 </div>`;
-// fetch('html/about.html')
-//     .then(response => response.text())
-//     .then(text => html_string = text)
+
 $(html_string).insertAfter("#map")
 $("#about").toggle()
