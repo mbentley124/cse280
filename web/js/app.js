@@ -287,7 +287,7 @@ const new_position = L.icon(
 function draw_stops(map) {
     $.each(stops.lehigh, function() { //LOOP: gets all stops for lehigh and places them on map
         
-        stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#68310A" }).bindPopup(this.name).addTo(map).on('click', function(e) { console.log(this.name); map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
+        stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#68310A" }).bindPopup(this.name).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
 
         //  console.log(cardinality_arr);
     });
@@ -491,8 +491,9 @@ update_map(mymap);
 setInterval(function(mymap) { update_map(mymap) }, 2000, mymap); //TODO: will update map every 'interval'
 
 // Center map view on click from the stops list
-function find_stop(lat,lng){
+function find_stop(lat,lng,name){
     mymap.setView([lat, lng], 16);
+    stop_arr[name].openPopup();
 }
 
 // Populate side-menu on render
@@ -508,7 +509,7 @@ $.each(keys, function(){
     $('#init-stop-list').append('<ul class="pure-menu-list" id="stops-list-'+this+'" style="display: none; background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height: 52.2vh;"></ul>');
     $.each(stops[this], function(){
         if(!stops_tracker.has(this.name)){
-            $('#stops-list-' + bus).append('<li><a class="pure-menu-link stops-item" onclick="find_stop('+this.latitude+','+this.longitude+')">'+this.name+'</a></li>');
+            $('#stops-list-' + bus).append('<li><a class="pure-menu-link stops-item" onclick="find_stop('+this.latitude+','+this.longitude+',\''+this.name+'\')">'+this.name+'</a></li>');
             count++;
             stops_tracker.set(this.name,true);
         }
