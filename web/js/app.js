@@ -540,33 +540,20 @@ function animateHamburger(elem) {
     elem.classList.toggle("change");
 }
 
+//toggle the visibility of the about page.
 function showAbout() {
     $("#about").toggle()
     $("#map").toggle()
 }
 
-var html_string = `<div id="about" style="padding: 2%;">
-    <h1>About</h1>
-    <p>This bus tracker is a Lehigh University CSE Capstone project by Cody Benkowski, Hansen Lukman, Michael Bentley, and Joseph Malisov.</p>
-    <p>Technology used includes:</p>
-    <ul>
-        <li>
-            Leaflet, for drawing the map.
-        </li>
-        <li>
-            Python, for scraping the data from Lehigh's and LANTA's websites.
-        </li>
-        <li>
-            JavaSpark, for our backend.
-        </li>
-        <li>
-            PostgreSQL, for our database.
-        </li>
-    </ul>
-    <p>Created in 2020.</p>
-</div>`;
-// fetch('html/about.html')
-//     .then(response => response.text())
-//     .then(text => html_string = text)
-$(html_string).insertAfter("#map")
-$("#about").toggle()
+//get the about page html contents from about.html and insert them into index.html
+async function make_about() {
+    await fetch('html/about.html')
+        .then(response => response.text())
+        .then(text => {
+            $(text).insertAfter("#map")
+            $("#about").toggle()
+        })
+}
+
+make_about()
