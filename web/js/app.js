@@ -286,8 +286,10 @@ const new_position = L.icon({
 function draw_stops(map) {
     $.each(stops.lehigh, function() { //LOOP: gets all stops for lehigh and places them on map
 
-        stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#68310A" }).bindPopup(this.name).addTo(map).on('click', function(e) { console.log(this.name);
-            map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
+        stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#68310A" }).bindPopup(this.name).addTo(map).on('click', function(e) {
+            console.log(this.name);
+            map.setView([this.getLatLng().lat, this.getLatLng().lng], 16);
+        });
 
         //  console.log(cardinality_arr);
     });
@@ -303,46 +305,45 @@ function draw_stops(map) {
 
 async function draw_polyline_sample(map) {
     const routes = await fetch("temp_routes_lu.json")
-    .then((data) => data.json())
-    .then(
-        (parsed) => {
-            const routes = [];
+        .then((data) => data.json())
+        .then(
+            (parsed) => {
+                const routes = [];
 
-            $.each(parsed, function(){
-                console.log(this);
-                const {color, path, name} = this;
-                routes.push({color: color, path:path, name:name});
-            });            
+                $.each(parsed, function() {
+                    console.log(this);
+                    const { color, path, name } = this;
+                    routes.push({ color: color, path: path, name: name });
+                });
 
-            return routes;
-        }
-    );
+                return routes;
+            }
+        );
     const polylines = {};
 
-    $.each(routes, function(){
+    $.each(routes, function() {
         const polyline = [];
-        for(let i = 0; i < this.path.length; i += 2) {
-            polyline.push(new L.LatLng(this.path[i], this.path[i+1]));
+        for (let i = 0; i < this.path.length; i += 2) {
+            polyline.push(new L.LatLng(this.path[i], this.path[i + 1]));
         }
         const leaflet_line = new L.polyline(
-            polyline,
-            {
+            polyline, {
                 color: this.color,
                 smoothFactor: 2,
             }
         );
-        if(this.name == "Campus Connnector") {
+        if (this.name == "Campus Connnector") {
             this.name = "Campus Connector";
         }
         polylines[this.name] = {
-            color: this.color,
-            path: polyline,
-            leaflet_obj: leaflet_line,
-            onmap: false,
-        }
-        // leaflet_line.addTo(map);
+                color: this.color,
+                path: polyline,
+                leaflet_obj: leaflet_line,
+                onmap: false,
+            }
+            // leaflet_line.addTo(map);
     });
-        
+
     polyline_global = polylines;
     return polylines;
 
@@ -476,15 +477,15 @@ function update_map(map) {
                 // marker_obj[this.vid] = L.marker(, {icon: lanta}).addTo(map);
 
             });
-        } );
+        });
 
     });
 }
 
 function toggle_polylines_sample(name) {
-    if(name in polyline_global) {
-        const {leaflet_obj, onmap} = polyline_global[name];
-        if(onmap) {
+    if (name in polyline_global) {
+        const { leaflet_obj, onmap } = polyline_global[name];
+        if (onmap) {
             leaflet_obj.removeFrom(mymap);
             polyline_global[name].onmap = false;
             return false;
@@ -538,3 +539,34 @@ $.each(keys, function() {
 function animateHamburger(elem) {
     elem.classList.toggle("change");
 }
+
+function showAbout() {
+    $("#about").toggle()
+    $("#map").toggle()
+}
+
+var html_string = `<div id="about" style="padding: 2%;">
+    <h1>About</h1>
+    <p>This bus tracker is a Lehigh University CSE Capstone project by Cody Benkowski, Hansen Lukman, Michael Bentley, and Joseph Malisov.</p>
+    <p>Technology used includes:</p>
+    <ul>
+        <li>
+            Leaflet, for drawing the map.
+        </li>
+        <li>
+            Python, for scraping the data from Lehigh's and LANTA's websites.
+        </li>
+        <li>
+            JavaSpark, for our backend.
+        </li>
+        <li>
+            PostgreSQL, for our database.
+        </li>
+    </ul>
+    <p>Created in 2020.</p>
+</div>`;
+// fetch('html/about.html')
+//     .then(response => response.text())
+//     .then(text => html_string = text)
+$(html_string).insertAfter("#map")
+$("#about").toggle()
