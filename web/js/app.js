@@ -11,6 +11,8 @@
 //     maxZoom: 18,
 // });
 
+var stops_list = []
+
 tile_style['default'] = L.tileLayer(tile_server_url, { //takes tile server URL and will return a tile
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
@@ -512,8 +514,11 @@ function find_stop(lat, lng) {
     mymap.setView([lat, lng], 16);
 }
 const poly_func = draw_polyline_sample(mymap);
+
 // Populate side-menu on render
 $('#stops').append('<ul class="pure-menu-list" id="init-stop-list" style="display: none; background-color: rgb(107, 46, 3); font-size: 15px;"></ul>');
+$('#init-stop-list').append('<input type="text" id="search" placeholder="Search" onkeypress="render_search_results()">');
+
 
 const keys = Object.keys(stops);
 
@@ -528,6 +533,7 @@ $.each(keys, function() {
             $('#stops-list-' + bus).append('<li><a class="pure-menu-link stops-item" onclick="find_stop(' + this.latitude + ',' + this.longitude + ')">' + this.name + '</a></li>');
             count++;
             stops_tracker.set(this.name, true);
+            stops_list.push(this);
         }
     })
     console.log(this + " " + count);
