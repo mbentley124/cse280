@@ -493,6 +493,9 @@ function toggle_polylines_sample(name) {
             polyline_global[name].onmap = false;
             return false;
         } else {
+            polyline_global.forEach((route, index) => {
+                route.onmap = false;
+            });
             polyline_global[name].onmap = true;
             leaflet_obj.addTo(mymap);
             return true;
@@ -554,7 +557,7 @@ var lc = L.control.locate({
 }).addTo(mymap);
 
 lc.start();
-lc.stopFollowing()
+lc.stopFollowing();
 
 // Animate Hamburger Icon on smaller screens
 function animateHamburger(elem) {
