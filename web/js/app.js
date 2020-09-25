@@ -15,6 +15,8 @@ var stops_list = []
 
 var highlighted_route = null;
 
+const stop_obj = {};
+
 tile_style['default'] = L.tileLayer(tile_server_url, { //takes tile server URL and will return a tile
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
@@ -295,14 +297,14 @@ function draw_stops(map) {
             console.log(this.name);
             map.setView([this.getLatLng().lat, this.getLatLng().lng], 16);
         });
-
+        stop_obj[this.stop_id] = this.name;
         //  console.log(cardinality_arr);
     });
 
     $.each(stops.lanta, function() { //LOOP: gets all stops for lanta and places them on map
 
         stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#004BBD" }).bindPopup(this.name, { maxWidth: '500px' }).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
-
+        stop_obj[this.stop_id] = this.name;
         //  console.log(cardinality_arr);
     });
 
@@ -355,134 +357,62 @@ async function draw_polyline_sample(map) {
 
 }
 
+function draw_buses(bus_obj, map) {
+    const buses_running = new Set();
+    $.each(bus_obj, function(k,bus){
+        const {bus_id, short_name, latitude, longitude, route_id, route_name, service, timings} = bus;
+        let {next_stop, last_stop} = bus;
+        if(service == "Lehigh") {
+            next_stop = stop_obj[next_stop];
+            last_stop = stop_obj[last_stop];
+        }
+        const icon_style = ((service == "Lehigh") ? lehigh : lanta); //will only work for two bus services.
+        if(bus_id in marker_obj) {
+            marker_obj[bus_id].setLatLng([latitude, longitude]).update();
+        } else {
+            marker_obj[bus_id] = L.marker([latitude, longitude], { icon: icon_style }).addTo(map);
+            marker_obj[bus_id].bindPopup(""); //bind a simple popup for use later.
+        }
+        const marker = marker_obj[bus_id];
+        let popup_content = "Error";
+        if(timings == null) {
+            popup_content = `${service} Bus: ${bus_id} <br>On route: ${route_id} <br> Previous stop: ${last_stop}`;
+        } else {
+            const {minutes, seconds, total_time} = timings;
+            let time_str = `${minutes} minutes & ${seconds} seconds.`;
+            if(minutes == 0 && seconds < 20) {
+                time_str = "Arriving Soon.";
+            }
+            popup_content = `${service} Bus: ${bus_id} <br>On route: ${route_id} <br> ${last_stop} => ${next_stop} in ${time_str}`;
+        }
+        marker.setPopupContent(popup_content); 
+        buses_running.add(bus_id);
+    });
+    const buses_with_markers = new Set(Array.from(bus_obj.keys()));
+    const buses_to_be_removed = new Set([...buses_with_markers].filter(x => !buses_running.has(x))); //https://stackoverflow.com/questions/1723168/what-is-the-fastest-or-most-elegant-way-to-compute-a-set-difference-using-javasc
+    $.each(buses_to_be_removed, function(){
+        marker_obj[this].removeFrom(map);
+    });
+}
 function update_map(map) {
     //console.log(map)
-    $.getJSON("https://bus.codyben.me/bus_data.json", function(data) { //gets data from JSON file which was created by scraper
-
-        $.each(data.lehigh, function() {
-            // cardinality_arr[this.vid] = new Set();
-            // console.log(cardinality_arr);
-            // let img = lu;
-            // if (this.key == "CC") {
-            //     img = cc;
-            //     route_to_use = cc_routes;
-            // } else if (this.key == "PE") {
-            //     img = pe;
-            //     route_to_use = pe_routes;
-            // } else if (this.key == "FW") {
-            //     img = fw;
-            //     route_to_use = fw_routes;
-            // }
-            const vid = this.bus_id;
-            var loc_list = [this.latitude, this.longitude];
-            // const lc = L.LatLng(this.latitude, this.longitude);
-            if (!(vid in marker_obj)) {
-                marker_obj[vid] = L.Marker.movingMarker([loc_list, loc_list], [29000000000], { icon: lehigh }).bindPopup("System: LU-TPS<br>" + "VID: " + vid).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
-            }
-            let marker = (marker_obj[vid]);
-            const { lat, lng } = marker.getLatLng();
-
-
-            if ((lat === loc_list[0]) && (lng === loc_list[1])) {
-                return 1;
-            } else if (marker.isRunning()) {
-                return 1;
-            }
-
-            const proj_lat = this.projected_coords.lat;
-            const proj_long = this.projected_coords.long;
-
-            if (!proj_long || !proj_lat) {
-                return 1;
-            }
-            $.getJSON(`https://routeserver.codyben.me/route/v1/driving/${proj_long},${proj_lat};${lng},${lat}?overview=full`, function(response) {
-                // if(response.routes[0].duration > 30) {
-                //     marker.moveTo(loc_list, [500]);
-                //     return 1; //abort on long running trips.
-                // }
-                const pairs = polyline.decode(response.routes[0].geometry);
-                // console.log(marker.isEnded());
-                marker.moveTo(loc_list, [500]);
-                map.removeLayer(marker);
-                marker = L.Marker.movingMarker([
-                    [lat, lng], loc_list
-                ], [1000000000], { icon: lehigh }).bindPopup("System: LU-TPS<br>" + "VID: " + vid).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
-                marker.moveTo(pairs[pairs.length - 1], 1);
-                $.each(pairs.reverse(), function() {
-                    // console.log(this);
-                    marker.addLatLng(this, [1100]);
-                });
-                marker_obj[vid] = marker;
-                marker.start();
-                if (vid in old_pairs) {
-                    old_pairs[vid].removeFrom(map);
-                }
-                // console.log(marker.isEnded());
-                const poly = L.polyline(polyline.decode(response.routes[0].geometry), { color: "gray" });
-                // console.log(poly);
-                poly.addTo(map);
-                old_pairs[vid] = poly;
-                // });
-
+    $.get("https://bus.codyben.me/bus_data.json", function(data, textStatus, xhr) { //gets data from JSON file which was created by scraper
+        //removing animated moving markers for now, will probably just animate along a polyline in the future.
+        console.log(xhr);
+        console.log(data);
+        if(xhr.status == 304) {
+            //unchanged file, so don't redraw buses.
+            //begin any animations here.
+        } else if(xhr.status == 404 || xhr.status == 500) {
+            console.error("Failed to get bus data");
+        } else if(xhr.status == 200) {
+            $.each(data, function(){
+                draw_buses(this, map);
             });
-            // console.log(marker.isRunning());
-            // marker.setLatLng(loc_list).update();
-            // var marker = (marker_obj[this.vid]);
-            // marker.setLatLng(loc_list).update();
-        });
-
-        $.each(data.lanta, function() {
-            // cardinality_arr[this.vid] = new Set();
-            // console.log(cardinality_arr);
-            const vid = this.bus_id;
-            var loc_list = [this.latitude, this.longitude];
-
-            const proj_lat = this.projected_coords.lat;
-            const proj_long = this.projected_coords.long;
-            // const vid = this.bus_id;
-            var loc_list = [this.latitude, this.longitude];
-            // const lc = L.LatLng(this.latitude, this.longitude);
-            if (!(vid in marker_obj)) {
-                marker_obj[vid] = L.Marker.movingMarker([loc_list, loc_list], [29000000000], { icon: lanta }).bindPopup("System: LANTA<br>" + "VID: " + vid).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
-            }
-            let marker = (marker_obj[vid]);
-            const { lat, lng } = marker.getLatLng();
-
-            if ((lat === loc_list[0]) && (lng === loc_list[1])) {
-                return 1;
-            } else if (marker.isRunning()) {
-                return 1;
-            }
-
-            if (!proj_long || !proj_lat) {
-                return 1;
-            }
-            $.getJSON(`https://routeserver.codyben.me/route/v1/driving/${proj_long},${proj_lat};${lng},${lat}?overview=full`, function(response) {
-                const pairs = polyline.decode(response.routes[0].geometry);
-                // console.log(marker.isEnded());
-                // marker.removeFrom(map);
-                // marker = L.Marker.movingMarker([[lat, lng], loc_list],[1000000000],{ icon: lanta }).bindPopup("System: LANTA<br>"+"VID: "+vid).addTo(map);
-                marker.moveTo(pairs[pairs.length - 1], 1);
-
-                // old_pairs[vid] = L.marker(loc_list,{ icon: new_position }).addTo(map);
-                $.each(pairs.reverse(), function() {
-                    // console.log(this);
-                    marker.addLatLng(this, [1400]);
-                });
-                marker_obj[vid] = marker;
-                marker.start();
-                if (vid in old_pairs) {
-                    old_pairs[vid].removeFrom(map);
-                }
-                // console.log(marker.isEnded());
-                const poly = L.polyline(polyline.decode(response.routes[0].geometry));
-                // console.log(poly);
-                poly.addTo(map);
-                old_pairs[vid] = poly;
-                // marker_obj[this.vid] = L.marker(, {icon: lanta}).addTo(map);
-
-            });
-        });
+        } else {
+            console.error("Received Response Code: "+xhr.status);
+            console.error("Not drawing buses.");
+        }
 
     });
 }
@@ -549,22 +479,26 @@ $.each(keys, function() {
     })
     console.log(this + " " + count);
 })
+try {
+    var lc = L.control.locate({
+        flyTo: true,
+        showCompass: true,
+        locateOptions: {
+            enableHighAccuracy: true
+        },
+        strings: {
+            title: "Your location"
+        },
+        drawCircle: false,
+        keepCurrentZoomLevel: true
+    }).addTo(mymap);
+    
+    lc.start();
+    lc.stopFollowing();
+}catch(e) {
+    console.warn(e.toString());
+}
 
-var lc = L.control.locate({
-    flyTo: true,
-    showCompass: true,
-    locateOptions: {
-        enableHighAccuracy: true
-    },
-    strings: {
-        title: "Your location"
-    },
-    drawCircle: false,
-    keepCurrentZoomLevel: true
-}).addTo(mymap);
-
-lc.start();
-lc.stopFollowing();
 
 // Animate Hamburger Icon on smaller screens
 function animateHamburger(elem) {
