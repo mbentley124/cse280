@@ -1,7 +1,7 @@
 from BusStop import BusStop
 from Bus import Bus
 from BusRoute import BusRoute
-import requests, os
+import requests, os, json
 import time as t
 from multiprocessing import Pool
 class LehighScraper:
@@ -10,10 +10,14 @@ class LehighScraper:
     last_stops = t.time()
     routes = []
     clean_stops = {}
+    routes_from_java_script = []
     def __init__(self, scraping_url = "https://lehigh.doublemap.com/map/v2/buses", next_stop=False):
         self.scraping_url = scraping_url
         self.next_stop = next_stop
         print("Initialized LehighScraper | PID: {}".format(os.getpid()))
+        with open("routes.json", "r") as r:
+            self.routes_from_java_script = json.load(r)
+            print("Loaded route file successfully.")
     
     def request_buses(self, processing = None, return_data = False):
         response = requests.get(self.scraping_url)
@@ -58,7 +62,8 @@ class LehighScraper:
             do_projection=self.projection,
             do_next_stop=self.next_stop,
             service="Lehigh",
-            stops=self.clean_stops
+            stops=self.clean_stops,
+            routes=self.routes_from_java_script
             ).to_dict()
 
     def request_stops(self, url = "https://lehigh.doublemap.com/map/v2/stops", processing = None, return_data = False):
