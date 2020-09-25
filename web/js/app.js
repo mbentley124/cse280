@@ -115,7 +115,7 @@ function toggle_style(style) { //use buttons to toggle dark mode on/off
 function do_location() {
 
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(calc_nearest);
+        calc_nearest();
     } else {
         alert("Geolocation is not supported by this browser.");
     }
@@ -155,10 +155,9 @@ function sortByKey(array, key) {
     });
 }
 
-function calc_nearest(position) {
-    var lat = position.coords.latitude;
-    var lon = position.coords.longitude;
-    console.log(lc.getLatLng())
+function calc_nearest() {
+    var lat = lc._marker._latlng.lat;
+    var lon = lc._marker._latlng.lng;
     var dist_arr_lu = []
     var dist_arr_lanta = []
         //replace with combined stops array
