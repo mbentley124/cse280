@@ -28,10 +28,25 @@ class Bus:
             if not (curr_route is None):
                 new_route = self.pivot_unwrap(curr_route, self.last_stop)
                 self.next_stop = new_route[1]
-                for stop in stops:
-                    if stop.get("stop_id") == self.next_stop:
-                        self.timings = self.time_to(stop.get("latitude"), stop.get("longitude"), self.latitude, self.longitude)
-                        # print(self.timings)
+                self.timings = {}
+                stop_map = self.align_routes(stops, new_route)
+                first_lookahead = stop_map[str(self.next_stop)]
+                first = self.time_to(self.latitude, self.longitude, first_lookahead.get("latitude"), first_lookahead.get("longitude"))
+                accumulation = first.get("total_time", 0)
+                self.timings[first_lookahead.get("stop_id")] = first
+                for cntr, stop_id in enumerate(new_route[2:], 2):
+                    # print(cntr)
+                    if new_route[cntr] == 156 or new_route[cntr - 1] == 156:
+                        continue # TODO: Missing stop?
+                    last = stop_map[str(new_route[cntr - 1])]
+                    curr = stop_map[str(new_route[cntr])]
+                    time_dict = self.time_to(last.get("latitude"), last.get("longitude"), curr.get("latitude"), curr.get("longitude"), accumulation)
+                    self.timings[curr.get("stop_id")] = time_dict
+                    accumulation = time_dict.get("total_time")
+
+
+                        
+                # print(self.timings)
 
     def to_json(self):
         return json.dumps(self.to_dict())
@@ -40,7 +55,18 @@ class Bus:
         index = route.index(stop)
         return [*route[index:],*route[:index]]
 
-    def time_to(self, lat1, lng1, lat2, lng2):
+    def align_routes(self, stop_dicts, stop_ids):
+        # TODO: Make this not a double loop
+        stop_map = {}
+        for stop_id in stop_ids:
+            # print(stop_id)
+            for stop_dict in stop_dicts:
+                if stop_id == stop_dict.get("stop_id"):
+                    stop_map[str(stop_id)] = stop_dict
+        # print(stop_map)
+        return stop_map
+
+    def time_to(self, lat1, lng1, lat2, lng2, prev=0):
         #http://127.0.0.1:5000/route/v1/driving/${proj_long},${proj_lat};${lng},${lat}?overview=full
         query_str = f"http://127.0.0.1:5000/route/v1/driving/{str(lng1)},{str(lat1)};{str(lng2)},{str(lat2)}?overview=full"
         response = requests.get(query_str)
@@ -55,9 +81,10 @@ class Bus:
         
         route = possible_routes[0]
         time = route.get("duration")
+        time += prev
         minutes = time // 60
         seconds = time % 60
-        return {"minutes": minutes, "seconds": round(seconds, 2), "total_time": time}
+        return {"minutes": minutes, "seconds": round(seconds, 2), "total_time": round(time, 2)}
 
     def to_dict(self):
         d = self.__dict__

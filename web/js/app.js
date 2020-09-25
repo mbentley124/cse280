@@ -293,7 +293,7 @@ function draw_stops(map) {
     $.each(stops.lehigh, function() { //LOOP: gets all stops for lehigh and places them on map
 
         stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#68310A" }).bindPopup(this.name).addTo(map).on('click', function(e) {
-            console.log(this.name);
+            // console.log(this.name);
             map.setView([this.getLatLng().lat, this.getLatLng().lng], 16);
         });
         stop_obj[this.stop_id] = this.name;
@@ -356,14 +356,36 @@ async function draw_polyline_sample(map) {
 
 }
 
+function reset_popup_content() {
+    $.each(stop_arr, function(name, marker) {
+        marker.setPopupContent(name);
+    })
+}
+
+function update_stop_times(timings, bus_id) {
+    $.each(timings, function(stop_id, time){
+        const stop_name = stop_obj[stop_id];
+        const stop_marker = stop_arr[stop_name];
+        const prev_content = stop_marker.getPopup().getContent();
+        const new_content = `<br> Bus ${bus_id} is arriving in ${time.minutes} minutes and ${time.seconds} seconds.`;
+        stop_marker.setPopupContent(prev_content+new_content);
+    });
+}
+
 function draw_buses(bus_obj, map) {
     const buses_running = new Set();
+    reset_popup_content();
     $.each(bus_obj, function(k,bus){
         const {bus_id, short_name, latitude, longitude, route_id, route_name, service, timings} = bus;
         let {next_stop, last_stop} = bus;
-        if(service == "Lehigh") {
+        let next_time = null;
+        if(service == "Lehigh" && timings != null) {
+            update_stop_times(timings, bus_id);
+            next_time = timings[next_stop];
             next_stop = stop_obj[next_stop];
             last_stop = stop_obj[last_stop];
+            console.log(timings);
+            console.log(next_stop);
         }
         const icon_style = ((service == "Lehigh") ? lehigh : lanta); //will only work for two bus services.
         if(bus_id in marker_obj) {
@@ -374,10 +396,10 @@ function draw_buses(bus_obj, map) {
         }
         const marker = marker_obj[bus_id];
         let popup_content = "Error";
-        if(timings == null) {
+        if((timings == null) || (timings.length == 0)) {
             popup_content = `${service} Bus: ${bus_id} <br>On route: ${route_id} <br> Previous stop: ${last_stop}`;
         } else {
-            const {minutes, seconds, total_time} = timings;
+            const {minutes, seconds, total_time} = next_time;
             let time_str = `${minutes} minutes & ${seconds} seconds.`;
             if(minutes == 0 && seconds < 20) {
                 time_str = "Arriving Soon.";
@@ -395,7 +417,7 @@ function draw_buses(bus_obj, map) {
 }
 function update_map(map) {
     //console.log(map)
-    $.get("https://bus.codyben.me/bus_data.json", function(data, textStatus, xhr) { //gets data from JSON file which was created by scraper
+    $.get("/bus_data.json", function(data, textStatus, xhr) { //gets data from JSON file which was created by scraper
         //removing animated moving markers for now, will probably just animate along a polyline in the future.
         console.log(xhr);
         console.log(data);
