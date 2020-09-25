@@ -482,7 +482,6 @@ $.each(keys, function() {
 try {
     var lc = L.control.locate({
         flyTo: true,
-        showCompass: true,
         locateOptions: {
             enableHighAccuracy: true
         },
@@ -490,7 +489,8 @@ try {
             title: "Your location"
         },
         drawCircle: false,
-        keepCurrentZoomLevel: true
+        keepCurrentZoomLevel: true,
+        metric: false
     }).addTo(mymap);
     
     lc.start();
