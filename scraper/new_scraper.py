@@ -89,6 +89,7 @@ while True:
         dict_end = t.time()
         if write_files:
             with open("data/all/stops.json", "w+") as st:
+                print(stops)
                 st.write("const stops = "+json.dumps(stops)+";")
             with open("data/all/bus_data.json", "w+") as bu:
                 json.dump(fp=bu, obj=buses)
@@ -118,7 +119,7 @@ while True:
         )
     )
     print("\tStoring Data:    {}".format(str(historical_total)))
-    t.sleep(4)
+    t.sleep(2.5)
 
 
 # lanta.request_routes()

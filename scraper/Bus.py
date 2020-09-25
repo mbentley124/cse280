@@ -42,7 +42,7 @@ class Bus:
 
     def time_to(self, lat1, lng1, lat2, lng2):
         #http://127.0.0.1:5000/route/v1/driving/${proj_long},${proj_lat};${lng},${lat}?overview=full
-        query_str = f"http://routeserver.codyben.me/route/v1/driving/{str(lng1)},{str(lat1)};{str(lng2)},{str(lat2)}?overview=full"
+        query_str = f"http://127.0.0.1:5000/route/v1/driving/{str(lng1)},{str(lat1)};{str(lng2)},{str(lat2)}?overview=full"
         response = requests.get(query_str)
 
         if response.status_code != 200:
