@@ -495,11 +495,11 @@ function toggle_polylines_sample(name) {
             polyline_global[name].onmap = false;
             return false;
         } else {
-            highlighted_route = name;
             if(highlighted_route != null){
                 polyline_global[highlighted_route].leaflet_obj.removeFrom(mymap);
                 polyline_global[highlighted_route].onmap = false;
             }
+            highlighted_route = name;
             polyline_global[name].onmap = true;
             leaflet_obj.addTo(mymap);
             return true;
