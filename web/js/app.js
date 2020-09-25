@@ -518,8 +518,9 @@ update_map(mymap);
 setInterval(function(mymap) { update_map(mymap) }, 2000, mymap); //TODO: will update map every 'interval'
 
 // Center map view on click from the stops list
-function find_stop(lat, lng) {
+function find_stop(lat, lng, name) {
     mymap.setView([lat, lng], 16);
+    stop_arr[name].openPopup();
 }
 const poly_func = draw_polyline_sample(mymap);
 
@@ -541,7 +542,7 @@ $.each(keys, function() {
     $('#stops-list-container-' + bus).prepend('<div style="text-align:center;border-bottom: 1px solid white; height:33.6px;"><input type="text" id="search" class="stops-item" style="margin-top:5px; width: 90%;" placeholder="Look for a stop" onkeypress="render_search_results('+this+')"/></div>');
     $.each(stops[this], function() {
         if (!stops_tracker.has(this.name)) {
-            $('#stops-list-' + bus).append('<li><a class="pure-menu-link stops-item" onclick="find_stop(' + this.latitude + ',' + this.longitude + ')">' + this.name + '</a></li>');
+            $('#stops-list-' + bus).append('<li><a class="pure-menu-link stops-item" onclick="find_stop(' + this.latitude + ',' + this.longitude + ',\''+this.name+'\')">' + this.name + '</a></li>');
             count++;
             stops_tracker.set(this.name, true);
             stops_list.push(this);
