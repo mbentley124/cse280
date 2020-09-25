@@ -380,3 +380,23 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         width: auto;
     }
 }
+
+#stops-list-container {
+    position: relative;
+}
+.stops-list-lanta li:first-child {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+.stops-list-lehigh li:first-child {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+.stops-list-lehigh {
+    overflow: auto;
+    position: static;
+}

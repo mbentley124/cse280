@@ -82,15 +82,15 @@ function show_init_stop_list() {
 // Show stops for a transportation on sidebar
 function show_stops(bus) {
     if (bus_opened != null) {
-        $("#stops-list-" + bus_opened).toggle();
+        $("#stops-list-container-" + bus_opened).toggle();
         if (bus_opened != bus) {
-            $("#stops-list-" + bus).toggle();
+            $("#stops-list-container-" + bus).toggle();
             bus_opened = bus;
         } else {
             bus_opened = null;
         }
     } else {
-        $("#stops-list-" + bus).toggle();
+        $("#stops-list-container-" + bus).toggle();
         bus_opened = bus;
     }
 }
