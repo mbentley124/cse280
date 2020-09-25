@@ -521,7 +521,7 @@ const poly_func = draw_polyline_sample(mymap);
 
 // Populate side-menu on render
 $('#stops').append('<ul class="pure-menu-list" id="init-stop-list" style="display: none; background-color: rgb(107, 46, 3); font-size: 15px;"></ul>');
-$('#init-stop-list').append('<input type="text" id="search" placeholder="Search" onkeypress="render_search_results()">');
+$('#init-stop-list').append('<input type="text" id="search" placeholder="Look for a stop" onkeypress="render_search_results()">');
 
 
 const keys = Object.keys(stops);
