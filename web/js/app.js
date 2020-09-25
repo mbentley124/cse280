@@ -497,7 +497,7 @@ function toggle_polylines_sample(name) {
         } else {
             highlighted_route = name;
             if(highlighted_route != null){
-                console.log(polyline_global[highlighted_route]);
+                polyline_global[highlighted_route].leaflet_obj.removeFrom(mymap);
                 polyline_global[highlighted_route].onmap = false;
             }
             polyline_global[name].onmap = true;
