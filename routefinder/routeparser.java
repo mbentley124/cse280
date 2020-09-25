@@ -13,8 +13,8 @@ class routeparser{
     private static String username;
     private static String password;
     private final static String host = "localhost"; //the database is firewalled off.
-    private final static String PIVOT = "Williams Hall";
-    private final static String FALLBACK_PIVOT = "Whitaker Lab"; //use this pivot is an error happens with the first one.
+    private final static String PIVOT = "67";
+    private final static String FALLBACK_PIVOT = "137"; //use this pivot is an error happens with the first one.
 
     
     /**
@@ -141,6 +141,7 @@ class routeparser{
         try {
             Class.forName("com.mysql.cj.jdbc.Driver"); 
         } catch (ClassNotFoundException e1) {
+            System.out.println("here");
             e1.printStackTrace();
         }
 
@@ -148,13 +149,13 @@ class routeparser{
         try (Connection conn = DriverManager.getConnection("jdbc:mysql://"+host+":3306/busapp?serverTimezone=UTC", username, password);) {
             
             //prepare and execute our SQL query
-            PreparedStatement preparedStatement = conn.prepareStatement("SELECT route_id,GROUP_CONCAT(current_stop), GROUP_CONCAT(retrieved), GROUP_CONCAT(latitude), GROUP_CONCAT(longitude) from `lehighbusdata` WHERE current_stop is not null AND current_stop != 'NULL' AND latitude is not nULL and longitude is not null GROUP BY route_id, vehicle_id,DATEDIFF(CURDATE(), retrieved)");
+            PreparedStatement preparedStatement = conn.prepareStatement("SELECT route_id,GROUP_CONCAT(last_stop), GROUP_CONCAT(insertion_time), GROUP_CONCAT(latitude), GROUP_CONCAT(longitude) from `transient_bus` WHERE last_stop is not null AND bus_service = \"Lehigh\" AND latitude is not nULL and longitude is not null GROUP BY route_id, bus_id,DATEDIFF(CURDATE(), insertion_time)");
             ResultSet results = preparedStatement.executeQuery();
 
             //iterate through bus routes
             while (results.next()) {
                 System.out.println();
-                String big_stop_str = results.getString("GROUP_CONCAT(current_stop)");
+                String big_stop_str = results.getString("GROUP_CONCAT(last_stop)");
                 // System.out.println("\t++"+big_stop_str);
                 String big_stop_arr[] = big_stop_str.split(",");
                 ArrayList<String> deduped = dedup_adjacent(big_stop_arr);
@@ -195,16 +196,19 @@ class routeparser{
 
         // get the routes naively (by simply iterating throught the list of stops)
         HashMap<Integer, ArrayList<String>> potentials = naive_route_determ(route_map);
-
+        String json = "{"; //this is so terrible but the fastest way
         for(int rid : potentials.keySet()) {
             System.out.println("Potential routes for: "+rid);
             if((potentials.get(rid)).size() == 0) {
                 System.out.println("\t+Could not determine a simple route.\n");
             }
             for(String r : potentials.get(rid)) {
+                json += "\""+Integer.toString(rid) + "\": " + r.toString() + ",";
                 System.out.println("\n"+r+"\n");
             }
         }
+        json += "\"route\": true}";
+        System.out.println(json);
 
     }
 }
