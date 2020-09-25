@@ -154,7 +154,6 @@ function sortByKey(array, key) {
 function calc_nearest(position) {
     var lat = position.coords.latitude;
     var lon = position.coords.longitude;
-    L.circleMarker([lat, lon], { color: "#34eb34" }).bindPopup("My location.").addTo(mymap);
     var dist_arr_lu = []
     var dist_arr_lanta = []
         //replace with combined stops array
@@ -200,6 +199,7 @@ function calc_nearest(position) {
     stop_arr[close_key].openPopup();
     if (!data_str.includes("miles")) {
         popup.setContent(data_str + "<br>~" + close_dist.toFixed(2) + " miles");
+        mymap.setView([stop_arr[close_key].getLatLng().lat, stop_arr[close_key].getLatLng().lng], 16);
     }
     // 
 
@@ -539,6 +539,18 @@ $.each(keys, function() {
     console.log(this + " " + count);
 })
 
+var lc = L.control.locate({
+    flyTo: true,
+    showCompass: true,
+    locateOptions: {
+        enableHighAccuracy: true
+    },
+    strings: {
+        title: "Your location"
+    },
+    drawCircle: false,
+    keepCurrentZoomLevel: true
+}).addTo(mymap);
 
 
 // Animate Hamburger Icon on smaller screens
