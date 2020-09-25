@@ -26,8 +26,15 @@ def write_to_db(data):
     cursor = cnx.cursor(prepared=True)
     prepared_statement = """INSERT INTO transient_bus (bus_id,short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, bus_service)
                                                 VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+
     for bus in data:
-        bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, _,__, service = bus.values()
+        if "timings" in bus:
+            bus.pop("timings", None)
+        if "projected_coords" in bus:
+            bus.pop("projected_coords", None)
+        # print(bus)
+        bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, _, service = bus.values()
+        # print(bus.values())
         # print((bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, service)) 
         cursor.execute(prepared_statement, (bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, service))
     
@@ -40,7 +47,7 @@ def log_error(e):
     print(curr_time+"\t"+str(e))
 
 parser = argparse.ArgumentParser("Scrape Lehigh University & LANTA Bus Trackers")
-parser.add_argument("-p", "--prediction", nargs='?', type=bool, const=True, default=True)
+parser.add_argument("-p", "--prediction", nargs='?', type=bool, const=True, default=False)
 parser.add_argument("-wf", "--write-file", nargs='?', type=bool, const=True, default=True)
 parser.add_argument("-wd", "--write-db", nargs='?', type=bool, const=True, default=True)
 args = parser.parse_args()
@@ -50,7 +57,7 @@ write_files = args.write_file
 write_db = args.write_db
 
 
-lehigh = LehighScraper()
+lehigh = LehighScraper(next_stop=True)
 lanta = LANTAScraper()
 
 while True:
@@ -71,16 +78,11 @@ while True:
     try:
         projection_begin = t.time()
         stops = {"lanta": lanta.get_stops(), "lehigh": lehigh.get_stops()}
-        buses = {"lanta": lanta.get_buses(projection=False), "lehigh": lehigh.get_buses(projection=preds)}
+        buses = {"lanta": lanta.get_buses(projection=preds), "lehigh": lehigh.get_buses(projection=preds)}
         projection_end = t.time()
         projection_total = projection_end - projection_begin
         routes = {"lanta": [], "lehigh": lehigh.request_routes(return_data=True)}
         historical_begin = t.time()
-        if write_db:
-            with Pool(len(buses)) as p:
-                p.map_async(write_db, buses)
-            # write_to_db(buses['lehigh'])
-            # write_to_db(buses['lanta'])
         total_buses = len(buses['lehigh']) + len(buses['lanta'])
         historical_end = t.time()
         historical_total = historical_end - historical_begin
@@ -92,6 +94,12 @@ while True:
                 json.dump(fp=bu, obj=buses)
             with open("data/all/routes.json", "w+") as ro:
                 ro.write("const routes = "+json.dumps(routes)+";")
+        
+        if write_db:
+            with Pool(len(buses.keys())) as p:
+                p.map_async(write_db, buses)
+            # write_to_db(buses['lehigh'])
+            # write_to_db(buses['lanta'])
     except Exception as e:
         dict_end = -1
         log_error(e)
