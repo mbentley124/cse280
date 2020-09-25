@@ -13,6 +13,8 @@
 
 var stops_list = []
 
+var highlighted_route = null;
+
 tile_style['default'] = L.tileLayer(tile_server_url, { //takes tile server URL and will return a tile
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
     maxZoom: 18,
@@ -493,9 +495,11 @@ function toggle_polylines_sample(name) {
             polyline_global[name].onmap = false;
             return false;
         } else {
-            polyline_global.forEach((route, index) => {
-                route.onmap = false;
-            });
+            highlighted_route = name;
+            if(highlighted_route != null){
+                polyline_global[highlighted_route].onmap = false;
+                polyline_global[highlighted_route].removeFrom(mymap);
+            }
             polyline_global[name].onmap = true;
             leaflet_obj.addTo(mymap);
             return true;
