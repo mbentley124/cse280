@@ -95,11 +95,11 @@ function show_stops(bus) {
     }
 }
 
-
+//Called on keypress when user is searching stops
 function render_search_results() {
-    query = "Le"
-    for (i = 0; i < stops_list.length; i++) {
-        if (stops_list[i].includes(query)) {
+    query = "Le" //just testing for now
+    for (i = 0; i < stops_list.length; i++) { //iterate through stops_list
+        if (stops_list[i].includes(query)) { //show stop if string contains query
             $("#stops-list-" + i).toggle();
 
         }

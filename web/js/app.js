@@ -11,7 +11,7 @@
 //     maxZoom: 18,
 // });
 
-var stops_list = []
+var stops_list = [] //holds stop names
 
 var highlighted_route = null;
 
@@ -363,23 +363,23 @@ function reset_popup_content() {
 }
 
 function update_stop_times(timings, bus_id) {
-    $.each(timings, function(stop_id, time){
+    $.each(timings, function(stop_id, time) {
         const stop_name = stop_obj[stop_id];
         const stop_marker = stop_arr[stop_name];
         const prev_content = stop_marker.getPopup().getContent();
         const new_content = `<br> Bus ${bus_id} is arriving in ${time.minutes} minutes and ${time.seconds} seconds.`;
-        stop_marker.setPopupContent(prev_content+new_content);
+        stop_marker.setPopupContent(prev_content + new_content);
     });
 }
 
 function draw_buses(bus_obj, map) {
     const buses_running = new Set();
     reset_popup_content();
-    $.each(bus_obj, function(k,bus){
-        const {bus_id, short_name, latitude, longitude, route_id, route_name, service, timings} = bus;
-        let {next_stop, last_stop} = bus;
+    $.each(bus_obj, function(k, bus) {
+        const { bus_id, short_name, latitude, longitude, route_id, route_name, service, timings } = bus;
+        let { next_stop, last_stop } = bus;
         let next_time = null;
-        if(service == "Lehigh" && timings != null) {
+        if (service == "Lehigh" && timings != null) {
             update_stop_times(timings, bus_id);
             next_time = timings[next_stop];
             next_stop = stop_obj[next_stop];
@@ -388,7 +388,7 @@ function draw_buses(bus_obj, map) {
             // console.log(next_stop);
         }
         const icon_style = ((service == "Lehigh") ? lehigh : lanta); //will only work for two bus services.
-        if(bus_id in marker_obj) {
+        if (bus_id in marker_obj) {
             marker_obj[bus_id].setLatLng([latitude, longitude]).update();
         } else {
             marker_obj[bus_id] = L.marker([latitude, longitude], { icon: icon_style }).addTo(map);
@@ -396,42 +396,43 @@ function draw_buses(bus_obj, map) {
         }
         const marker = marker_obj[bus_id];
         let popup_content = "Error";
-        if((timings == null) || (timings.length == 0)) {
+        if ((timings == null) || (timings.length == 0)) {
             popup_content = `${service} Bus: ${bus_id} <br>On route: ${route_id} <br> Previous stop: ${last_stop}`;
         } else {
-            const {minutes, seconds, total_time} = next_time;
+            const { minutes, seconds, total_time } = next_time;
             let time_str = `${minutes} minutes & ${seconds} seconds.`;
-            if(minutes == 0 && seconds < 20) {
+            if (minutes == 0 && seconds < 20) {
                 time_str = "Arriving Soon.";
             }
             popup_content = `${service} Bus: ${bus_id} <br>On route: ${route_id} <br> ${last_stop} => ${next_stop} in ${time_str}`;
         }
-        marker.setPopupContent(popup_content); 
+        marker.setPopupContent(popup_content);
         buses_running.add(bus_id);
     });
     const buses_with_markers = new Set(Array.from(bus_obj.keys()));
     const buses_to_be_removed = new Set([...buses_with_markers].filter(x => !buses_running.has(x))); //https://stackoverflow.com/questions/1723168/what-is-the-fastest-or-most-elegant-way-to-compute-a-set-difference-using-javasc
-    $.each(buses_to_be_removed, function(){
+    $.each(buses_to_be_removed, function() {
         marker_obj[this].removeFrom(map);
     });
 }
+
 function update_map(map) {
     //console.log(map)
     $.get("/bus_data.json", function(data, textStatus, xhr) { //gets data from JSON file which was created by scraper
         //removing animated moving markers for now, will probably just animate along a polyline in the future.
         // console.log(xhr);
         // console.log(data);
-        if(xhr.status == 304) {
+        if (xhr.status == 304) {
             //unchanged file, so don't redraw buses.
             //begin any animations here.
-        } else if(xhr.status == 404 || xhr.status == 500) {
+        } else if (xhr.status == 404 || xhr.status == 500) {
             console.error("Failed to get bus data");
-        } else if(xhr.status == 200) {
-            $.each(data, function(){
+        } else if (xhr.status == 200) {
+            $.each(data, function() {
                 draw_buses(this, map);
             });
         } else {
-            console.error("Received Response Code: "+xhr.status);
+            console.error("Received Response Code: " + xhr.status);
             console.error("Not drawing buses.");
         }
 
@@ -446,7 +447,7 @@ function toggle_polylines_sample(name) {
             polyline_global[name].onmap = false;
             return false;
         } else {
-            if(highlighted_route != null){
+            if (highlighted_route != null) {
                 polyline_global[highlighted_route].leaflet_obj.removeFrom(mymap);
                 polyline_global[highlighted_route].onmap = false;
             }
@@ -479,7 +480,7 @@ const poly_func = draw_polyline_sample(mymap);
 $('#stops').append('<ul class="pure-menu-list" id="init-stop-list" style="display: none; background-color: rgb(107, 46, 3); font-size: 15px;"></ul>');
 
 // TODO: Implement filter search
-function render_search_results(list_name){
+function render_search_results(list_name) {
 
 }
 const keys = Object.keys(stops);
@@ -490,13 +491,13 @@ $.each(keys, function() {
     var count = 0;
     $('#init-stop-list').append('<a id="transportation-item" class="pure-menu-link" onclick="show_stops(\'' + this + '\')">' + this.charAt(0).toUpperCase() + this.slice(1) + '</a>');
     $('#init-stop-list').append('<div id="stops-list-container-' + this + '" style="display: none;"><ul class="pure-menu-list" id="stops-list-' + this + '" style="background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height: 52.2vh;"></ul></div>');
-    $('#stops-list-container-' + bus).prepend('<div style="text-align:center;border-bottom: 1px solid white; height:33.6px;"><input type="text" id="search-'+ this +'" class="stops-item" style="margin-top:5px; width: 90%;" placeholder="Look for a stop" onkeypress="render_search_results(\''+this+'\')"/></div>');
+    $('#stops-list-container-' + bus).prepend('<div style="text-align:center;border-bottom: 1px solid white; height:33.6px;"><input type="text" id="search-' + this + '" class="stops-item" style="margin-top:5px; width: 90%;" placeholder="Look for a stop" onkeypress="render_search_results(\'' + this + '\')"/></div>');
     $.each(stops[this], function() {
         if (!stops_tracker.has(this.name)) {
-            $('#stops-list-' + bus).append('<li><a class="pure-menu-link stops-item" onclick="find_stop(' + this.latitude + ',' + this.longitude + ',\''+this.name+'\')">' + this.name + '</a></li>');
+            $('#stops-list-' + bus).append('<li><a class="pure-menu-link stops-item" onclick="find_stop(' + this.latitude + ',' + this.longitude + ',\'' + this.name + '\')">' + this.name + '</a></li>');
             count++;
             stops_tracker.set(this.name, true);
-            stops_list.push(this);
+            stops_list.push(this); //add to list of stops
         }
     })
     console.log(this + " " + count);
@@ -514,10 +515,10 @@ try {
         keepCurrentZoomLevel: true,
         metric: false
     }).addTo(mymap);
-    
+
     lc.start();
     lc.stopFollowing();
-}catch(e) {
+} catch (e) {
     console.warn(e.toString());
 }
 
