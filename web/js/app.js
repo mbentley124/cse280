@@ -154,6 +154,7 @@ function sortByKey(array, key) {
 function calc_nearest(position) {
     var lat = position.coords.latitude;
     var lon = position.coords.longitude;
+    console.log(lc.getLatLng())
     var dist_arr_lu = []
     var dist_arr_lanta = []
         //replace with combined stops array
@@ -552,6 +553,8 @@ var lc = L.control.locate({
     keepCurrentZoomLevel: true
 }).addTo(mymap);
 
+lc.start();
+lc.stopFollowing()
 
 // Animate Hamburger Icon on smaller screens
 function animateHamburger(elem) {
