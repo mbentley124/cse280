@@ -1,6 +1,6 @@
 import json, mysql.connector, requests
 class Bus:
-    def __init__(self, bus_id, short_name, latitude, longitude, route_id, route_name=None, last_stop=None, next_stop=None, do_projection=False, cnx=None, service="Lehigh", do_next_stop=False, stops=None):
+    def __init__(self, bus_id, short_name, latitude, longitude, route_id, route_name=None, last_stop=None, next_stop=None, do_projection=False, cnx=None, service="Lehigh", do_next_stop=False, stops=None, routes=[]):
         self.bus_id = bus_id
         self.short_name = short_name
         self.last_stop = last_stop
@@ -24,9 +24,6 @@ class Bus:
             self.projected_coords = {"lat":None, "long":None}
 
         if do_next_stop:
-            file_routes_in = open("routes.json")
-            routes = json.load(file_routes_in)
-            file_routes_in.close()
             curr_route = routes.get(str(self.route_id))
             if not (curr_route is None):
                 new_route = self.pivot_unwrap(curr_route, self.last_stop)

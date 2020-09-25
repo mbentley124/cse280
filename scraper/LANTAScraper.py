@@ -11,7 +11,7 @@ class LANTAScraper:
     buses = []
     stops = []
     last_stops = t.time()
-    def __init__(self, routes = []):
+    def __init__(self, routes = [], next_stop=False):
         self.routes = routes #init with predetermined route numbers if needed
         print("Initialized LANTAScraper | PID: {}".format(os.getpid()))
     
