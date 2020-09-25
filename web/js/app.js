@@ -186,9 +186,9 @@ function calc_nearest() {
     });
     var result_lu = sortByKey(dist_arr_lu, "dist")[0];
     // stop_arr[result_lu.key].openPopup();
-    console.log(result_lu);
+    // console.log(result_lu);
     var result_lanta = sortByKey(dist_arr_lanta, "dist")[0];
-    console.log(result_lanta);
+    // console.log(result_lanta);
     // stop_arr[result_lanta.key].openPopup();
     var close_key = result_lu.key;
     var close_dist = result_lu.dist;
@@ -196,7 +196,7 @@ function calc_nearest() {
         close_key = result_lanta.key;
         close_dist = result_lanta.dist;
     }
-    console.log(close_key);
+    // console.log(close_key);
     var data_str;
     var popup = stop_arr[close_key].getPopup();
     data_str = popup.getContent();
@@ -384,8 +384,8 @@ function draw_buses(bus_obj, map) {
             next_time = timings[next_stop];
             next_stop = stop_obj[next_stop];
             last_stop = stop_obj[last_stop];
-            console.log(timings);
-            console.log(next_stop);
+            // console.log(timings);
+            // console.log(next_stop);
         }
         const icon_style = ((service == "Lehigh") ? lehigh : lanta); //will only work for two bus services.
         if(bus_id in marker_obj) {
@@ -419,8 +419,8 @@ function update_map(map) {
     //console.log(map)
     $.get("/bus_data.json", function(data, textStatus, xhr) { //gets data from JSON file which was created by scraper
         //removing animated moving markers for now, will probably just animate along a polyline in the future.
-        console.log(xhr);
-        console.log(data);
+        // console.log(xhr);
+        // console.log(data);
         if(xhr.status == 304) {
             //unchanged file, so don't redraw buses.
             //begin any animations here.
