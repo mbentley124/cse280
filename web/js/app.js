@@ -490,7 +490,7 @@ function update_map(map) {
 function toggle_polylines_sample(name) {
     if (name in polyline_global) {
         const { leaflet_obj, onmap } = polyline_global[name];
-        const { prev_leaflet_obj, onmap } = polyline_global[highlighted_route];
+        const { prev_leaflet_obj, onmap1 } = polyline_global[highlighted_route];
         if (onmap) {
             leaflet_obj.removeFrom(mymap);
             polyline_global[name].onmap = false;
