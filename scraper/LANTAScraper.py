@@ -11,7 +11,7 @@ class LANTAScraper:
     buses = []
     stops = []
     last_stops = t.time()
-    def __init__(self, routes = []):
+    def __init__(self, routes = [], next_stop=False):
         self.routes = routes #init with predetermined route numbers if needed
         print("Initialized LANTAScraper | PID: {}".format(os.getpid()))
     
@@ -99,7 +99,7 @@ class LANTAScraper:
         
     def request_stops(self, url = "https://realtimelanta.availtec.com/InfoPoint/rest/RouteDetails/Get/{}", processing = None, return_data = False):
         curr_time = t.time()
-        if (self.last_stops - curr_time > 900) or (not self.stops):
+        if (self.last_stops - curr_time > 1800) or (not self.stops):
             self.last_stops = t.time()
         else:
             return self.stops

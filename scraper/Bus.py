@@ -1,7 +1,6 @@
-import json, mysql.connector
+import json, mysql.connector, requests
 class Bus:
-
-    def __init__(self, bus_id, short_name, latitude, longitude, route_id, route_name=None, last_stop=None, next_stop=None, do_projection=False, cnx=None, service="Lehigh"):
+    def __init__(self, bus_id, short_name, latitude, longitude, route_id, route_name=None, last_stop=None, next_stop=None, do_projection=False, cnx=None, service="Lehigh", do_next_stop=False, stops=None, routes=[]):
         self.bus_id = bus_id
         self.short_name = short_name
         self.last_stop = last_stop
@@ -12,6 +11,7 @@ class Bus:
         self.route_name = route_name
         self.coords = {"lat":latitude, "long":longitude}
         self.service = service
+        self.timings = None
         if do_projection:
             self.cnx = mysql.connector.connect(  user='busapp',
                                         password='busapp',
@@ -23,13 +23,74 @@ class Bus:
         else:
             self.projected_coords = {"lat":None, "long":None}
 
+        if do_next_stop:
+            curr_route = routes.get(str(self.route_id))
+            if not (curr_route is None):
+                new_route = self.pivot_unwrap(curr_route, self.last_stop)
+                self.next_stop = new_route[1]
+                self.timings = {}
+                stop_map = self.align_routes(stops, new_route)
+                first_lookahead = stop_map[str(self.next_stop)]
+                first = self.time_to(self.latitude, self.longitude, first_lookahead.get("latitude"), first_lookahead.get("longitude"))
+                accumulation = first.get("total_time", 0)
+                self.timings[first_lookahead.get("stop_id")] = first
+                for cntr, stop_id in enumerate(new_route[2:], 2):
+                    # print(cntr)
+                    if new_route[cntr] == 156 or new_route[cntr - 1] == 156:
+                        continue # TODO: Missing stop?
+                    last = stop_map[str(new_route[cntr - 1])]
+                    curr = stop_map[str(new_route[cntr])]
+                    time_dict = self.time_to(last.get("latitude"), last.get("longitude"), curr.get("latitude"), curr.get("longitude"), accumulation)
+                    self.timings[curr.get("stop_id")] = time_dict
+                    accumulation = time_dict.get("total_time")
+
+
+                        
+                # print(self.timings)
+
     def to_json(self):
         return json.dumps(self.to_dict())
     
+    def pivot_unwrap(self, route, stop):
+        index = route.index(stop)
+        return [*route[index:],*route[:index]]
+
+    def align_routes(self, stop_dicts, stop_ids):
+        # TODO: Make this not a double loop
+        stop_map = {}
+        for stop_id in stop_ids:
+            # print(stop_id)
+            for stop_dict in stop_dicts:
+                if stop_id == stop_dict.get("stop_id"):
+                    stop_map[str(stop_id)] = stop_dict
+        # print(stop_map)
+        return stop_map
+
+    def time_to(self, lat1, lng1, lat2, lng2, prev=0):
+        #http://127.0.0.1:5000/route/v1/driving/${proj_long},${proj_lat};${lng},${lat}?overview=full
+        query_str = f"http://127.0.0.1:5000/route/v1/driving/{str(lng1)},{str(lat1)};{str(lng2)},{str(lat2)}?overview=full"
+        response = requests.get(query_str)
+
+        if response.status_code != 200:
+            response.raise_for_status()
+        
+        results = response.json() #let the caller handle exceptions
+        possible_routes = results.get("routes")
+        if possible_routes is None:
+            return None
+        
+        route = possible_routes[0]
+        time = route.get("duration")
+        time += prev
+        minutes = time // 60
+        seconds = time % 60
+        return {"minutes": minutes, "seconds": round(seconds, 2), "total_time": round(time, 2)}
+
     def to_dict(self):
         d = self.__dict__
         d.pop("cnx", None)
         d.pop("prepared_statement", None)
+        d.pop("do_next_stop", None)
         return d
 
     def compute_projection(self):

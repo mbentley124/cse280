@@ -36,11 +36,11 @@ function toggleAll(e) {
     toggleClass(topbar, active)
 }
 
-menuLink.onclick = function (e) {
+menuLink.onclick = function(e) {
     toggleAll(e);
 };
 
-content.onclick = function (e) {
+content.onclick = function(e) {
     if (menu.className.indexOf('active') !== -1) {
         toggleAll(e);
     }
@@ -52,13 +52,13 @@ function getRoutes() {
     //Figure out a way to not expose URL, unless it's fine
     fetch(url)
         .then(response)
-        .then(data => { })
+        .then(data => {})
 }
 // Show route dropdown on sidebar
-function show_routes(){
+function show_routes() {
     $('.list-opened').toggle();
     $('.list-opened').removeClass('list-opened');
-    if(opened!='routes'){
+    if (opened != 'routes') {
         $("#routes-list").toggle();
         $("#routes-list").addClass("list-opened");
         opened = 'routes';
@@ -68,10 +68,10 @@ function show_routes(){
 }
 
 // Show transportation methods on side bar
-function show_init_stop_list(){
+function show_init_stop_list() {
     $('.list-opened').toggle();
     $('.list-opened').removeClass('list-opened');
-    if(opened!='stops'){
+    if (opened != 'stops') {
         $("#init-stop-list").toggle();
         $("#init-stop-list").addClass("list-opened");
         opened = 'stops';
@@ -80,17 +80,28 @@ function show_init_stop_list(){
     }
 }
 // Show stops for a transportation on sidebar
-function show_stops(bus){
-    if(bus_opened!=null){
-        $("#stops-list-" + bus_opened).toggle();
-        if(bus_opened!=bus){
-            $("#stops-list-" + bus).toggle();
+function show_stops(bus) {
+    if (bus_opened != null) {
+        $("#stops-list-container-" + bus_opened).toggle();
+        if (bus_opened != bus) {
+            $("#stops-list-container-" + bus).toggle();
             bus_opened = bus;
         } else {
             bus_opened = null;
         }
     } else {
-        $("#stops-list-" + bus).toggle();
+        $("#stops-list-container-" + bus).toggle();
         bus_opened = bus;
+    }
+}
+
+//Called on keypress when user is searching stops
+function render_search_results() {
+    query = "Le" //just testing for now
+    for (i = 0; i < stops_list.length; i++) { //iterate through stops_list
+        if (stops_list[i].includes(query)) { //show stop if string contains query
+            $("#stops-list-" + i).toggle();
+
+        }
     }
 }

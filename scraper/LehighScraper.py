@@ -1,7 +1,7 @@
 from BusStop import BusStop
 from Bus import Bus
 from BusRoute import BusRoute
-import requests, os
+import requests, os, json
 import time as t
 from multiprocessing import Pool
 class LehighScraper:
@@ -9,9 +9,15 @@ class LehighScraper:
     stops = []
     last_stops = t.time()
     routes = []
-    def __init__(self, scraping_url = "https://lehigh.doublemap.com/map/v2/buses"):
+    clean_stops = {}
+    routes_from_java_script = []
+    def __init__(self, scraping_url = "https://lehigh.doublemap.com/map/v2/buses", next_stop=False):
         self.scraping_url = scraping_url
+        self.next_stop = next_stop
         print("Initialized LehighScraper | PID: {}".format(os.getpid()))
+        with open("routes.json", "r") as r:
+            self.routes_from_java_script = json.load(r)
+            print("Loaded route file successfully.")
     
     def request_buses(self, processing = None, return_data = False):
         response = requests.get(self.scraping_url)
@@ -30,9 +36,10 @@ class LehighScraper:
         if return_data:
             return results
 
-    def get_buses(self, projection=True):
+    def get_buses(self, projection=True, next_=True):
         bus_list = []
         self.projection = projection
+        self.next_stop = next_
         with Pool(len(self.buses)) as p:
             bus_list = list(p.map(self._multi_bus, self.buses))
                 
@@ -53,11 +60,19 @@ class LehighScraper:
             longitude=lon,
             route_id=route,
             do_projection=self.projection,
-            service="Lehigh"
+            do_next_stop=self.next_stop,
+            service="Lehigh",
+            stops=self.clean_stops,
+            routes=self.routes_from_java_script
             ).to_dict()
 
     def request_stops(self, url = "https://lehigh.doublemap.com/map/v2/stops", processing = None, return_data = False):
-        
+        curr_time = t.time()
+        if (self.last_stops - curr_time > 1800) or (not self.stops):
+            self.last_stops = t.time()
+        else:
+            return self.stops
+
         response = requests.get(url)
 
         if response.status_code != 200:
@@ -89,6 +104,7 @@ class LehighScraper:
                     longitude=lon
                 ).to_dict()
             )
+        self.clean_stops = new_stops
         return new_stops
 
     def request_routes(self, url = "https://lehigh.doublemap.com/map/v2/routes", processing = None, return_data = False):
