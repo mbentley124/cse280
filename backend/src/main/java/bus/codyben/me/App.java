@@ -1,47 +1,29 @@
 //imports
 package bus.codyben.me;
 
-import spark.Request;
-import spark.Response;
-import spark.Route;
 import spark.Spark;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Arrays;
 import java.util.Timer;
 import java.util.TimerTask;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 
-import org.apache.http.HttpEntity;
 import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpRequestRetryHandler;
-import org.apache.http.client.config.AuthSchemes;
-import org.apache.http.client.config.CookieSpecs;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.http.protocol.HttpContext;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
-import org.w3c.dom.Document;
-import org.xml.sax.SAXException;
 
 /**
  * Boilerplate code for a Java Spark web server.
@@ -53,6 +35,7 @@ import org.xml.sax.SAXException;
  */
 public class App {
 
+    // The ids of the Lanta routes used. 
     private static final String[] ROUTE_IDS = new String[] { "101", "102" };
 
     private static JsonObject cached_stops = new JsonObject();
@@ -70,22 +53,23 @@ public class App {
         try {
             Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/busapp?serverTimezone=UTC",
                     "busapp", "busapp");
+            // Gets all the positions of all the buses (both Lanta and Lehgih)
             final PreparedStatement bus_query = conn
                     .prepareStatement("SELECT bus_id, short_name, latitude, longitude, route_id, bus_service FROM ( "
-                            + "SELECT *, row_number() over(partition by bus_id order by insertion_time desc) as rn "
-                            + "FROM busapp.transient_bus " 
-                            + "WHERE bus_service = 'LANTA' "
-                            + "AND insertion_time > now() - interval 5 minute " 
-                            + ") b " 
-                            + "WHERE rn = 1 " 
-                            + "UNION "
-                            + "SELECT bus_id, short_name, latitude, longitude, route_id, bus_service FROM ( "
-                            + "SELECT *, row_number() over(partition by bus_id order by insertion_time desc) as rn  "
-                            + "FROM busapp.transient_bus " 
-                            + "WHERE bus_service = 'LEHIGH' "
-                            + "AND insertion_time > now() - interval 5 minute " 
-                            + ") b " 
-                            + "WHERE rn = 1;");
+                                        + "SELECT *, row_number() over(partition by bus_id order by insertion_time desc) as rn "
+                                        + "FROM busapp.transient_bus " 
+                                        + "WHERE bus_service = 'LANTA' "
+                                        + "AND insertion_time > now() - interval 5 minute " 
+                                    + ") b " 
+                                    + "WHERE rn = 1 " 
+                                    + "UNION "
+                                    + "SELECT bus_id, short_name, latitude, longitude, route_id, bus_service FROM ( "
+                                        + "SELECT *, row_number() over(partition by bus_id order by insertion_time desc) as rn  "
+                                        + "FROM busapp.transient_bus " 
+                                        + "WHERE bus_service = 'LEHIGH' "
+                                        + "AND insertion_time > now() - interval 5 minute " 
+                                    + ") b " 
+                                    + "WHERE rn = 1;");
 
             int connectTimeout = 250;
             RequestConfig config = RequestConfig.custom().setConnectTimeout(connectTimeout)
@@ -95,6 +79,7 @@ public class App {
                     .setRetryHandler((exception, executionCount, context) -> (executionCount < 3))
                     .setDefaultRequestConfig(config).build();
 
+            // Update all the typically unchanging information every hour
             Timer time = new Timer();
             time.schedule(new TimerTask() {
                 @Override
@@ -117,12 +102,11 @@ public class App {
                 }
             }, 0, 3600000);
 
-            final HttpGet lehighRoutePathsGet = new HttpGet("https://lehigh.doublemap.com/map/v2/routes");
             final HttpGet lantaRoutesGet = new HttpGet(
                     "https://realtimelanta.availtec.com/InfoPoint/rest/Routes/GetVisibleRoutes");
             lantaRoutesGet.addHeader("Accept", "application/json");
-            System.out.println("Hello World!");
             Spark.port(4567);
+            // Setup all the backend routes
             Spark.get("/announcements", (req, res) -> {
                 res.type("application/json");
                 return cached_announcements;
@@ -140,6 +124,7 @@ public class App {
             });
             String[] headers = { "bus_id", "short_name", "latitude", "longitude", "route_id", "bus_service" };
             Spark.get("/buses", (req, res) -> {
+                // Queriers for the bus location. (This is the only query that doesn't used cached data)
                 final ResultSet bus_results = bus_query.executeQuery();
                 res.type("application/json");
                 JSONArray out = new JSONArray();
@@ -157,17 +142,8 @@ public class App {
         }
     }
 
-    private static byte[] getHttp(final CloseableHttpClient client, final HttpGet get, final Response response)
-            throws UnsupportedOperationException, ClientProtocolException, IOException {
-        // TODO add some form of error handling.
-        response.type("application/json");
-        CloseableHttpResponse res = client.execute(get);
-        byte[] data = res.getEntity().getContent().readAllBytes();
-        res.close();
-        return data;
-    }
-
     private static void updateRouteStops(final CloseableHttpClient client) throws ClientProtocolException, IOException {
+        // Gets the stops for all the lanta routes
         final JsonObject lanta_stop_info = new JsonObject();
         for (String route_id : ROUTE_IDS) {
             final HttpGet routeKmlGet = new HttpGet(
@@ -177,12 +153,14 @@ public class App {
             res.close();
             lanta_stop_info.add(route_id, new Gson().fromJson(data, JsonObject.class));
         }
+        // Gets all the lehigh stops
         final HttpGet lehighStopsGet = new HttpGet("https://lehigh.doublemap.com/map/v2/stops");
         final CloseableHttpResponse res = client.execute(lehighStopsGet);
         final JsonArray lehigh_stop_info = new Gson().fromJson(new String(res.getEntity().getContent().readAllBytes()),
                 JsonArray.class);
         res.close();
 
+        // Merges the two lists into the cached list. 
         final JsonObject final_stop_info = new JsonObject();
         final_stop_info.add("lehigh", lehigh_stop_info);
         final_stop_info.add("lanta", lanta_stop_info);
@@ -200,6 +178,8 @@ public class App {
 
     private static void updateRoutePaths(final CloseableHttpClient client) throws ClientProtocolException, IOException {
         JsonObject lanta_paths = new JsonObject();
+        // Converts the kml file type to an array of an array of coordinates of the form:
+        // Is an array of array of coordinates since thats the way kml files are formatted. 
         for (String route_id : ROUTE_IDS) {
             final HttpGet routeKmlGet = new HttpGet("https://realtimelanta.availtec.com/InfoPoint/Resources/Traces/Route_" + route_id + ".kml");
             CloseableHttpResponse res = client.execute(routeKmlGet);
@@ -229,6 +209,7 @@ public class App {
         }
         
 
+        // Just directly passes the lehigh route paths. 
         final HttpGet lehighRoutePathsGet = new HttpGet("https://lehigh.doublemap.com/map/v2/routes");
         final CloseableHttpResponse res = client.execute(lehighRoutePathsGet);
         final JsonArray lehigh_route_paths = new Gson().fromJson(new String(res.getEntity().getContent().readAllBytes()),
