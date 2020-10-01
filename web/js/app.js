@@ -290,12 +290,14 @@ const new_position = L.icon({
 });
 
 function draw_stops(map) {
+    //TODO: CLEAN THIS UP
     $.each(stops.lehigh, function() { //LOOP: gets all stops for lehigh and places them on map
 
         stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#68310A" }).bindPopup(this.name).addTo(map).on('click', function(e) {
             // console.log(this.name);
             map.setView([this.getLatLng().lat, this.getLatLng().lng], 16);
         });
+        stop_arr[this.name]._stopid = this.stop_id;
         stop_obj[this.stop_id] = this.name;
         //  console.log(cardinality_arr);
     });
@@ -304,6 +306,7 @@ function draw_stops(map) {
 
         stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#004BBD" }).bindPopup(this.name, { maxWidth: '500px' }).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
         stop_obj[this.stop_id] = this.name;
+        stop_arr[this.name]._stopid = this.stop_id;
         //  console.log(cardinality_arr);
     });
 
@@ -356,31 +359,57 @@ async function draw_polyline_sample(map) {
 
 }
 
-function reset_popup_content() {
+function reset_popup_content(stop_arrivals) {
+    console.log(stop_arrivals);
     $.each(stop_arr, function(name, marker) {
-        marker.setPopupContent(name);
+        const stop_id = marker._stopid;
+        // console.log(stop_id);
+        let tdata = "<td>N/A</td><td>N/A</td>";
+        if(stop_id in stop_arrivals) {
+            tdata = "";
+            stop_arrivals[stop_id].forEach(arrival => {
+                tdata += "<tr>";
+                tdata += arrival;
+                tdata += "</tr>";
+            });
+        }
+        const simple_table = `
+        <h3>${name}</h3>
+        <table class="pure-table" id="${stop_id}">
+        <thead>
+            <tr>
+                <th>Bus #</th>
+                <th>Arriving</th>
+            </tr>
+        </thead>
+        <tbody>
+            ${tdata}
+        </tbody>
+    </table>`;
+        marker.setPopupContent(simple_table);
     })
 }
 
-function update_stop_times(timings, bus_id) {
+function update_stop_times(timings, bus_id, stop_arrivals) {
     $.each(timings, function(stop_id, time) {
-        const stop_name = stop_obj[stop_id];
-        const stop_marker = stop_arr[stop_name];
-        const prev_content = stop_marker.getPopup().getContent();
-        const new_content = `<br> Bus ${bus_id} is arriving in ${time.minutes} minutes and ${time.seconds} seconds.`;
-        stop_marker.setPopupContent(prev_content + new_content);
+        const new_content = `<td>${bus_id}</td> <td> ${time.minutes} minutes and ${time.seconds} seconds.</td>`;
+        if(!(stop_id in stop_arrivals)) {
+            stop_arrivals[stop_id] = [new_content];
+        } else {
+            stop_arrivals[stop_id].push(new_content);
+        }
     });
 }
 
 function draw_buses(bus_obj, map) {
     const buses_running = new Set();
-    reset_popup_content();
+    const stop_arrivals = {};
     $.each(bus_obj, function(k, bus) {
         const { bus_id, short_name, latitude, longitude, route_id, route_name, service, timings } = bus;
         let { next_stop, last_stop } = bus;
         let next_time = null;
         if (service == "Lehigh" && timings != null) {
-            update_stop_times(timings, bus_id);
+            update_stop_times(timings, bus_id, stop_arrivals);
             next_time = timings[next_stop];
             next_stop = stop_obj[next_stop];
             last_stop = stop_obj[last_stop];
@@ -409,6 +438,7 @@ function draw_buses(bus_obj, map) {
         marker.setPopupContent(popup_content);
         buses_running.add(bus_id);
     });
+    reset_popup_content(stop_arrivals);
     const buses_with_markers = new Set(Array.from(bus_obj.keys()));
     const buses_to_be_removed = new Set([...buses_with_markers].filter(x => !buses_running.has(x))); //https://stackoverflow.com/questions/1723168/what-is-the-fastest-or-most-elegant-way-to-compute-a-set-difference-using-javasc
     $.each(buses_to_be_removed, function() {
