@@ -96,12 +96,30 @@ function show_stops(bus) {
 }
 
 //Called on keypress when user is searching stops
-function render_search_results() {
-    query = "Le" //just testing for now
-    for (i = 0; i < stops_list.length; i++) { //iterate through stops_list
-        if (stops_list[i].includes(query)) { //show stop if string contains query
-            $("#stops-list-" + i).toggle();
+function render_search_results(this_stops_list) {
+    stops_list_html_id = "#stops-list-" + this_stops_list
+    $(stops_list_html_id).hide()
+    query = $("#search-" + this_stops_list).val() //just testing for now
+    results = [] //clear results list
+    $("#lehigh-query-results").empty() //clear whatever current results are displayed
 
+    if (query == "") { //if empty query, show full list
+        $("#stops-list-lehigh").show()
+        $("#lehigh-query-results").hide()
+        return
+    }
+
+    $("#lehigh-query-results").show()
+
+    //get stops that match the query and add them to results list
+    for (i = 0; i < stops["lehigh"].length; i++) { //iterate through stops_list
+        if (stops["lehigh"][i]["name"].includes(query)) { //show stop if string contains query
+            results.push(stops["lehigh"][i])
         }
+    }
+
+    //render results
+    for (i = 0; i < results.length; i++) {
+        $("#lehigh-query-results").append('<li><a class="pure-menu-link stops-item" onclick="find_stop(' + results[i].longitude + ',\'' + results[i].name + '\')">' + results[i].name + '</a></li>');
     }
 }

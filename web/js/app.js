@@ -365,7 +365,7 @@ function reset_popup_content(stop_arrivals) {
         const stop_id = marker._stopid;
         // console.log(stop_id);
         let tdata = "<td>N/A</td><td>N/A</td>";
-        if(stop_id in stop_arrivals) {
+        if (stop_id in stop_arrivals) {
             tdata = "";
             stop_arrivals[stop_id].forEach(arrival => {
                 tdata += "<tr>";
@@ -393,7 +393,7 @@ function reset_popup_content(stop_arrivals) {
 function update_stop_times(timings, bus_id, stop_arrivals) {
     $.each(timings, function(stop_id, time) {
         const new_content = `<td>${bus_id}</td> <td> ${time.minutes} minutes and ${time.seconds} seconds.</td>`;
-        if(!(stop_id in stop_arrivals)) {
+        if (!(stop_id in stop_arrivals)) {
             stop_arrivals[stop_id] = [new_content];
         } else {
             stop_arrivals[stop_id].push(new_content);
@@ -509,10 +509,6 @@ const poly_func = draw_polyline_sample(mymap);
 // Populate side-menu on render
 $('#stops').append('<ul class="pure-menu-list" id="init-stop-list" style="display: none; background-color: rgb(107, 46, 3); font-size: 15px;"></ul>');
 
-// TODO: Implement filter search
-function render_search_results(list_name) {
-
-}
 const keys = Object.keys(stops);
 
 $.each(keys, function() {
@@ -520,8 +516,8 @@ $.each(keys, function() {
     let stops_tracker = new Map();
     var count = 0;
     $('#init-stop-list').append('<a id="transportation-item" class="pure-menu-link" onclick="show_stops(\'' + this + '\')">' + this.charAt(0).toUpperCase() + this.slice(1) + '</a>');
-    $('#init-stop-list').append('<div id="stops-list-container-' + this + '" style="display: none;"><ul class="pure-menu-list" id="stops-list-' + this + '" style="background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height: 52.2vh;"></ul></div>');
-    $('#stops-list-container-' + bus).prepend('<div style="text-align:center;border-bottom: 1px solid white; height:33.6px;"><input type="text" id="search-' + this + '" class="stops-item" style="margin-top:5px; width: 90%;" placeholder="Look for a stop" onkeypress="render_search_results(\'' + this + '\')"/></div>');
+    $('#init-stop-list').append('<div id="stops-list-container-' + this + '" style="display: none;"><ul class="pure-menu-list" id="stops-list-' + this + '" style="background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height: 52.2vh;"></ul></div><ul class="pure-menu-list" id="' + this + '-query-results" style="background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height: 52.2vh;"></ul></div>');
+    $('#stops-list-container-' + bus).prepend('<div style="text-align:center;border-bottom: 1px solid white; height:33.6px;"><input type="text" id="search-' + this + '" class="stops-item" style="margin-top:5px; width: 90%;" placeholder="Look for a stop" onkeyup="render_search_results(\'' + this + '\')"/></div>');
     $.each(stops[this], function() {
         if (!stops_tracker.has(this.name)) {
             $('#stops-list-' + bus).append('<li><a class="pure-menu-link stops-item" onclick="find_stop(' + this.latitude + ',' + this.longitude + ',\'' + this.name + '\')">' + this.name + '</a></li>');
