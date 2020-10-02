@@ -320,7 +320,7 @@ async function draw_polyline_sample(map) {
                 const routes = [];
 
                 $.each(parsed, function() {
-                    console.log(this);
+                    // console.log(this);
                     const { color, path, name } = this;
                     routes.push({ color: color, path: path, name: name });
                 });
@@ -360,7 +360,7 @@ async function draw_polyline_sample(map) {
 }
 
 function reset_popup_content(stop_arrivals) {
-    console.log(stop_arrivals);
+    // console.log(stop_arrivals);
     $.each(stop_arr, function(name, marker) {
         const stop_id = marker._stopid;
         // console.log(stop_id);
