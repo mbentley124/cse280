@@ -99,7 +99,8 @@ function show_stops(bus) {
 function render_search_results(this_stops_list) {
     stops_list_html_id = "#stops-list-" + this_stops_list
     $(stops_list_html_id).hide()
-    query = $("#search-" + this_stops_list).val() //just testing for now
+    query = $("#search-" + this_stops_list).val() //get the value from the input bar
+    query = query.toLowerCase()
     results = [] //clear results list
     $("#lehigh-query-results").empty() //clear whatever current results are displayed
 
@@ -113,7 +114,7 @@ function render_search_results(this_stops_list) {
 
     //get stops that match the query and add them to results list
     for (i = 0; i < stops["lehigh"].length; i++) { //iterate through stops_list
-        if (stops["lehigh"][i]["name"].includes(query)) { //show stop if string contains query
+        if ((stops["lehigh"][i]["name"]).toLowerCase().includes(query)) { //show stop if string contains query
             results.push(stops["lehigh"][i])
         }
     }
