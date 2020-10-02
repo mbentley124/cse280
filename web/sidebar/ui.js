@@ -102,25 +102,27 @@ function render_search_results(this_stops_list) {
     query = $("#search-" + this_stops_list).val() //get the value from the input bar
     query = query.toLowerCase()
     results = [] //clear results list
-    $("#lehigh-query-results").empty() //clear whatever current results are displayed
+    query_results_list = "#" + this_stops_list + "-query-results"
+    $(query_results_list).empty() //clear whatever current results are displayed
 
-    if (query == "") { //if empty query, show full list
-        $("#stops-list-lehigh").show()
-        $("#lehigh-query-results").hide()
+    if (query == "") { //if empty query, show full list and hide results list (even though it would be empty)
+        $(stops_list_html_id).show()
+        $(query_results_list).hide()
         return
     }
 
-    $("#lehigh-query-results").show()
+    //show the results list
+    $(query_results_list).show()
 
     //get stops that match the query and add them to results list
-    for (i = 0; i < stops["lehigh"].length; i++) { //iterate through stops_list
-        if ((stops["lehigh"][i]["name"]).toLowerCase().includes(query)) { //show stop if string contains query
-            results.push(stops["lehigh"][i])
+    for (i = 0; i < stops[this_stops_list].length; i++) { //iterate through stops_list
+        if ((stops[this_stops_list][i]["name"]).toLowerCase().includes(query)) { //show stop if string contains query
+            results.push(stops[this_stops_list][i])
         }
     }
 
     //render results
     for (i = 0; i < results.length; i++) {
-        $("#lehigh-query-results").append('<li><a class="pure-menu-link stops-item" onclick="find_stop(' + results[i].longitude + ',\'' + results[i].name + '\')">' + results[i].name + '</a></li>');
+        $(query_results_list).append('<li><a class="pure-menu-link stops-item" onclick="find_stop(' + results[i].longitude + ',\'' + results[i].name + '\')">' + results[i].name + '</a></li>');
     }
 }
