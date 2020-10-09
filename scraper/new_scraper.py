@@ -61,6 +61,9 @@ lehigh = LehighScraper(next_stop=True)
 lanta = LANTAScraper()
 
 while True:
+    total_buses = -1
+    projection_total = -1
+    historical_total = -1
     begin = t.time()
     begin_lanta = t.time()
     lanta.request_routes()
@@ -119,7 +122,7 @@ while True:
         )
     )
     print("\tStoring Data:    {}".format(str(historical_total)))
-    t.sleep(2.5)
+    t.sleep(2)
 
 
 # lanta.request_routes()

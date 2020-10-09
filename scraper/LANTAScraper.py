@@ -95,6 +95,7 @@ class LANTAScraper:
             route_id=route,
             do_projection=self.projection,
             service="LANTA",
+            cache={},
             ).to_dict()
         
     def request_stops(self, url = "https://realtimelanta.availtec.com/InfoPoint/rest/RouteDetails/Get/{}", processing = None, return_data = False):

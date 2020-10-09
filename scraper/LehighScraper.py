@@ -4,6 +4,7 @@ from BusRoute import BusRoute
 import requests, os, json
 import time as t
 from multiprocessing import Pool
+from TimingCache import TimingCache
 class LehighScraper:
     buses = []
     stops = []
@@ -14,6 +15,7 @@ class LehighScraper:
     def __init__(self, scraping_url = "https://lehigh.doublemap.com/map/v2/buses", next_stop=False):
         self.scraping_url = scraping_url
         self.next_stop = next_stop
+        self.cache = TimingCache().cache()
         print("Initialized LehighScraper | PID: {}".format(os.getpid()))
         with open("routes.json", "r") as r:
             self.routes_from_java_script = json.load(r)
@@ -63,7 +65,8 @@ class LehighScraper:
             do_next_stop=self.next_stop,
             service="Lehigh",
             stops=self.clean_stops,
-            routes=self.routes_from_java_script
+            routes=self.routes_from_java_script,
+            cache=self.cache,
             ).to_dict()
 
     def request_stops(self, url = "https://lehigh.doublemap.com/map/v2/stops", processing = None, return_data = False):
