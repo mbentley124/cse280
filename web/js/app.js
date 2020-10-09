@@ -307,14 +307,14 @@ function draw_buses(bus_obj, map) {
         const marker = marker_obj[bus_id];
         let popup_content = "Error";
         if ((timings == null) || (timings.length == 0)) {
-            popup_content = `${service} Bus: ${bus_id} <br>On route: ${typeof mapped_routes.get(route_id) === "undefined" || !abc ? route_id : mapped_routes.get(route_id)} <br> Previous stop: ${last_stop}`;
+            popup_content = `${service} Bus: ${bus_id} <br>On route: ${typeof mapped_routes.get(route_id) === "undefined" ? route_id : mapped_routes.get(route_id)} <br> Previous stop: ${last_stop}`;
         } else {
             const { minutes, seconds, total_time } = next_time;
             let time_str = `${minutes} minutes & ${seconds} seconds.`;
             if (minutes == 0 && seconds < 20) {
                 time_str = "Arriving Soon.";
             }
-            popup_content = `${service} Bus: ${bus_id} <br>On route: ${typeof mapped_routes.get(route_id) === "undefined" || !abc ? route_id : mapped_routes.get(route_id)} <br> ${last_stop} => ${next_stop} in ${time_str}`;
+            popup_content = `${service} Bus: ${bus_id} <br>On route: ${typeof mapped_routes.get(route_id) === "undefined" ? route_id : mapped_routes.get(route_id)} <br> ${last_stop} => ${next_stop} in ${time_str}`;
         }
         marker.setPopupContent(popup_content);
         buses_running.add(bus_id);
