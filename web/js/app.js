@@ -339,6 +339,7 @@ function update_map(map) {
         } else if (xhr.status == 404 || xhr.status == 500) {
             console.error("Failed to get bus data");
         } else if (xhr.status == 200) {
+            console.log("Drawing buses...");
             $.each(data, function() {
                 draw_buses(this, map);
             });
