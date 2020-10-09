@@ -170,9 +170,25 @@ function reset_popup_content(stop_arrivals) {
     })
 }
 
+function zoom_to_bus(bus_id) {
+    if(bus_id in marker_obj) {
+        const the_bus = marker_obj[bus_id];
+        mymap.setView(the_bus.getLatLng());
+        the_bus.openPopup();
+    }
+}
+
+function zoom_to_stop(stop_id) {
+    if(stop_id in stop_arr) {
+        const the_stop = stop_arr[stop_id];
+        mymap.setView(the_stop.getLatLng());
+        the_stop.openPopup();
+    }
+}
+
 function update_stop_times(timings, bus_id, route_id, stop_arrivals) {
     $.each(timings, function(stop_id, time) {
-        const new_content = `<td>${bus_id + " (" + mapped_routes.get(route_id) + ") "}</td> <td> ${time.minutes} minutes and ${time.seconds} seconds.</td>`;
+        const new_content = `<td><a href="#bus-${bus_id}" onclick="zoom_to_bus(${bus_id});">${bus_id + " (" + mapped_routes.get(route_id) + ") "}</a></td> <td> ${time.minutes} minutes and ${time.seconds} seconds.</td>`;
         if (!(stop_id in stop_arrivals)) {
             stop_arrivals[stop_id] = [new_content];
         } else {
@@ -213,7 +229,7 @@ function draw_buses(bus_obj, map) {
             if (minutes == 0 && seconds < 20) {
                 time_str = "Arriving Soon.";
             }
-            popup_content = `${service} Bus: ${bus_id} <br>On route: ${typeof mapped_routes.get(route_id) === "undefined" ? route_id : mapped_routes.get(route_id)} <br> ${last_stop} => ${next_stop} in ${time_str}`;
+            popup_content = `${service} Bus: ${bus_id} <br>On route: ${typeof mapped_routes.get(route_id) === "undefined" ? route_id : mapped_routes.get(route_id)} <br> <a onclick="zoom_to_stop('${last_stop}')" href="#stop-${last_stop}"> ${last_stop}</a> => <a onclick="zoom_to_stop('${next_stop}');" href="#stop-${next_stop}">${next_stop}</a> in ${time_str}`;
         }
         marker.setPopupContent(popup_content);
         buses_running.add(bus_id);
