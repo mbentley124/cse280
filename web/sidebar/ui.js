@@ -46,7 +46,7 @@ content.onclick = function(e) {
     }
 };
 
-let routes = [];
+let routes_list = [];
 //TODO: Get Routes from Backend, need more clarification
 function getRoutes() {
     //Figure out a way to not expose URL, unless it's fine

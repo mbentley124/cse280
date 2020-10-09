@@ -12,11 +12,16 @@
 // });
 
 var stops_list = [] //holds stop names
+let mapped_routes = new Map(); // Holds the mapping for the route_id to the actual route name
 
 var highlighted_route = null;
 
 //TODO: what is this?
 const stop_obj = {};
+
+$.each(routes.lehigh, function (){ // Sets the mapping for the mapped_routes map
+    mapped_routes.set(this.id, this.short_name);
+})
 
 tile_style['default'] = L.tileLayer(tile_server_url, { //takes tile server URL and will return a tile
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -163,9 +168,9 @@ function reset_popup_content(stop_arrivals) {
     })
 }
 
-function update_stop_times(timings, bus_id, stop_arrivals) {
+function update_stop_times(timings, bus_id, route_id, stop_arrivals) {
     $.each(timings, function(stop_id, time) {
-        const new_content = `<td>${bus_id}</td> <td> ${time.minutes} minutes and ${time.seconds} seconds.</td>`;
+        const new_content = `<td>${bus_id + " (" + mapped_routes.get(route_id) + ") "}</td> <td> ${time.minutes} minutes and ${time.seconds} seconds.</td>`;
         if (!(stop_id in stop_arrivals)) {
             stop_arrivals[stop_id] = [new_content];
         } else {
@@ -182,7 +187,7 @@ function draw_buses(bus_obj, map) {
         let { next_stop, last_stop } = bus;
         let next_time = null;
         if (service == "Lehigh" && timings != null) {
-            update_stop_times(timings, bus_id, stop_arrivals);
+            update_stop_times(timings, bus_id, route_id, stop_arrivals);
             next_time = timings[next_stop];
             next_stop = stop_obj[next_stop];
             last_stop = stop_obj[last_stop];
@@ -199,14 +204,14 @@ function draw_buses(bus_obj, map) {
         const marker = marker_obj[bus_id];
         let popup_content = "Error";
         if ((timings == null) || (timings.length == 0)) {
-            popup_content = `${service} Bus: ${bus_id} <br>On route: ${route_id} <br> Previous stop: ${last_stop}`;
+            popup_content = `${service} Bus: ${bus_id} <br>On route: ${typeof mapped_routes.get(route_id) === "undefined" ? route_id : mapped_routes.get(route_id)} <br> Previous stop: ${last_stop}`;
         } else {
             const { minutes, seconds, total_time } = next_time;
             let time_str = `${minutes} minutes & ${seconds} seconds.`;
             if (minutes == 0 && seconds < 20) {
                 time_str = "Arriving Soon.";
             }
-            popup_content = `${service} Bus: ${bus_id} <br>On route: ${route_id} <br> ${last_stop} => ${next_stop} in ${time_str}`;
+            popup_content = `${service} Bus: ${bus_id} <br>On route: ${typeof mapped_routes.get(route_id) === "undefined" ? route_id : mapped_routes.get(route_id)} <br> ${last_stop} => ${next_stop} in ${time_str}`;
         }
         marker.setPopupContent(popup_content);
         buses_running.add(bus_id);
@@ -231,6 +236,7 @@ function update_map(map) {
         } else if (xhr.status == 404 || xhr.status == 500) {
             console.error("Failed to get bus data");
         } else if (xhr.status == 200) {
+            console.log("Drawing buses...");
             $.each(data, function() {
                 draw_buses(this, map);
             });
