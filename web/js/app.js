@@ -264,10 +264,9 @@ function toggle_polylines_sample(name) {
 
 mymap = L.map('mapid', leaflet_config).setView([40.604377, -75.372161], 16); //sets center of map & zoom level
 draw_stops(mymap);
-// update_initial(mymap);
 
 
-toggle_style((args.get("style") == null) ? check_dark() : args.get("style"));
+//TODO: what does this do?
 mymap.addLayer(tile_style['default']);
 update_map(mymap);
 setInterval(function(mymap) { update_map(mymap) }, 2000, mymap); //TODO: will update map every 'interval'
@@ -284,6 +283,7 @@ $('#stops').append('<ul class="pure-menu-list" id="init-stop-list" style="displa
 
 const keys = Object.keys(stops);
 
+//TODO: what does this do?
 $.each(keys, function() {
     const bus = this;
     let stops_tracker = new Map();
@@ -301,6 +301,8 @@ $.each(keys, function() {
     })
     console.log(this + " " + count);
 })
+
+//TODO: what does this do?
 try {
     var lc = L.control.locate({
         flyTo: true,

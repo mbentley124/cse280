@@ -26,3 +26,5 @@ function toggle_style(style) {
         navbar.removeClass("bg-dark").addClass("bg-primary");
     }
 }
+
+toggle_style((args.get("style") == null) ? check_dark() : args.get("style"));
