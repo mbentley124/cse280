@@ -9,6 +9,15 @@ function make_icon_bus(fill, background) {
     return 'data:image/svg+xml;base64,' + btoa(svg_str);
 }
 
+//change window size
+if (window.innerWidth > 600) {
+    ic = [48, 48] //bus icon
+    icb = [32, 32] //bus stop icon
+} else {
+    ic = [32, 32]
+    icb = [20, 20]
+}
+
 /*
 
 images for icons

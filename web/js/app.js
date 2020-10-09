@@ -19,7 +19,7 @@ var highlighted_route = null;
 //TODO: what is this?
 const stop_obj = {};
 
-$.each(routes.lehigh, function (){ // Sets the mapping for the mapped_routes map
+$.each(routes.lehigh, function() { // Sets the mapping for the mapped_routes map
     mapped_routes.set(this.id, this.short_name);
 })
 
@@ -30,6 +30,8 @@ tile_style['default'] = L.tileLayer(tile_server_url, { //takes tile server URL a
 
 //needs a lot of class refactoring.
 let polyline_global = {};
+
+//TODO: I moved this into icons.js, should I delete it here?
 //change window size
 if (window.innerWidth > 600) {
     ic = [48, 48] //bus icon
