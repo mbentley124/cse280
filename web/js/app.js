@@ -293,7 +293,7 @@ draw_stops(mymap);
 //TODO: what does this do?
 mymap.addLayer(tile_style['default']);
 update_map(mymap);
-setInterval(function(mymap) { update_map(mymap) }, 2000, mymap); //TODO: will update map every 'interval'
+setInterval(function(mymap) { update_map(mymap) }, 500, mymap); //TODO: will update map every 'interval'
 
 // Center map view on click from the stops list
 function find_stop(lat, lng, name) {
