@@ -307,7 +307,7 @@ $('#stops').append('<ul class="pure-menu-list" id="init-stop-list" style="displa
 
 const keys = Object.keys(stops);
 
-//TODO: what does this do?
+// This populates the stops lists for each transportation option, and checks for duplicates
 $.each(keys, function() {
     const bus = this;
     let stops_tracker = new Map();
@@ -326,7 +326,7 @@ $.each(keys, function() {
     console.log(this + " " + count);
 })
 
-//TODO: what does this do?
+// This adds the 'find me' button
 try {
     var lc = L.control.locate({
         flyTo: true,
