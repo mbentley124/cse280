@@ -378,6 +378,8 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         padding-left: 50px;
         transition: 0.25s;
         max-height: 24.8px;
-        width: auto;
+        position: fixed;
+        z-index: 999;
+        width: calc(100vw - 51.2px);
     }
 }

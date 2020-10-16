@@ -13,7 +13,7 @@
 #map {
     display: inline-block;
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 42.3px);
 }
 #mapid {
     height: 100%;
@@ -192,5 +192,9 @@ body {
     .lehigh-switch-container{
         float: right;
         margin-right: 10px;
+    }
+    #map {
+        margin-top: 42.3px;
+        height: calc(100vh - 42.3px);
     }
 }
