@@ -347,6 +347,11 @@ try {
     console.warn(e.toString());
 }
 
+// This adds the 'Lehigh' button, to pan the view to campus
+L.easyButton('<img src="img/lehigh_logo.png" style="padding-top:5px">', function(btn, map){
+    var lehigh = [40.597856,-75.360639];
+    map.setView(lehigh,14);
+}).addTo( mymap );
 
 // Animate Hamburger Icon on smaller screens
 function animateHamburger(elem) {
