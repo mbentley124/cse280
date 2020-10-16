@@ -52,3 +52,145 @@ body {
     width:100%;
     overflow: hidden;
 }
+
+/* Lehigh switch styling */
+
+.lehigh-switch-container {
+    position: relative; width: 68px;
+    float:left;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.lehigh-switch-checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+.lehigh-switch-label {
+    display: block; overflow: hidden; cursor: pointer;
+    border: 2px solid #999999; border-radius: 20px;
+}
+.lehigh-switch-inner {
+    display: block; width: 200%; margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+}
+.lehigh-switch-inner:before, .lehigh-switch-inner:after {
+    display: block; float: left; width: 50%; height: 18px; padding: 0; line-height: 18px;
+    font-size: 11px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+    box-sizing: border-box;
+}
+.lehigh-switch-inner:before {
+    content: "Lehigh";
+    padding-left: 10px;
+    background-color: #944918; color: #FFFFFF;
+}
+.lehigh-switch-inner:after {
+    content: "Lehigh";
+    padding-right: 10px;
+    background-color: #EEEEEE; color: #999999;
+    text-align: right;
+}
+.lehigh-switch-switch {
+    display: block; width: 5px; margin: 6.5px;
+    background: #FFFFFF;
+    position: absolute; top: 0; bottom: 0;
+    right: 47px;
+    border: 2px solid #999999; border-radius: 20px;
+    transition: all 0.3s ease-in 0s; 
+}
+.lehigh-switch-checkbox:checked + .lehigh-switch-label .lehigh-switch-inner {
+    margin-left: 0;
+}
+.lehigh-switch-checkbox:checked + .lehigh-switch-label .lehigh-switch-switch {
+    right: 0px; 
+}
+
+/* LANTA switch styling */
+
+.lanta-switch-container {
+    position: relative; width: 68px;
+    float:left;
+    -webkit-user-select:none; -moz-user-select:none; -ms-user-select: none;
+}
+.lanta-switch-checkbox {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+.lanta-switch-label {
+    display: block; overflow: hidden; cursor: pointer;
+    border: 2px solid #999999; border-radius: 20px;
+}
+.lanta-switch-inner {
+    display: block; width: 200%; margin-left: -100%;
+    transition: margin 0.3s ease-in 0s;
+}
+.lanta-switch-inner:before, .lanta-switch-inner:after {
+    display: block; float: left; width: 50%; height: 18px; padding: 0; line-height: 18px;
+    font-size: 11px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
+    box-sizing: border-box;
+}
+.lanta-switch-inner:before {
+    content: "LANTA";
+    padding-left: 10px;
+    background-color: #944918; color: #FFFFFF;
+}
+.lanta-switch-inner:after {
+    content: "LANTA";
+    padding-right: 10px;
+    background-color: #EEEEEE; color: #999999;
+    text-align: right;
+}
+.lanta-switch-switch {
+    display: block; width: 5px; margin: 6.5px;
+    background: #FFFFFF;
+    position: absolute; top: 0; bottom: 0;
+    right: 47px;
+    border: 2px solid #999999; border-radius: 20px;
+    transition: all 0.3s ease-in 0s; 
+}
+.lanta-switch-checkbox:checked + .lanta-switch-label .lanta-switch-inner {
+    margin-left: 0;
+}
+.lanta-switch-checkbox:checked + .lanta-switch-label .lanta-switch-switch {
+    right: 0px; 
+}
+
+.toggle-title{
+    margin-left:10px;
+    margin-top: 1px;
+    margin-bottom: 0;
+    margin-right: 0;
+    float: left;
+}
+
+@media (min-width: 769px) {
+    #mobile-home {
+        display:none;
+    }
+    #desktop-home {
+        display: flex;
+    }
+    .lanta-switch-container{
+        margin-left: 10px;
+    }
+    .lehigh-switch-container{
+        margin-left: 50px;
+    }
+}
+
+@media (max-width: 768px) {
+    #mobile-home {
+        display: flex;
+    }
+    #desktop-home {
+        display: none;
+    }
+    .lanta-switch-container{
+        float: right;
+        margin-right: 10px;
+    }
+    .lehigh-switch-container{
+        float: right;
+        margin-right: 10px;
+    }
+}
