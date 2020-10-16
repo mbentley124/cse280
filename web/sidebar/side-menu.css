@@ -171,12 +171,13 @@ describing light/dark buttons in the menu
     background-color:#4B2913;
     border-bottom: 1px solid white;
 }
-#topbar-home {
+.topbar-home {
+    float:left;
     font-size: 130%;
     color: white;
     text-decoration: none;
 }
-#topbar-home:hover {
+.topbar-home:hover {
     font-size: 130%;
     color: rgb(230, 214, 203);
 }
@@ -366,7 +367,7 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         left: calc(100vw - 37px);
         
     }
-    #topbar-home{
+    .topbar-home{
         width: fit-content;
     }
     #menuLink.container{
@@ -377,6 +378,8 @@ Hides the menu at `48em`, but modify this based on your app's needs.
         padding-left: 50px;
         transition: 0.25s;
         max-height: 24.8px;
-        width: auto;
+        position: fixed;
+        z-index: 999;
+        width: calc(100vw - 51.2px);
     }
 }

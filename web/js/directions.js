@@ -10,8 +10,15 @@
  * if so, give first instance of shared stop after starting_stop
  */
 
-
+/**
+ * returns a string in the form:
+ * "Get on {bus route} at {nearest bus stop to starting location}
+ * Depart at {nearest bus stop to destination} and walk to destination."
+ * @param {location} start the starting location
+ * @param {location} dest the destination location
+ */
 function get_directions(start, dest) {
+
     var start_nearest = calc_nearest_result(start);
     var dest_nearest = calc_nearest_result(dest);
 
@@ -19,19 +26,20 @@ function get_directions(start, dest) {
     //TODO: define getRoutes();
 
     //get list of routes associated with our stops
-    var start_nearest_routes = start_nearest.getRoutes();
-    var dest_nearest_routes = dest_nearest.getRoutes();
+    var start_nearest_routes = getRoutes(start_nearest);
+    var dest_nearest_routes = getRoutes(dest_nearest);
 
-    var sameRoute = getRouteIfSame();
+    var sameRoute = getRouteIfSame(start_nearest_routes, dest_nearest_routes);
 
-    //one stop can have multiple routes, so I have to check if any route for start_nearest is the same has any route for dest_nearest
-    //TODO: I imagine theres a faster way to do this
-
-
-
+    if (sameRoute != null) {
+        //TODO: idk if these are strings
+        return ("Get on " + sameRoute + " at " + start_nearest + "\nDepart at " + dest_nearest + " and walk to destination.")
+    }
 
 }
 
+//one stop can have multiple routes, so I have to check if any route for start_nearest is the same has any route for dest_nearest
+//TODO: I imagine theres a faster way to do this
 function getRouteIfSame(start_nearest_routes, dest_nearest_routes) {
     for (i in start_nearest_routes) {
         for (j in dest_nearest_routes) {
@@ -43,8 +51,21 @@ function getRouteIfSame(start_nearest_routes, dest_nearest_routes) {
     return null;
 }
 
-function getRoutes() {
-
+function getRoutes(stopName) {
+    routes = [];
+    for (i in routes.lehigh) {
+        if (i.name == stopName) {
+            routes.push(i.name)
+        }
+    }
+    if (routes.length == 0) {
+        for (i in routes.lanta) {
+            if (i.name == stopName) {
+                routes.push(i.name)
+            }
+        }
+    }
+    return routes;
 }
 
 

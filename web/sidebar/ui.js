@@ -97,6 +97,7 @@ function show_stops(bus) {
 
 //Called on keypress when user is searching stops
 function render_search_results(this_stops_list) {
+    let stops_tracker2 = new Map();
     stops_list_html_id = "#stops-list-" + this_stops_list
     $(stops_list_html_id).hide()
     query = $("#search-" + this_stops_list).val() //get the value from the input bar
@@ -116,13 +117,14 @@ function render_search_results(this_stops_list) {
 
     //get stops that match the query and add them to results list
     for (i = 0; i < stops[this_stops_list].length; i++) { //iterate through stops_list
-        if ((stops[this_stops_list][i]["name"]).toLowerCase().includes(query)) { //show stop if string contains query
+        if ((stops[this_stops_list][i]["name"]).toLowerCase().includes(query) && !stops_tracker2.has(stops[this_stops_list][i]["name"])) { //show stop if string contains query
             results.push(stops[this_stops_list][i])
+            stops_tracker2.set(stops[this_stops_list][i]["name"],true)
         }
     }
 
     //render results
     for (i = 0; i < results.length; i++) {
-        $(query_results_list).append('<li><a class="pure-menu-link stops-item" onclick="find_stop(' + results[i].longitude + ',\'' + results[i].name + '\')">' + results[i].name + '</a></li>');
+        $(query_results_list).append('<li><a class="pure-menu-link stops-item" onclick="find_stop(' + results[i].longitude + ',' + results[i].longitude +  ',\'' + results[i].name + '\')">' + results[i].name + '</a></li>');
     }
 }

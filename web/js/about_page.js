@@ -11,6 +11,7 @@ async function make_about() {
         .then(text => {
             $(text).insertAfter("#map")
             $("#about").toggle()
+            console.log("HERE");
         })
 }
 

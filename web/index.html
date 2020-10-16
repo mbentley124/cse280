@@ -38,6 +38,8 @@
     <script src="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.js" charset="utf-8"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet.locatecontrol/dist/L.Control.Locate.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
     <!-- Library Files -->
     <script type="text/javascript" src="stops.json"></script>
     <script type="text/javascript" src="routes.json"></script>
@@ -58,7 +60,22 @@
                     <div class="bar3"></div>
                 </div>
             </a>
-            <a id="topbar-home" href="">Lehigh University Bus Tracker</a>
+            <a id="desktop-home" class="topbar-home" href="">Lehigh University Bus Tracker</a>
+            <a id="mobile-home" class="topbar-home" href="">LUBT</a>
+            <div class="lehigh-switch-container">
+                <input type="checkbox" name="lehigh-switch" class="lehigh-switch-checkbox" id="lehigh-switch" tabindex="0" checked>
+                <label class="lehigh-switch-label" for="lehigh-switch">
+                    <span class="lehigh-switch-inner"></span>
+                    <span class="lehigh-switch-switch"></span>
+                </label>
+            </div>
+            <div class="lanta-switch-container">
+                <input type="checkbox" name="lanta-switch" class="lanta-switch-checkbox" id="lanta-switch" tabindex="0" checked>
+                <label class="lanta-switch-label" for="lanta-switch">
+                    <span class="lanta-switch-inner"></span>
+                    <span class="lanta-switch-switch"></span>
+                </label>
+            </div>
         </div>
         <div id="layout">
             <div id="menu">
@@ -81,19 +98,6 @@
                         </li>
                         <li class="pure-menu-item" id="stops">
                             <a class="pure-menu-link" onclick="show_init_stop_list()">List of Stops</a>
-                            <!--
-                            <ul class="pure-menu-list transportation-list" style="display: none; background-color: rgb(107, 46, 3); font-size: 15px;">
-                                <ul class="pure-menu-list" id="stops-list" style="display: none; background-color: rgb(153, 67, 6); font-size: 15px;">
-                                    <a id="stops-item" class="pure-menu-link">Lehigh</a>
-                                    <a id="stops-item" class="pure-menu-link">Lanta</a>
-                                </ul>
-                                <a id="transportation-item" class="pure-menu-link" onclick="show_stops()">Lanta</a>
-                                <ul class="pure-menu-list" id="stops-list" style="display: none; background-color: rgb(153, 67, 6); font-size: 15px;">
-                                    <a id="stops-item" class="pure-menu-link">Lehigh</a>
-                                    <a id="stops-item" class="pure-menu-link">Lanta</a>
-                                </ul>
-                            </ul>
-                            -->
                         </li>
                         <li class="pure-menu-item"><a class="pure-menu-link" onclick="do_location()">Find nearest stop</a></li>
                         <li class="pure-menu-item"><a class="pure-menu-link" onclick="showAbout()">About</a></li>

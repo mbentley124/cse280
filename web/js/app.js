@@ -307,7 +307,7 @@ $('#stops').append('<ul class="pure-menu-list" id="init-stop-list" style="displa
 
 const keys = Object.keys(stops);
 
-//TODO: what does this do?
+// This populates the stops lists for each transportation option, and checks for duplicates
 $.each(keys, function() {
     const bus = this;
     let stops_tracker = new Map();
@@ -326,7 +326,7 @@ $.each(keys, function() {
     console.log(this + " " + count);
 })
 
-//TODO: what does this do?
+// This adds the 'find me' button
 try {
     var lc = L.control.locate({
         flyTo: true,
@@ -347,6 +347,11 @@ try {
     console.warn(e.toString());
 }
 
+// This adds the 'Lehigh' button, to pan the view to campus
+L.easyButton('<img src="img/lehigh_logo.png" style="padding-top:6px">', function(btn, map){
+    var lehigh = [40.597856,-75.367639];
+    map.setView(lehigh,14);
+}).addTo( mymap );
 
 // Animate Hamburger Icon on smaller screens
 function animateHamburger(elem) {
