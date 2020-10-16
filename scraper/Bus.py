@@ -29,7 +29,7 @@ class Bus:
         else:
             self.projected_coords = {"lat":None, "long":None}
 
-        if do_next_stop and (self.route_name != "AccessLU"):
+        if do_next_stop and self.route_name and (self.route_name != "AccessLU"): #NB: Make sure we're projecting on a known route.
             try:
                 curr_route = routes.get(str(self.route_id))
                 if not (curr_route is None):

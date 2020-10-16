@@ -16,30 +16,34 @@ def return_cnx():
                                         database='busapp',
                                         auth_plugin='mysql_native_password')
     except Exception as e:
+        print("Ex1")
         log_error(e)
         cnx = None
     return cnx
     
 
 def write_to_db(data):
-    cnx = return_cnx()
-    cursor = cnx.cursor(prepared=True)
-    prepared_statement = """INSERT INTO transient_bus (bus_id,short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, bus_service)
-                                                VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
-
-    for bus in data:
-        if "timings" in bus:
-            bus.pop("timings", None)
-        if "projected_coords" in bus:
-            bus.pop("projected_coords", None)
-        # print(bus)
-        bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, _, service = bus.values()
-        # print(bus.values())
-        # print((bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, service)) 
-        cursor.execute(prepared_statement, (bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, service))
-    
-    cnx.commit()
-    cnx.close()
+    try:
+        cnx = return_cnx()
+        cursor = cnx.cursor(prepared=True)
+        prepared_statement = """INSERT INTO transient_bus (bus_id,short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, bus_service)
+                                                    VALUES(%s, %s, %s, %s, %s, %s, %s, %s, %s)"""
+        for bus in data:
+            if "timings" in bus:
+                bus.pop("timings", None)
+            if "projected_coords" in bus:
+                bus.pop("projected_coords", None)
+            # print(bus)
+            bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, _, service = bus.values()
+            # print(bus.values())
+            # print((bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, service)) 
+            cursor.execute(prepared_statement, (bus_id, short_name, last_stop, next_stop, latitude, longitude, route_id, route_name, service))
+        cnx.commit()
+        cnx.close()
+    except Exception as e:
+        print("ex2")
+        log_error(e)
+        raise e
 
 
 def log_error(e):
@@ -100,10 +104,8 @@ while True:
                 ro.write("const routes = "+json.dumps(routes)+";")
         
         if write_db:
-            with Pool(len(buses.keys())) as p:
-                p.map_async(write_db, buses)
-            # write_to_db(buses['lehigh'])
-            # write_to_db(buses['lanta'])
+            write_to_db(buses['lehigh'])
+            write_to_db(buses['lanta'])
     except Exception as e:
         dict_end = -1
         log_error(e)
