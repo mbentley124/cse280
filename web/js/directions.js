@@ -20,6 +20,14 @@
  */
 async function get_directions(start, dest) {
 
+    if ($("#directions_tab").is(":visible")) {
+        $("#directions_tab").toggle();
+        return
+    }
+    $("#directions_tab").toggle(); //make it visible
+    $("#directions_child").remove(); //clear out old content
+
+
     var start_nearest = calc_nearest_result(start);
     var dest_nearest = calc_nearest_result(dest);
 
@@ -31,10 +39,14 @@ async function get_directions(start, dest) {
 
     //the starting and dest stops have a matching route
     if (sameRoute != null) {
+        directions_string = ("Get on " + sameRoute + " at " + start_nearest + ".<br>Depart at " + dest_nearest + " and walk to destination.");
+        html_string = `<p1 id="directions_child">${directions_string}</p1>`
+        $("#directions_tab").append(html_string)
 
-        return ("Get on " + sameRoute + " at " + start_nearest + "\nDepart at " + dest_nearest + " and walk to destination.")
+        return directions_string
     }
 
+    $("#directions_tab").append("Could not find directions using location given.")
     return "Nothing"
 
 }
