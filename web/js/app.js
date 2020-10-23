@@ -13,8 +13,13 @@
 
 var stops_list = [] //holds stop names
 let mapped_routes = new Map(); // Holds the mapping for the route_id to the actual route name
+let prevent_duplicates = new Set(); // Tracks which stops have been drawn to prevent duplicate draws
 
 var highlighted_route = null;
+
+// These will track whether or not the switches at the topbar have been toggled.
+var lehigh_toggled = false;
+var lanta_toggled = false;
 
 //TODO: what is this?
 const stop_obj = {};
@@ -70,26 +75,37 @@ function check_ip() {
 }
 
 function draw_stops(map) {
-    //TODO: CLEAN THIS UP
+    draw_lehigh(map);
+    draw_lanta(map);
+    console.log(stop_arr);
+}
+
+function draw_lehigh(map){
     $.each(stops.lehigh, function() { //LOOP: gets all stops for lehigh and places them on map
-
-        stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#68310A" }).bindPopup(this.name).addTo(map).on('click', function(e) {
-            // console.log(this.name);
-            map.setView([this.getLatLng().lat, this.getLatLng().lng], 16);
-        });
-        stop_arr[this.name]._stopid = this.stop_id;
-        stop_obj[this.stop_id] = this.name;
-        //  console.log(cardinality_arr);
+        if(!prevent_duplicates.has(this.name)){
+            stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#68310A" }).bindPopup(this.name).addTo(map).on('click', function(e) {
+                map.setView([this.getLatLng().lat, this.getLatLng().lng], 16);
+            });
+            stop_arr[this.name]._stopid = this.stop_id;
+            stop_obj[this.stop_id] = this.name;
+            stop_arr[this.name].type = 'lehigh';
+        }  
+        prevent_duplicates.add(this.name);
     });
+    prevent_duplicates.clear(); //reset duplicate tracker
+}
 
+function draw_lanta(map){
     $.each(stops.lanta, function() { //LOOP: gets all stops for lanta and places them on map
-
-        stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#004BBD" }).bindPopup(this.name, { maxWidth: '500px' }).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
-        stop_obj[this.stop_id] = this.name;
-        stop_arr[this.name]._stopid = this.stop_id;
-        //  console.log(cardinality_arr);
+        if(!prevent_duplicates.has(this.name)){
+            stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#004BBD" }).bindPopup(this.name, { maxWidth: '500px' }).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
+            stop_obj[this.stop_id] = this.name;
+            stop_arr[this.name]._stopid = this.stop_id;
+            stop_arr[this.name].type = 'lanta';
+        }
+        prevent_duplicates.add(this.name);
     });
-
+    prevent_duplicates.clear(); //reset duplicate tracker
 }
 
 async function draw_polyline_sample(map) {
@@ -356,4 +372,34 @@ L.easyButton('<img src="img/lehigh_logo.png" style="padding-top:6px">', function
 // Animate Hamburger Icon on smaller screens
 function animateHamburger(elem) {
     elem.classList.toggle("change");
+}
+
+// Toggles the stops for Lehigh
+function toggle_lehigh(){
+    if(lehigh_toggled){
+        draw_lehigh(mymap);
+        lehigh_toggled = false;
+    } else {
+        $.each(stop_arr,function(){
+            if(this.type == 'lehigh'){
+                this.remove();
+            }
+        })
+        lehigh_toggled = true;
+    }
+}
+
+// Toggles the stops for lanta
+function toggle_lanta(){
+    if(lanta_toggled){
+        draw_lanta(mymap);
+        lanta_toggled = false;
+    } else {
+        $.each(stop_arr,function(){
+            if(this.type == 'lanta'){
+                this.remove();
+            }
+        })
+        lanta_toggled = true;
+    }
 }

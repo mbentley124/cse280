@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>Lehigh University Bus Schedule</title>
+    <title>TripleMap</title>
 
     <!-- Scaling Viewport -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -41,8 +41,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
     <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
     <!-- Library Files -->
-    <script type="text/javascript" src="stops.json"></script>
-    <script type="text/javascript" src="routes.json"></script>
+    <script type="text/javascript" src="stops_copy.json"></script>
+    <script type="text/javascript" src="routes_copy.json"></script>
     <script type="text/javascript" src="js/MovingMarker.js"></script>
     <script type="text/javascript" src="js/polyline.js"></script>
     <!-- CSS files -->
@@ -60,17 +60,17 @@
                     <div class="bar3"></div>
                 </div>
             </a>
-            <a id="desktop-home" class="topbar-home" href="">Lehigh University Bus Tracker</a>
-            <a id="mobile-home" class="topbar-home" href="">LUBT</a>
+            <a id="desktop-home" class="topbar-home" href=""><img src="icons/favicon-32x32.png" style="height:24.8px;"></img> TripleMap</a>
+            <a id="mobile-home" class="topbar-home" href=""><img src="icons/favicon-32x32.png" style="height:24.8px;"></img> TripleMap</a>
             <div class="lehigh-switch-container">
-                <input type="checkbox" name="lehigh-switch" class="lehigh-switch-checkbox" id="lehigh-switch" tabindex="0" checked>
+                <input type="checkbox" name="lehigh-switch" class="lehigh-switch-checkbox" id="lehigh-switch" onclick="toggle_lehigh()" tabindex="0" checked>
                 <label class="lehigh-switch-label" for="lehigh-switch">
                     <span class="lehigh-switch-inner"></span>
                     <span class="lehigh-switch-switch"></span>
                 </label>
             </div>
             <div class="lanta-switch-container">
-                <input type="checkbox" name="lanta-switch" class="lanta-switch-checkbox" id="lanta-switch" tabindex="0" checked>
+                <input type="checkbox" name="lanta-switch" class="lanta-switch-checkbox" id="lanta-switch" onclick="toggle_lanta()" tabindex="0" checked>
                 <label class="lanta-switch-label" for="lanta-switch">
                     <span class="lanta-switch-inner"></span>
                     <span class="lanta-switch-switch"></span>
