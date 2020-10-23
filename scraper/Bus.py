@@ -1,4 +1,4 @@
-import json, mysql.connector, requests
+import json, mysql.connector, requests, os
 class Bus:
     route_map = {
         12: "AccessLU",
@@ -19,9 +19,9 @@ class Bus:
         self.timings = None
         self.stop_offset_cache = cache
         if do_projection:
-            self.cnx = mysql.connector.connect(  user='busapp',
-                                        password='busapp',
-                                        host='localhost',
+            self.cnx = mysql.connector.connect(  user=os.environ.get("DB_USER", "busapp"),
+                                        password=os.environ.get("DB_PASS", "busapp"),
+                                        host=os.environ.get("DB_HOST", "localhost"),
                                         database='busapp',
                                         auth_plugin='mysql_native_password')
             self.prepared_statement = """select last_stop as ls, bus_id as b, route_id as ro, insertion_time as r, (SELECT CONCAT(latitude,",",longitude) FROM transient_bus as l WHERE UNIX_TIMESTAMP(l.insertion_time) BETWEEN UNIX_TIMESTAMP(r) +5 AND UNIX_TIMESTAMP(r)+20 AND l.route_id = ro AND l.bus_id = b AND l.last_stop = ls ORDER BY UNIX_TIMESTAMP(l.insertion_time) LIMIT 1) as projected_point, ST_Distance_Sphere(point(latitude, longitude), point(%s,%s)) as D FROM transient_bus ORDER BY D ASC LIMIT 1"""
@@ -51,6 +51,7 @@ class Bus:
                         self.timings[curr.get("stop_id")] = time_dict
                         accumulation = time_dict.get("total_time")
             except Exception as e:
+                print(self.route_name)
                 print(f"Bus Init Error: {str(e)}")
 
 
