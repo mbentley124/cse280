@@ -10,9 +10,9 @@ import mysql.connector
 from multiprocessing import Pool
 def return_cnx():
     try:
-        cnx = mysql.connector.connect(  user='busapp',
-                                        password='busapp',
-                                        host='localhost',
+        cnx = mysql.connector.connect(  user=os.environ.get("DB_USER", "busapp"),
+                                        password=os.environ.get("DB_PASS", "busapp"),
+                                        host=os.environ.get("DB_HOST", "localhost"),
                                         database='busapp',
                                         auth_plugin='mysql_native_password')
     except Exception as e:
@@ -98,6 +98,8 @@ while True:
             with open("data/all/stops.json", "w+") as st:
                 # print(stops)
                 st.write("const stops = "+json.dumps(stops)+";")
+            with open("stops.json", "w+") as st2:
+                json.dump(fp=st2, obj=stops)
             with open("data/all/bus_data.json", "w+") as bu:
                 json.dump(fp=bu, obj=buses)
             with open("data/all/routes.json", "w+") as ro:
