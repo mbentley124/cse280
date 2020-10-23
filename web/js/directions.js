@@ -56,8 +56,8 @@ async function get_directions(start, dest) {
 function getRouteIfSame(start_nearest_routes, dest_nearest_routes) {
     for (i in start_nearest_routes) {
         for (j in dest_nearest_routes) {
-            if (i == j) {
-                return i;
+            if (start_nearest_routes[i] == dest_nearest_routes[j]) {
+                return start_nearest_routes[i];
             }
         }
     }
