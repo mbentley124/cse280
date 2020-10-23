@@ -74,7 +74,7 @@ async function getRoutes(stopName) {
     //     );
     stopid = stop_arr[stopName]._stopid
     for (var i = 0; i < routes.lehigh.length; i++) {
-        if (stopid in routes.lehigh[i].stops) {
+        if (routes.lehigh[i].stops.includes(stopid)) {
             stopRoutes.push(routes.lehigh[i].name)
         }
     }
