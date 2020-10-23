@@ -23,8 +23,6 @@ async function get_directions(start, dest) {
     var start_nearest = calc_nearest_result(start);
     var dest_nearest = calc_nearest_result(dest);
 
-    //TODO: I need a routes list
-
     //get list of routes associated with our stops
     var start_nearest_routes = await getRoutes(start_nearest);
     var dest_nearest_routes = await getRoutes(dest_nearest);
@@ -33,7 +31,7 @@ async function get_directions(start, dest) {
 
     //the starting and dest stops have a matching route
     if (sameRoute != null) {
-        //TODO: idk if these are strings
+
         return ("Get on " + sameRoute + " at " + start_nearest + "\nDepart at " + dest_nearest + " and walk to destination.")
     }
 
