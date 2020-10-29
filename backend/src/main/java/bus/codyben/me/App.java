@@ -9,16 +9,12 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonPrimitive;
 
 import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.config.RequestConfig;
@@ -57,16 +53,17 @@ public class App {
         } catch (ClassNotFoundException e1) {
             e1.printStackTrace();
         }
+        String username = System.console().readLine("Enter db username: ").trim();
+        String password = String.valueOf(System.console().readPassword("Enter db password: "));
         try {
-            Connection conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/busapp?serverTimezone=UTC",
-                    "busapp", "busapp");
+            Connection conn = DriverManager.getConnection("jdbc:mysql://database-1.cb98ayqpnb2s.us-east-1.rds.amazonaws.com:3306/busapp?serverTimezone=UTC", username, password);
             // Gets all the positions of all the buses (both Lanta and Lehgih)
             final PreparedStatement bus_query = conn
                     .prepareStatement("SELECT bus_id, short_name, last_stop, latitude, longitude, route_id, bus_service FROM ( "
                                         + "SELECT *, row_number() over(partition by bus_id order by insertion_time desc) as rn "
                                         + "FROM busapp.transient_bus " 
                                         + "WHERE bus_service = 'LANTA' "
-                                        + "AND insertion_time > now() - interval 40 day " 
+                                        + "AND insertion_time > now() - interval 5 minute " 
                                     + ") b " 
                                     + "WHERE rn = 1 " 
                                     + "UNION "
@@ -74,7 +71,7 @@ public class App {
                                         + "SELECT *, row_number() over(partition by bus_id order by insertion_time desc) as rn  "
                                         + "FROM busapp.transient_bus " 
                                         + "WHERE bus_service = 'Lehigh' "
-                                        + "AND insertion_time > now() - interval 40 day " 
+                                        + "AND insertion_time > now() - interval 5 minute " 
                                     + ") b " 
                                     + "WHERE rn = 1;");
 
