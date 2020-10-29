@@ -235,7 +235,7 @@ public class App {
                         final double current_stop_long = possible_stop.get("lon").getAsDouble();
                         if (prev_stop_lat != -1) {
                             final long time_to_arrive = calculateRouteDuration(client, prev_stop_lat, prev_stop_long, current_stop_lat, current_stop_long);
-                            copied_stop.addProperty("time_to_arrive", String.valueOf(time_to_arrive));
+                            copied_stop.addProperty("time_to_arrive", time_to_arrive);
                         }
                         prev_stop_lat = current_stop_lat;
                         prev_stop_long = current_stop_long;
@@ -263,8 +263,8 @@ public class App {
 
     private static long calculateRouteDuration(final CloseableHttpClient client, final double start_lat, final double start_long, final double end_lat, final double end_long)
             throws ClientProtocolException, IOException {
-        final String key_str = start_long + "," + start_lat + ";" + end_long + "," + end_long;
-        // System.out.println(key_str);
+        final String key_str = start_long + "," + start_lat + ";" + end_long + "," + end_lat;
+        System.out.println(key_str);
         final HttpGet duration_get = new HttpGet("http://127.0.0.1:5000/route/v1/driving/" + key_str + "?overview=full");
         final CloseableHttpResponse res = client.execute(duration_get);
         final JsonObject route_info = new Gson().fromJson(new String(res.getEntity().getContent().readAllBytes()),
