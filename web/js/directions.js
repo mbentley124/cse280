@@ -21,11 +21,7 @@
 async function get_directions(start) {
     $("#directions_instructions").toggle();
 
-    await get_loc_onclick().then((dest) => {
-        get_directions_worker(start, dest)
-    }).then(() => {
-        mymap.off('click');
-    });
+    await get_loc_onclick(start);
 }
 
 async function get_directions_worker(start, dest) {
@@ -45,11 +41,11 @@ async function get_directions_worker(start, dest) {
         start2.long = start._marker._latlng.lng;
     }
 
-    if (typeof dest == typeof(lc)) {
-        dest2 = [];
-        dest2.lat = dest._marker._latlng.lat;
-        dest2.long = dest._marker._latlng.lng;
-    }
+    // if (typeof dest == typeof(lc)) {
+    //     dest2 = [];
+    //     dest2.lat = dest._marker._latlng.lat;
+    //     dest2.long = dest._marker._latlng.lng;
+    // }
 
     var start_nearest = calc_nearest_result(start);
     var dest_nearest = calc_nearest_result(dest);
@@ -180,15 +176,16 @@ function calc_nearest_result(location) {
 // }
 
 
-async function get_loc_onclick() {
-    dest = []
+async function get_loc_onclick(start) {
+    console.log(start);
     mymap.on('click', function(e) {
 
-        dest.lat = e.latlng.lat;
-        dest.long = e.latlng.lng;
+        const ex = get_directions_worker(start, {lat: e.latlng.lat, long: e.latlng.lng});
+        ex.then(() => {
+            mymap.off('click');
+            console.log(ex);
+        });
 
-        mymap.off('click');
 
     })
-    return dest
 }
