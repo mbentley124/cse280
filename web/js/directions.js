@@ -45,11 +45,11 @@ async function get_directions_worker(start, dest) {
         start2.long = start._marker._latlng.lng;
     }
 
-    if (typeof dest == typeof(lc)) {
-        dest2 = [];
-        dest2.lat = dest._marker._latlng.lat;
-        dest2.long = dest._marker._latlng.lng;
-    }
+    // if (typeof dest == typeof(lc)) {
+    //     dest2 = [];
+    //     dest2.lat = dest._marker._latlng.lat;
+    //     dest2.long = dest._marker._latlng.lng;
+    // }
 
     var start_nearest = calc_nearest_result(start);
     var dest_nearest = calc_nearest_result(dest);
