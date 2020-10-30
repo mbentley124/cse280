@@ -19,13 +19,14 @@
  * @param {location} dest the destination location
  */
 async function get_directions(start) {
+    $("#directions_tab").empty();
+    $("#directions_choice").show();
     $("#directions_instructions").toggle();
 
     await get_loc_onclick(start);
 }
 
 async function get_directions_worker(start, dest) {
-
     //set up UI
     if ($("#directions_tab").is(":visible")) {
         $("#directions_tab").toggle();
@@ -64,16 +65,18 @@ async function get_directions_worker(start, dest) {
     var sameRoute = getRouteIfSame(start_nearest_routes, dest_nearest_routes);
 
     //the starting and dest stops have a matching route
+    directions_string = "Nothing.";
     if (sameRoute != null) {
         directions_string = ("Get on " + sameRoute + " at " + start_nearest + ".<br>Depart at " + dest_nearest + " and walk to destination.");
         html_string = `<p id="directions_child">${directions_string}</p>`
         $("#directions_tab").append(html_string)
 
-        return directions_string
+    } else {
+        $("#directions_tab").append("Could not find directions using location given.");
     }
 
-    $("#directions_tab").append("Could not find directions using location given.")
-    return "Nothing"
+    $("#directions_choice").hide();
+    return directions_string
 
 }
 
