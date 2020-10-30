@@ -235,6 +235,7 @@ function draw_buses(bus_obj, map) {
             // If the bus marker was removed, and the bus marker is a part of lehigh, and lehigh has been toggled to appear
             if(marker_obj[bus_id].rmved && (marker_obj[bus_id].type == 'Lehigh' && !lehigh_toggled)){
                 marker_obj[bus_id] = L.marker([latitude, longitude], { icon: icon_style }).addTo(map);
+                marker_obj[bus_id].bindPopup(""); //bind a simple popup for use later.
                 marker_obj[bus_id].type = service;
                 marker_obj[bus_id].rmved = false;
             } 
@@ -242,6 +243,7 @@ function draw_buses(bus_obj, map) {
             else if(marker_obj[bus_id].rmved && (marker_obj[bus_id].type != 'Lehigh' && !lanta_toggled))
             {
                 marker_obj[bus_id] = L.marker([latitude, longitude], { icon: icon_style }).addTo(map);
+                marker_obj[bus_id].bindPopup(""); //bind a simple popup for use later.
                 marker_obj[bus_id].type = service;
                 marker_obj[bus_id].rmved = false;
             } else {
@@ -253,7 +255,6 @@ function draw_buses(bus_obj, map) {
                 marker_obj[bus_id].bindPopup(""); //bind a simple popup for use later.
                 marker_obj[bus_id].type = service;
                 marker_obj[bus_id].rmved = false;
-                console.log(marker_obj[bus_id]);
             }
         }  
         const marker = marker_obj[bus_id];
