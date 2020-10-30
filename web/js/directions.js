@@ -19,13 +19,14 @@
  * @param {location} dest the destination location
  */
 async function get_directions(start) {
+    $("#directions_tab").empty();
+    $("#directions_choice").show();
     $("#directions_instructions").toggle();
 
     await get_loc_onclick(start);
 }
 
 async function get_directions_worker(start, dest) {
-
     //set up UI
     if ($("#directions_tab").is(":visible")) {
         $("#directions_tab").toggle();
@@ -39,6 +40,7 @@ async function get_directions_worker(start, dest) {
         var start2 = [];
         start2.lat = start._marker._latlng.lat;
         start2.long = start._marker._latlng.lng;
+        start = start2;
     }
 
     // if (typeof dest == typeof(lc)) {
@@ -46,6 +48,12 @@ async function get_directions_worker(start, dest) {
     //     dest2.lat = dest._marker._latlng.lat;
     //     dest2.long = dest._marker._latlng.lng;
     // }
+    try {
+        dest2 = {};
+        dest2.lat = dest._marker._latlng.lat;
+        dest2.long = dest._marker._latlng.lng;
+        dest = dest2;
+    } catch(e) {}
 
     var start_nearest = calc_nearest_result(start);
     var dest_nearest = calc_nearest_result(dest);
@@ -57,16 +65,18 @@ async function get_directions_worker(start, dest) {
     var sameRoute = getRouteIfSame(start_nearest_routes, dest_nearest_routes);
 
     //the starting and dest stops have a matching route
+    directions_string = "Nothing.";
     if (sameRoute != null) {
         directions_string = ("Get on " + sameRoute + " at " + start_nearest + ".<br>Depart at " + dest_nearest + " and walk to destination.");
-        html_string = `<p1 id="directions_child">${directions_string}</p1>`
+        html_string = `<p id="directions_child">${directions_string}</p>`
         $("#directions_tab").append(html_string)
 
-        return directions_string
+    } else {
+        $("#directions_tab").append("Could not find directions using location given.");
     }
 
-    $("#directions_tab").append("Could not find directions using location given.")
-    return "Nothing"
+    $("#directions_choice").hide();
+    return directions_string
 
 }
 
