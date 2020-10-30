@@ -39,6 +39,7 @@ async function get_directions_worker(start, dest) {
         var start2 = [];
         start2.lat = start._marker._latlng.lat;
         start2.long = start._marker._latlng.lng;
+        start = start2;
     }
 
     // if (typeof dest == typeof(lc)) {
@@ -46,6 +47,12 @@ async function get_directions_worker(start, dest) {
     //     dest2.lat = dest._marker._latlng.lat;
     //     dest2.long = dest._marker._latlng.lng;
     // }
+    try {
+        dest2 = {};
+        dest2.lat = dest._marker._latlng.lat;
+        dest2.long = dest._marker._latlng.lng;
+        dest = dest2;
+    } catch(e) {}
 
     var start_nearest = calc_nearest_result(start);
     var dest_nearest = calc_nearest_result(dest);
@@ -59,7 +66,7 @@ async function get_directions_worker(start, dest) {
     //the starting and dest stops have a matching route
     if (sameRoute != null) {
         directions_string = ("Get on " + sameRoute + " at " + start_nearest + ".<br>Depart at " + dest_nearest + " and walk to destination.");
-        html_string = `<p1 id="directions_child">${directions_string}</p1>`
+        html_string = `<p id="directions_child">${directions_string}</p>`
         $("#directions_tab").append(html_string)
 
         return directions_string
