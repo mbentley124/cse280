@@ -232,20 +232,28 @@ function draw_buses(bus_obj, map) {
         if (bus_id in marker_obj) {
             marker_obj[bus_id].setLatLng([latitude, longitude]).update();
         } else {
-            marker_obj[bus_id] = L.marker([latitude, longitude], { icon: icon_style }).addTo(map);
-            marker_obj[bus_id].bindPopup(""); //bind a simple popup for use later.
-        }
+            if((service == "Lehigh" && !lehigh_toggled) || (service != "Lehigh" && !lanta_toggled)){
+                marker_obj[bus_id] = L.marker([latitude, longitude], { icon: icon_style }).addTo(map);
+                marker_obj[bus_id].bindPopup(""); //bind a simple popup for use later.
+                marker_obj[bus_id].service = service;
+            }
+        }  
         const marker = marker_obj[bus_id];
         let popup_content = "Error";
         if ((timings == null) || (timings.length == 0)) {
             popup_content = `${service} Bus: ${bus_id} <br>On route: ${typeof mapped_routes.get(route_id) === "undefined" ? route_id : mapped_routes.get(route_id)} <br> Previous stop: ${last_stop}`;
         } else {
-            const { minutes, seconds, total_time } = next_time;
-            let time_str = `${minutes} minutes & ${seconds} seconds.`;
-            if (minutes == 0 && seconds < 20) {
-                time_str = "Arriving Soon.";
+            if (typeof next_time !== 'undefined' 
+                && typeof next_time.minutes !== 'undefined' 
+                && typeof next_time.seconds !== 'undefined'){
+                const { minutes, seconds, total_time } = next_time;
+                let time_str = `${minutes} minutes & ${seconds} seconds.`;
+                if (minutes == 0 && seconds < 20) {
+                    time_str = "Arriving Soon.";
+                }
+                popup_content = `${service} Bus: ${bus_id} <br>On route: ${typeof mapped_routes.get(route_id) === "undefined" ? route_id : mapped_routes.get(route_id)} <br> <a onclick="zoom_to_stop('${last_stop}')" href="#stop-${last_stop}"> ${last_stop}</a> => <a onclick="zoom_to_stop('${next_stop}');" href="#stop-${next_stop}">${next_stop}</a> in ${time_str}`;
             }
-            popup_content = `${service} Bus: ${bus_id} <br>On route: ${typeof mapped_routes.get(route_id) === "undefined" ? route_id : mapped_routes.get(route_id)} <br> <a onclick="zoom_to_stop('${last_stop}')" href="#stop-${last_stop}"> ${last_stop}</a> => <a onclick="zoom_to_stop('${next_stop}');" href="#stop-${next_stop}">${next_stop}</a> in ${time_str}`;
+            console.error("next_time has undefined property");
         }
         marker.setPopupContent(popup_content);
         buses_running.add(bus_id);
@@ -379,9 +387,15 @@ function toggle_lehigh() {
     if (lehigh_toggled) {
         draw_lehigh(mymap);
         lehigh_toggled = false;
+        update_map(mymap);
     } else {
         $.each(stop_arr, function() {
             if (this.type == 'lehigh') {
+                this.remove();
+            }
+        })
+        $.each(marker_obj,function(){
+            if(this.service == 'Lehigh'){
                 this.remove();
             }
         })
@@ -394,9 +408,15 @@ function toggle_lanta() {
     if (lanta_toggled) {
         draw_lanta(mymap);
         lanta_toggled = false;
+        update_map(mymap);
     } else {
         $.each(stop_arr, function() {
             if (this.type == 'lanta') {
+                this.remove();
+            }
+        })
+        $.each(marker_obj,function(){
+            if(this.service != 'Lehigh'){
                 this.remove();
             }
         })
