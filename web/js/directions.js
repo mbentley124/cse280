@@ -21,7 +21,7 @@
 async function get_directions(start) {
     $("#directions_instructions").toggle();
 
-    dest = await get_loc_onclick().then((dest) => {
+    await get_loc_onclick().then((dest) => {
         get_directions_worker(start, dest)
     }).then(() => {
         mymap.off('click');
@@ -190,4 +190,5 @@ async function get_loc_onclick() {
         mymap.off('click');
 
     })
+    return dest
 }
