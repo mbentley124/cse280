@@ -232,9 +232,12 @@ function draw_buses(bus_obj, map) {
         if (bus_id in marker_obj) {
             marker_obj[bus_id].setLatLng([latitude, longitude]).update();
         } else {
-            marker_obj[bus_id] = L.marker([latitude, longitude], { icon: icon_style }).addTo(map);
-            marker_obj[bus_id].bindPopup(""); //bind a simple popup for use later.
-        }
+            if((service == "Lehigh" && !lehigh_toggled) || (service != "Lehigh" && !lanta_toggled)){
+                marker_obj[bus_id] = L.marker([latitude, longitude], { icon: icon_style }).addTo(map);
+                marker_obj[bus_id].bindPopup(""); //bind a simple popup for use later.
+                marker_obj[bus_id].service = service;
+            }
+        }  
         const marker = marker_obj[bus_id];
         let popup_content = "Error";
         try {
@@ -384,9 +387,15 @@ function toggle_lehigh() {
     if (lehigh_toggled) {
         draw_lehigh(mymap);
         lehigh_toggled = false;
+        update_map(mymap);
     } else {
         $.each(stop_arr, function() {
             if (this.type == 'lehigh') {
+                this.remove();
+            }
+        })
+        $.each(marker_obj,function(){
+            if(this.service == 'Lehigh'){
                 this.remove();
             }
         })
@@ -399,9 +408,15 @@ function toggle_lanta() {
     if (lanta_toggled) {
         draw_lanta(mymap);
         lanta_toggled = false;
+        update_map(mymap);
     } else {
         $.each(stop_arr, function() {
             if (this.type == 'lanta') {
+                this.remove();
+            }
+        })
+        $.each(marker_obj,function(){
+            if(this.service != 'Lehigh'){
                 this.remove();
             }
         })
