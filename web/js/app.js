@@ -232,10 +232,17 @@ function draw_buses(bus_obj, map) {
         }
         const icon_style = ((service == "Lehigh") ? lehigh : lanta); //will only work for two bus services.
         if (bus_id in marker_obj) {
-            if(marker_obj[bus_id].rmved){
+            // If the bus marker was removed, and the bus marker is a part of lehigh, and lehigh has been toggled to appear
+            if(marker_obj[bus_id].rmved && (marker_obj[bus_id].service == 'Lehigh' && !lehigh_toggled)){
                 marker_obj[bus_id] = L.marker([latitude, longitude], { icon: icon_style }).addTo(map);
+            } 
+            // If the bus marker was removed, and the bus marker is a part of lanta, and lanta has been toggled to appear
+            else if(marker_obj[bus_id].rmved && (marker_obj[bus_id].service != 'Lehigh' && !lanta_toggled))
+            {
+                marker_obj[bus_id] = L.marker([latitude, longitude], { icon: icon_style }).addTo(map);
+            } else {
+                marker_obj[bus_id].setLatLng([latitude, longitude]).update();
             }
-            marker_obj[bus_id].setLatLng([latitude, longitude]).update();
         } else {
             if((service == "Lehigh" && !lehigh_toggled) || (service != "Lehigh" && !lanta_toggled)){
                 marker_obj[bus_id] = L.marker([latitude, longitude], { icon: icon_style }).addTo(map);
@@ -403,6 +410,7 @@ function toggle_lehigh() {
         $.each(marker_obj,function(){
             if(this.service == 'Lehigh'){
                 this.remove();
+                this.rmved = true;
             }
         })
         lehigh_toggled = true;
