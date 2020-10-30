@@ -246,12 +246,10 @@ function draw_buses(bus_obj, map) {
         }  
         const marker = marker_obj[bus_id];
         let popup_content = "Error";
-        if ((timings == null) || (timings.length == 0)) {
-            popup_content = `${service} Bus: ${bus_id} <br>On route: ${typeof mapped_routes.get(route_id) === "undefined" ? route_id : mapped_routes.get(route_id)} <br> Previous stop: ${last_stop}`;
-        } else {
-            if (typeof next_time !== 'undefined' 
-                && typeof next_time.minutes !== 'undefined' 
-                && typeof next_time.seconds !== 'undefined'){
+        try {
+            if ((timings == null) || (timings.length == 0)) {
+                popup_content = `${service} Bus: ${bus_id} <br>On route: ${typeof mapped_routes.get(route_id) === "undefined" ? route_id : mapped_routes.get(route_id)} <br> Previous stop: ${last_stop}`;
+            } else {
                 const { minutes, seconds, total_time } = next_time;
                 let time_str = `${minutes} minutes & ${seconds} seconds.`;
                 if (minutes == 0 && seconds < 20) {
@@ -259,8 +257,10 @@ function draw_buses(bus_obj, map) {
                 }
                 popup_content = `${service} Bus: ${bus_id} <br>On route: ${typeof mapped_routes.get(route_id) === "undefined" ? route_id : mapped_routes.get(route_id)} <br> <a onclick="zoom_to_stop('${last_stop}')" href="#stop-${last_stop}"> ${last_stop}</a> => <a onclick="zoom_to_stop('${next_stop}');" href="#stop-${next_stop}">${next_stop}</a> in ${time_str}`;
             }
-            console.error("next_time has undefined property");
+        }catch(e) {
+            // console.log("Destructure error");
         }
+        
         marker.setPopupContent(popup_content);
         buses_running.add(bus_id);
     });
