@@ -253,6 +253,7 @@ function draw_buses(bus_obj, map) {
                 marker_obj[bus_id].bindPopup(""); //bind a simple popup for use later.
                 marker_obj[bus_id].type = service;
                 marker_obj[bus_id].rmved = false;
+                console.log(marker_obj[bus_id]);
             }
         }  
         const marker = marker_obj[bus_id];
@@ -412,7 +413,7 @@ function toggle_lehigh() {
             }
         })
         $.each(marker_obj,function(){
-            if(this.service == 'Lehigh'){
+            if(this.type == 'Lehigh'){
                 this.remove();
                 this.rmved = true;
             }
@@ -434,7 +435,7 @@ function toggle_lanta() {
             }
         })
         $.each(marker_obj,function(){
-            if(this.service != 'Lehigh'){
+            if(this.type != 'Lehigh'){
                 this.remove();
                 this.rmved = true;
             }
