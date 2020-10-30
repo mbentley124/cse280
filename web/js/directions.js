@@ -18,8 +18,19 @@
  * @param {location} start the starting location
  * @param {location} dest the destination location
  */
-async function get_directions(start, dest) {
+async function get_directions(start) {
+    $("#directions_instructions").toggle();
 
+    await get_loc_onclick().then((dest) => {
+        get_directions_worker(start, dest)
+    }).then(() => {
+        mymap.off('click');
+    });
+}
+
+async function get_directions_worker(start, dest) {
+
+    //set up UI
     if ($("#directions_tab").is(":visible")) {
         $("#directions_tab").toggle();
         return
@@ -27,6 +38,18 @@ async function get_directions(start, dest) {
     $("#directions_tab").toggle(); //make it visible
     $("#directions_child").remove(); //clear out old content
 
+    //if we passed a browser location object instead of lat/long pair
+    if (typeof start == typeof(lc)) {
+        var start2 = [];
+        start2.lat = start._marker._latlng.lat;
+        start2.long = start._marker._latlng.lng;
+    }
+
+    if (typeof dest == typeof(lc)) {
+        dest2 = [];
+        dest2.lat = dest._marker._latlng.lat;
+        dest2.long = dest._marker._latlng.lng;
+    }
 
     var start_nearest = calc_nearest_result(start);
     var dest_nearest = calc_nearest_result(dest);
@@ -50,6 +73,8 @@ async function get_directions(start, dest) {
     return "Nothing"
 
 }
+
+
 
 //one stop can have multiple routes, so I have to check if any route for start_nearest is the same as any route for dest_nearest
 //TODO: I imagine theres a faster way to do this
@@ -103,8 +128,8 @@ function get_stops_into_routes(routes) {
 }
 
 function calc_nearest_result(location) {
-    var lat = location._marker._latlng.lat;
-    var lon = location._marker._latlng.lng;
+    var lat = location.lat;
+    var lon = location.long;
     var dist_arr_lu = []
     var dist_arr_lanta = []
         //replace with combined stops array
@@ -153,3 +178,17 @@ function calc_nearest_result(location) {
 //             }
 //     }
 // }
+
+
+async function get_loc_onclick() {
+    dest = []
+    mymap.on('click', function(e) {
+
+        dest.lat = e.latlng.lat;
+        dest.long = e.latlng.lng;
+
+        mymap.off('click');
+
+    })
+    return dest
+}
