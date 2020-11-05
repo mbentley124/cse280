@@ -14,6 +14,7 @@
 var stops_list = [] //holds stop names
 let mapped_routes = new Map(); // Holds the mapping for the route_id to the actual route name
 let prevent_duplicates = new Set(); // Tracks which stops have been drawn to prevent duplicate draws
+let lehigh_route_stop_ids = new Set();
 
 var highlighted_route = null;
 
@@ -28,7 +29,12 @@ const stop_obj = {};
 
 $.each(routes.lehigh, function() { // Sets the mapping for the mapped_routes map
     mapped_routes.set(this.id, this.short_name);
-})
+    if (this.name != "accessLU") {
+        $.each(this.stops, function() {
+            lehigh_route_stop_ids.add(this);
+        });
+    }
+});
 
 tile_style['default'] = L.tileLayer(tile_server_url, { //takes tile server URL and will return a tile
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -84,7 +90,7 @@ function draw_stops(map) {
 
 function draw_lehigh(map) {
     $.each(stops.lehigh, function() { //LOOP: gets all stops for lehigh and places them on map
-        if (!prevent_duplicates.has(this.name)) {
+        if (!prevent_duplicates.has(this.name) && lehigh_route_stop_ids.has(this.stop_id)) {
             stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#68310A" }).bindPopup(this.name).addTo(map).on('click', function(e) {
                 map.setView([this.getLatLng().lat, this.getLatLng().lng], 16);
             });
