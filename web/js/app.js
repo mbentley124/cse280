@@ -295,6 +295,7 @@ function draw_buses(bus_obj, map) {
                             <th>Route</th>
                             <th>Previous Stop</th>
                             <th>Next Stop</th>
+                            <th>Arriving</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -302,8 +303,8 @@ function draw_buses(bus_obj, map) {
                             <td>${typeof mapped_routes.get(route_id) === "undefined" ? route_id : mapped_routes.get(route_id)}</td>
                             <td><a onclick="zoom_to_stop('${last_stop}')" href="#stop-${last_stop}"> ${last_stop}</a></td>
                             <td><a onclick="zoom_to_stop('${next_stop}');" href="#stop-${next_stop}">${next_stop}</a></td>
+                            <td>${time_str}</tr>
                         </tr>
-                        <tr>Arriving to next stop in ${time_str}</tr>
                     </tbody>
                 </table>`;
     
@@ -370,6 +371,7 @@ function toggle_polylines_sample(name) {
 mymap = L.map('mapid', leaflet_config).setView([40.604377, -75.372161], 16); //sets center of map & zoom level
 draw_stops(mymap);
 
+mymap.invalidateSize()
 
 //TODO: what does this do?
 mymap.addLayer(tile_style['default']);
@@ -483,6 +485,8 @@ function toggle_lanta() {
     }
 }
 
+// Had to add directions this way to fix the map canvas disorientation
+$('<div id="directions_instructions" style="padding: 2%; color: whitesmoke;"><p>Choose a destination.</p></div><div id="directions_tab" style="padding: 2%; color: whitesmoke;"></div>').insertBefore('#map')
 //make these things default invisible
 $("#directions_tab").toggle();
 $("#directions_instructions").toggle();
