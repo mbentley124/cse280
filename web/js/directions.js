@@ -18,42 +18,44 @@
  * @param {location} start the starting location
  * @param {location} dest the destination location
  */
-async function get_directions(start) {
-    $("#directions_tab").empty();
-    $("#directions_choice").show();
-    $("#directions_instructions").toggle();
-
-    await get_loc_onclick(start);
-}
-
-async function get_directions_worker(start, dest) {
+async function get_directions() {
     //set up UI
     if ($("#directions_tab").is(":visible")) {
         $("#directions_tab").toggle();
         return
     }
+    $("#directions_tab").empty();
+    // $("#directions_choice").show();
+    $("#directions_instructions").toggle();
+    $("#directions_instructions p").html("Choose a starting location.");
+
+    await get_loc_onclick();
+}
+
+async function get_directions_worker(start, dest) {
+
     $("#directions_tab").toggle(); //make it visible
     $("#directions_child").remove(); //clear out old content
 
     //if we passed a browser location object instead of lat/long pair
-    if (typeof start == typeof(lc)) {
-        var start2 = [];
-        start2.lat = start._marker._latlng.lat;
-        start2.long = start._marker._latlng.lng;
-        start = start2;
-    }
+    // if (typeof start == typeof(lc)) {
+    //     var start2 = [];
+    //     start2.lat = start._marker._latlng.lat;
+    //     start2.long = start._marker._latlng.lng;
+    //     start = start2;
+    // }
 
     // if (typeof dest == typeof(lc)) {
     //     dest2 = [];
     //     dest2.lat = dest._marker._latlng.lat;
     //     dest2.long = dest._marker._latlng.lng;
     // }
-    try {
-        dest2 = {};
-        dest2.lat = dest._marker._latlng.lat;
-        dest2.long = dest._marker._latlng.lng;
-        dest = dest2;
-    } catch(e) {}
+    // try {
+    //     dest2 = {};
+    //     dest2.lat = dest._marker._latlng.lat;
+    //     dest2.long = dest._marker._latlng.lng;
+    //     dest = dest2;
+    // } catch (e) {}
 
     var start_nearest = calc_nearest_result(start);
     var dest_nearest = calc_nearest_result(dest);
@@ -75,7 +77,7 @@ async function get_directions_worker(start, dest) {
         $("#directions_tab").append("Could not find directions using location given.");
     }
 
-    $("#directions_choice").hide();
+    // $("#directions_choice").hide();
     return directions_string
 
 }
@@ -186,16 +188,20 @@ function calc_nearest_result(location) {
 // }
 
 
-async function get_loc_onclick(start) {
-    console.log(start);
+async function get_loc_onclick() {
     mymap.on('click', function(e) {
-
-        const ex = get_directions_worker(start, {lat: e.latlng.lat, long: e.latlng.lng});
-        ex.then(() => {
-            mymap.off('click');
-            console.log(ex);
+        // const ex = get_directions_worker(start, { lat: e.latlng.lat, long: e.latlng.lng });
+        start = { lat: e.latlng.lat, long: e.latlng.lng }
+        $("#directions_instructions p").html("Choose a destination.");
+        mymap.off('click');
+        mymap.on('click', function(e) {
+            dest = { lat: e.latlng.lat, long: e.latlng.lng }
+            $("#directions_instructions").toggle();
+            const ex = get_directions_worker(start, dest);
+            ex.then(() => {
+                mymap.off('click');
+            });
         });
 
-
-    })
+    });
 }
