@@ -19,6 +19,8 @@ ENV MAVEN_CONFIG "$USER_HOME_DIR/.m2"
 
 COPY ./ USER_HOME_DIR
 
+EXPOSE 4567
+
 CMD cd USER_HOME_DIR \ 
 && mvn install:install-file -DgroupId=com.oracle -DartifactId=ojdbc8 -Dversion=19.3 -Dpackaging=jar -Dfile=ojdbc8.jar \
 && mvn compile \
