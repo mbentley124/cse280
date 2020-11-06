@@ -27,10 +27,10 @@ var lanta_toggled = false;
 //TODO: what is this?
 const stop_obj = {};
 
-$.each(routes.lehigh, function() { // Sets the mapping for the mapped_routes map
+$.each(routes.lehigh, function () { // Sets the mapping for the mapped_routes map
     mapped_routes.set(this.id, this.short_name);
     if (this.name != "accessLU") {
-        $.each(this.stops, function() {
+        $.each(this.stops, function () {
             lehigh_route_stop_ids.add(this);
         });
     }
@@ -89,9 +89,9 @@ function draw_stops(map) {
 }
 
 function draw_lehigh(map) {
-    $.each(stops.lehigh, function() { //LOOP: gets all stops for lehigh and places them on map
+    $.each(stops.lehigh, function () { //LOOP: gets all stops for lehigh and places them on map
         if (!prevent_duplicates.has(this.name) && lehigh_route_stop_ids.has(this.stop_id)) {
-            stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#68310A" }).bindPopup(this.name).addTo(map).on('click', function(e) {
+            stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#68310A" }).bindPopup(this.name).addTo(map).on('click', function (e) {
                 map.setView([this.getLatLng().lat, this.getLatLng().lng], 16);
             });
             stop_arr[this.name]._stopid = this.stop_id;
@@ -104,9 +104,9 @@ function draw_lehigh(map) {
 }
 
 function draw_lanta(map) {
-    $.each(stops.lanta, function() { //LOOP: gets all stops for lanta and places them on map
+    $.each(stops.lanta, function () { //LOOP: gets all stops for lanta and places them on map
         if (!prevent_duplicates.has(this.name)) {
-            stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#004BBD" }).bindPopup(this.name, { maxWidth: '500px' }).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
+            stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#004BBD" }).bindPopup(this.name, { maxWidth: '500px' }).addTo(map).on('click', function (e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
             stop_obj[this.stop_id] = this.name;
             stop_arr[this.name]._stopid = this.stop_id;
             stop_arr[this.name].type = 'lanta';
@@ -123,7 +123,7 @@ async function draw_polyline_sample(map) {
             (parsed) => {
                 const routes = [];
 
-                $.each(parsed, function() {
+                $.each(parsed, function () {
                     // console.log(this);
                     const { color, path, name } = this;
                     routes.push({ color: color, path: path, name: name });
@@ -134,27 +134,27 @@ async function draw_polyline_sample(map) {
         );
     const polylines = {};
 
-    $.each(routes, function() {
+    $.each(routes, function () {
         const polyline = [];
         for (let i = 0; i < this.path.length; i += 2) {
             polyline.push(new L.LatLng(this.path[i], this.path[i + 1]));
         }
         const leaflet_line = new L.polyline(
             polyline, {
-                color: this.color,
-                smoothFactor: 2,
-            }
+            color: this.color,
+            smoothFactor: 2,
+        }
         );
         if (this.name == "Campus Connnector") {
             this.name = "Campus Connector";
         }
         polylines[this.name] = {
-                color: this.color,
-                path: polyline,
-                leaflet_obj: leaflet_line,
-                onmap: false,
-            }
-            // leaflet_line.addTo(map);
+            color: this.color,
+            path: polyline,
+            leaflet_obj: leaflet_line,
+            onmap: false,
+        }
+        // leaflet_line.addTo(map);
     });
 
     polyline_global = polylines;
@@ -165,7 +165,7 @@ async function draw_polyline_sample(map) {
 
 function reset_popup_content(stop_arrivals) {
     // console.log(stop_arrivals);
-    $.each(stop_arr, function(name, marker) {
+    $.each(stop_arr, function (name, marker) {
         const stop_id = marker._stopid;
         // console.log(stop_id);
         let tdata = "<td>N/A</td><td>N/A</td>";
@@ -192,6 +192,7 @@ function reset_popup_content(stop_arrivals) {
     </table>`;
         marker.setPopupContent(simple_table);
     })
+
 }
 
 function zoom_to_bus(bus_id) {
@@ -211,7 +212,7 @@ function zoom_to_stop(stop_id) {
 }
 
 function update_stop_times(timings, bus_id, route_id, stop_arrivals) {
-    $.each(timings, function(stop_id, time) {
+    $.each(timings, function (stop_id, time) {
         const new_content = `<td><a href="#bus-${bus_id}" onclick="zoom_to_bus(${bus_id});">${bus_id + " (" + mapped_routes.get(route_id) + ") "}</a></td> <td> ${time.minutes} minutes and ${time.seconds} seconds.</td>`;
         if (!(stop_id in stop_arrivals)) {
             stop_arrivals[stop_id] = [new_content];
@@ -224,7 +225,7 @@ function update_stop_times(timings, bus_id, route_id, stop_arrivals) {
 function draw_buses(bus_obj, map) {
     const buses_running = new Set();
     const stop_arrivals = {};
-    $.each(bus_obj, function(k, bus) {
+    $.each(bus_obj, function (k, bus) {
         const { bus_id, short_name, latitude, longitude, route_id, route_name, service, timings } = bus;
         let { next_stop, last_stop } = bus;
         let next_time = null;
@@ -239,15 +240,14 @@ function draw_buses(bus_obj, map) {
         const icon_style = ((service == "Lehigh") ? lehigh : lanta); //will only work for two bus services.
         if (bus_id in marker_obj) {
             // If the bus marker was removed, and the bus marker is a part of lehigh, and lehigh has been toggled to appear
-            if(marker_obj[bus_id].rmved && (marker_obj[bus_id].type == 'Lehigh' && !lehigh_toggled)){
+            if (marker_obj[bus_id].rmved && (marker_obj[bus_id].type == 'Lehigh' && !lehigh_toggled)) {
                 marker_obj[bus_id] = L.marker([latitude, longitude], { icon: icon_style }).addTo(map);
                 marker_obj[bus_id].bindPopup(""); //bind a simple popup for use later.
                 marker_obj[bus_id].type = service;
                 marker_obj[bus_id].rmved = false;
-            } 
+            }
             // If the bus marker was removed, and the bus marker is a part of lanta, and lanta has been toggled to appear
-            else if(marker_obj[bus_id].rmved && (marker_obj[bus_id].type != 'Lehigh' && !lanta_toggled))
-            {
+            else if (marker_obj[bus_id].rmved && (marker_obj[bus_id].type != 'Lehigh' && !lanta_toggled)) {
                 marker_obj[bus_id] = L.marker([latitude, longitude], { icon: icon_style }).addTo(map);
                 marker_obj[bus_id].bindPopup(""); //bind a simple popup for use later.
                 marker_obj[bus_id].type = service;
@@ -256,44 +256,76 @@ function draw_buses(bus_obj, map) {
                 marker_obj[bus_id].setLatLng([latitude, longitude]).update();
             }
         } else {
-            if((service == "Lehigh" && !lehigh_toggled) || (service != "Lehigh" && !lanta_toggled)){
+            if ((service == "Lehigh" && !lehigh_toggled) || (service != "Lehigh" && !lanta_toggled)) {
                 marker_obj[bus_id] = L.marker([latitude, longitude], { icon: icon_style }).addTo(map);
                 marker_obj[bus_id].bindPopup(""); //bind a simple popup for use later.
                 marker_obj[bus_id].type = service;
                 marker_obj[bus_id].rmved = false;
             }
-        }  
+        }
         const marker = marker_obj[bus_id];
         let popup_content = "Error";
         try {
             if ((timings == null) || (timings.length == 0)) {
-                popup_content = `${service} Bus: ${bus_id} <br>On route: ${typeof mapped_routes.get(route_id) === "undefined" ? route_id : mapped_routes.get(route_id)} <br> Previous stop: ${last_stop}`;
+                popup_content = `<h3>${service} Bus: ${bus_id}</h3>
+                <table class="pure-table" id="${bus_id}">
+                    <thead>
+                        <tr>
+                            <th>Route</th>
+                            <th>Previous Stop</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>${typeof mapped_routes.get(route_id) === "undefined" ? route_id : mapped_routes.get(route_id)}</td>
+                            <td><a onclick="zoom_to_stop('${last_stop}')" href="#stop-${last_stop}"> ${last_stop}</a></td>
+                        </tr>
+                    </tbody>
+                </table>`;
             } else {
                 const { minutes, seconds, total_time } = next_time;
-                let time_str = `${minutes} minutes & ${seconds} seconds.`;
+                let time_str = `${minutes} minutes and ${seconds} seconds.`;
                 if (minutes == 0 && seconds < 20) {
                     time_str = "Arriving Soon.";
                 }
-                popup_content = `${service} Bus: ${bus_id} <br>On route: ${typeof mapped_routes.get(route_id) === "undefined" ? route_id : mapped_routes.get(route_id)} <br> <a onclick="zoom_to_stop('${last_stop}')" href="#stop-${last_stop}"> ${last_stop}</a> => <a onclick="zoom_to_stop('${next_stop}');" href="#stop-${next_stop}">${next_stop}</a> in ${time_str}`;
+                popup_content = `<h3>${service} Bus: ${bus_id}</h3>
+                <table class="pure-table" id="${bus_id}">
+                    <thead>
+                        <tr>
+                            <th>Route</th>
+                            <th>Previous Stop</th>
+                            <th>Next Stop</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>${typeof mapped_routes.get(route_id) === "undefined" ? route_id : mapped_routes.get(route_id)}</td>
+                            <td><a onclick="zoom_to_stop('${last_stop}')" href="#stop-${last_stop}"> ${last_stop}</a></td>
+                            <td><a onclick="zoom_to_stop('${next_stop}');" href="#stop-${next_stop}">${next_stop}</a></td>
+                        </tr>
+                        <tr>Arriving to next stop in ${time_str}</tr>
+                    </tbody>
+                </table>`;
+    
             }
-        }catch(e) {
+        } catch (e) {
             // console.log("Destructure error");
         }
-        
+
         marker.setPopupContent(popup_content);
         buses_running.add(bus_id);
     });
     reset_popup_content(stop_arrivals);
     const buses_with_markers = new Set(Array.from(bus_obj.keys()));
     const buses_to_be_removed = new Set([...buses_with_markers].filter(x => !buses_running.has(x))); //https://stackoverflow.com/questions/1723168/what-is-the-fastest-or-most-elegant-way-to-compute-a-set-difference-using-javasc
-    $.each(buses_to_be_removed, function() {
+    $.each(buses_to_be_removed, function () {
         marker_obj[this].removeFrom(map);
     });
 }
 
 function update_map(map) {
     //console.log(map)
-    $.get("/bus_data.json", function(data, textStatus, xhr) { //gets data from JSON file which was created by scraper
+    $.get("/bus_data.json", function (data, textStatus, xhr) { //gets data from JSON file which was created by scraper
         //removing animated moving markers for now, will probably just animate along a polyline in the future.
         // console.log(xhr);
         // console.log(data);
@@ -304,7 +336,7 @@ function update_map(map) {
             console.error("Failed to get bus data");
         } else if (xhr.status == 200) {
             console.log("Drawing buses...");
-            $.each(data, function() {
+            $.each(data, function () {
                 draw_buses(this, map);
             });
         } else {
@@ -342,7 +374,7 @@ draw_stops(mymap);
 //TODO: what does this do?
 mymap.addLayer(tile_style['default']);
 update_map(mymap);
-setInterval(function(mymap) { update_map(mymap) }, 500, mymap); //TODO: will update map every 'interval'
+setInterval(function (mymap) { update_map(mymap) }, 500, mymap); //TODO: will update map every 'interval'
 
 // Center map view on click from the stops list
 function find_stop(lat, lng, name) {
@@ -357,14 +389,14 @@ $('#stops').append('<ul class="pure-menu-list" id="init-stop-list" style="displa
 const keys = Object.keys(stops);
 
 // This populates the stops lists for each transportation option, and checks for duplicates
-$.each(keys, function() {
+$.each(keys, function () {
     const bus = this;
     let stops_tracker = new Map();
     var count = 0;
     $('#init-stop-list').append('<a id="transportation-item" class="pure-menu-link" onclick="show_stops(\'' + this + '\')">' + this.charAt(0).toUpperCase() + this.slice(1) + '</a>');
     $('#init-stop-list').append('<div id="stops-list-container-' + this + '" style="display: none;"><ul class="pure-menu-list" id="stops-list-' + this + '" style="background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height: 52.2vh;"></ul><ul class="pure-menu-list" id="' + this + '-query-results" style="background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height: 52.2vh;"></ul></div>');
     $('#stops-list-container-' + bus).prepend('<div style="text-align:center;border-bottom: 1px solid white; height:33.6px;"><input type="text" id="search-' + this + '" class="stops-item" style="margin-top:5px; width: 90%;" placeholder="Look for a stop" onkeyup="render_search_results(\'' + this + '\')"/></div>');
-    $.each(stops[this], function() {
+    $.each(stops[this], function () {
         if (!stops_tracker.has(this.name)) {
             $('#stops-list-' + bus).append('<li><a class="pure-menu-link stops-item" onclick="find_stop(' + this.latitude + ',' + this.longitude + ',\'' + this.name + '\')">' + this.name + '</a></li>');
             count++;
@@ -397,7 +429,7 @@ try {
 }
 
 // This adds the 'Lehigh' button, to pan the view to campus
-L.easyButton('<img src="img/lehigh_logo.png" style="padding-top:6px">', function(btn, map) {
+L.easyButton('<img src="img/lehigh_logo.png" style="padding-top:6px">', function (btn, map) {
     var lehigh = [40.597856, -75.367639];
     map.setView(lehigh, 14);
 }).addTo(mymap);
@@ -414,13 +446,13 @@ function toggle_lehigh() {
         lehigh_toggled = false;
         update_map(mymap);
     } else {
-        $.each(stop_arr, function() {
+        $.each(stop_arr, function () {
             if (this.type == 'lehigh') {
                 this.remove();
             }
         })
-        $.each(marker_obj,function(){
-            if(this.type == 'Lehigh'){
+        $.each(marker_obj, function () {
+            if (this.type == 'Lehigh') {
                 this.rmved = true;
                 this.remove();
             }
@@ -436,13 +468,13 @@ function toggle_lanta() {
         lanta_toggled = false;
         update_map(mymap);
     } else {
-        $.each(stop_arr, function() {
+        $.each(stop_arr, function () {
             if (this.type == 'lanta') {
                 this.remove();
             }
         })
-        $.each(marker_obj,function(){
-            if(this.type != 'Lehigh'){
+        $.each(marker_obj, function () {
+            if (this.type != 'Lehigh') {
                 this.rmved = true;
                 this.remove();
             }
