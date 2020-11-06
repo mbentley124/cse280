@@ -122,9 +122,9 @@ function render_search_results(this_stops_list) {
             stops_tracker2.set(stops[this_stops_list][i]["name"],true)
         }
     }
-
+    console.log(results);
     //render results
     for (i = 0; i < results.length; i++) {
-        $(query_results_list).append('<li><a class="pure-menu-link stops-item" onclick="find_stop(' + results[i].longitude + ',' + results[i].longitude +  ',\'' + results[i].name + '\')">' + results[i].name + '</a></li>');
+        $(query_results_list).append('<li><a class="pure-menu-link stops-item" onclick="find_stop(' + results[i].latitude + ',' + results[i].longitude +  ',\'' + results[i].name + '\')">' + results[i].name + '</a></li>');
     }
 }

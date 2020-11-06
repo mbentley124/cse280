@@ -13,15 +13,28 @@
 
 var stops_list = [] //holds stop names
 let mapped_routes = new Map(); // Holds the mapping for the route_id to the actual route name
+let prevent_duplicates = new Set(); // Tracks which stops have been drawn to prevent duplicate draws
+let lehigh_route_stop_ids = new Set();
 
 var highlighted_route = null;
+
+// These will track whether or not the switches at the topbar have been toggled.
+var lehigh_toggled = false;
+var lanta_toggled = false;
+
+// These wil
 
 //TODO: what is this?
 const stop_obj = {};
 
 $.each(routes.lehigh, function() { // Sets the mapping for the mapped_routes map
     mapped_routes.set(this.id, this.short_name);
-})
+    if (this.name != "accessLU") {
+        $.each(this.stops, function() {
+            lehigh_route_stop_ids.add(this);
+        });
+    }
+});
 
 tile_style['default'] = L.tileLayer(tile_server_url, { //takes tile server URL and will return a tile
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -70,26 +83,37 @@ function check_ip() {
 }
 
 function draw_stops(map) {
-    //TODO: CLEAN THIS UP
+    draw_lehigh(map);
+    draw_lanta(map);
+    console.log(stop_arr);
+}
+
+function draw_lehigh(map) {
     $.each(stops.lehigh, function() { //LOOP: gets all stops for lehigh and places them on map
-
-        stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#68310A" }).bindPopup(this.name).addTo(map).on('click', function(e) {
-            // console.log(this.name);
-            map.setView([this.getLatLng().lat, this.getLatLng().lng], 16);
-        });
-        stop_arr[this.name]._stopid = this.stop_id;
-        stop_obj[this.stop_id] = this.name;
-        //  console.log(cardinality_arr);
+        if (!prevent_duplicates.has(this.name) && lehigh_route_stop_ids.has(this.stop_id)) {
+            stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#68310A" }).bindPopup(this.name).addTo(map).on('click', function(e) {
+                map.setView([this.getLatLng().lat, this.getLatLng().lng], 16);
+            });
+            stop_arr[this.name]._stopid = this.stop_id;
+            stop_obj[this.stop_id] = this.name;
+            stop_arr[this.name].type = 'lehigh';
+            prevent_duplicates.add(this.name);
+        }
     });
+    prevent_duplicates.clear(); //reset duplicate tracker
+}
 
+function draw_lanta(map) {
     $.each(stops.lanta, function() { //LOOP: gets all stops for lanta and places them on map
-
-        stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#004BBD" }).bindPopup(this.name, { maxWidth: '500px' }).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
-        stop_obj[this.stop_id] = this.name;
-        stop_arr[this.name]._stopid = this.stop_id;
-        //  console.log(cardinality_arr);
+        if (!prevent_duplicates.has(this.name)) {
+            stop_arr[this.name] = L.circleMarker([this.latitude, this.longitude], { color: "#004BBD" }).bindPopup(this.name, { maxWidth: '500px' }).addTo(map).on('click', function(e) { map.setView([this.getLatLng().lat, this.getLatLng().lng], 16); });
+            stop_obj[this.stop_id] = this.name;
+            stop_arr[this.name]._stopid = this.stop_id;
+            stop_arr[this.name].type = 'lanta';
+            prevent_duplicates.add(this.name);
+        }
     });
-
+    prevent_duplicates.clear(); //reset duplicate tracker
 }
 
 async function draw_polyline_sample(map) {
@@ -171,7 +195,7 @@ function reset_popup_content(stop_arrivals) {
 }
 
 function zoom_to_bus(bus_id) {
-    if(bus_id in marker_obj) {
+    if (bus_id in marker_obj) {
         const the_bus = marker_obj[bus_id];
         mymap.setView(the_bus.getLatLng());
         the_bus.openPopup();
@@ -179,7 +203,7 @@ function zoom_to_bus(bus_id) {
 }
 
 function zoom_to_stop(stop_id) {
-    if(stop_id in stop_arr) {
+    if (stop_id in stop_arr) {
         const the_stop = stop_arr[stop_id];
         mymap.setView(the_stop.getLatLng());
         the_stop.openPopup();
@@ -214,23 +238,48 @@ function draw_buses(bus_obj, map) {
         }
         const icon_style = ((service == "Lehigh") ? lehigh : lanta); //will only work for two bus services.
         if (bus_id in marker_obj) {
-            marker_obj[bus_id].setLatLng([latitude, longitude]).update();
+            // If the bus marker was removed, and the bus marker is a part of lehigh, and lehigh has been toggled to appear
+            if(marker_obj[bus_id].rmved && (marker_obj[bus_id].type == 'Lehigh' && !lehigh_toggled)){
+                marker_obj[bus_id] = L.marker([latitude, longitude], { icon: icon_style }).addTo(map);
+                marker_obj[bus_id].bindPopup(""); //bind a simple popup for use later.
+                marker_obj[bus_id].type = service;
+                marker_obj[bus_id].rmved = false;
+            } 
+            // If the bus marker was removed, and the bus marker is a part of lanta, and lanta has been toggled to appear
+            else if(marker_obj[bus_id].rmved && (marker_obj[bus_id].type != 'Lehigh' && !lanta_toggled))
+            {
+                marker_obj[bus_id] = L.marker([latitude, longitude], { icon: icon_style }).addTo(map);
+                marker_obj[bus_id].bindPopup(""); //bind a simple popup for use later.
+                marker_obj[bus_id].type = service;
+                marker_obj[bus_id].rmved = false;
+            } else {
+                marker_obj[bus_id].setLatLng([latitude, longitude]).update();
+            }
         } else {
-            marker_obj[bus_id] = L.marker([latitude, longitude], { icon: icon_style }).addTo(map);
-            marker_obj[bus_id].bindPopup(""); //bind a simple popup for use later.
-        }
+            if((service == "Lehigh" && !lehigh_toggled) || (service != "Lehigh" && !lanta_toggled)){
+                marker_obj[bus_id] = L.marker([latitude, longitude], { icon: icon_style }).addTo(map);
+                marker_obj[bus_id].bindPopup(""); //bind a simple popup for use later.
+                marker_obj[bus_id].type = service;
+                marker_obj[bus_id].rmved = false;
+            }
+        }  
         const marker = marker_obj[bus_id];
         let popup_content = "Error";
-        if ((timings == null) || (timings.length == 0)) {
-            popup_content = `${service} Bus: ${bus_id} <br>On route: ${typeof mapped_routes.get(route_id) === "undefined" ? route_id : mapped_routes.get(route_id)} <br> Previous stop: ${last_stop}`;
-        } else {
-            const { minutes, seconds, total_time } = next_time;
-            let time_str = `${minutes} minutes & ${seconds} seconds.`;
-            if (minutes == 0 && seconds < 20) {
-                time_str = "Arriving Soon.";
+        try {
+            if ((timings == null) || (timings.length == 0)) {
+                popup_content = `${service} Bus: ${bus_id} <br>On route: ${typeof mapped_routes.get(route_id) === "undefined" ? route_id : mapped_routes.get(route_id)} <br> Previous stop: ${last_stop}`;
+            } else {
+                const { minutes, seconds, total_time } = next_time;
+                let time_str = `${minutes} minutes & ${seconds} seconds.`;
+                if (minutes == 0 && seconds < 20) {
+                    time_str = "Arriving Soon.";
+                }
+                popup_content = `${service} Bus: ${bus_id} <br>On route: ${typeof mapped_routes.get(route_id) === "undefined" ? route_id : mapped_routes.get(route_id)} <br> <a onclick="zoom_to_stop('${last_stop}')" href="#stop-${last_stop}"> ${last_stop}</a> => <a onclick="zoom_to_stop('${next_stop}');" href="#stop-${next_stop}">${next_stop}</a> in ${time_str}`;
             }
-            popup_content = `${service} Bus: ${bus_id} <br>On route: ${typeof mapped_routes.get(route_id) === "undefined" ? route_id : mapped_routes.get(route_id)} <br> <a onclick="zoom_to_stop('${last_stop}')" href="#stop-${last_stop}"> ${last_stop}</a> => <a onclick="zoom_to_stop('${next_stop}');" href="#stop-${next_stop}">${next_stop}</a> in ${time_str}`;
+        }catch(e) {
+            // console.log("Destructure error");
         }
+        
         marker.setPopupContent(popup_content);
         buses_running.add(bus_id);
     });
@@ -313,7 +362,7 @@ $.each(keys, function() {
     let stops_tracker = new Map();
     var count = 0;
     $('#init-stop-list').append('<a id="transportation-item" class="pure-menu-link" onclick="show_stops(\'' + this + '\')">' + this.charAt(0).toUpperCase() + this.slice(1) + '</a>');
-    $('#init-stop-list').append('<div id="stops-list-container-' + this + '" style="display: none;"><ul class="pure-menu-list" id="stops-list-' + this + '" style="background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height: 52.2vh;"></ul></div><ul class="pure-menu-list" id="' + this + '-query-results" style="background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height: 52.2vh;"></ul></div>');
+    $('#init-stop-list').append('<div id="stops-list-container-' + this + '" style="display: none;"><ul class="pure-menu-list" id="stops-list-' + this + '" style="background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height: 52.2vh;"></ul><ul class="pure-menu-list" id="' + this + '-query-results" style="background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height: 52.2vh;"></ul></div>');
     $('#stops-list-container-' + bus).prepend('<div style="text-align:center;border-bottom: 1px solid white; height:33.6px;"><input type="text" id="search-' + this + '" class="stops-item" style="margin-top:5px; width: 90%;" placeholder="Look for a stop" onkeyup="render_search_results(\'' + this + '\')"/></div>');
     $.each(stops[this], function() {
         if (!stops_tracker.has(this.name)) {
@@ -348,12 +397,60 @@ try {
 }
 
 // This adds the 'Lehigh' button, to pan the view to campus
-L.easyButton('<img src="img/lehigh_logo.png" style="padding-top:6px">', function(btn, map){
-    var lehigh = [40.597856,-75.367639];
-    map.setView(lehigh,14);
-}).addTo( mymap );
+L.easyButton('<img src="img/lehigh_logo.png" style="padding-top:6px">', function(btn, map) {
+    var lehigh = [40.597856, -75.367639];
+    map.setView(lehigh, 14);
+}).addTo(mymap);
 
 // Animate Hamburger Icon on smaller screens
 function animateHamburger(elem) {
     elem.classList.toggle("change");
 }
+
+// Toggles the stops for Lehigh
+function toggle_lehigh() {
+    if (lehigh_toggled) {
+        draw_lehigh(mymap);
+        lehigh_toggled = false;
+        update_map(mymap);
+    } else {
+        $.each(stop_arr, function() {
+            if (this.type == 'lehigh') {
+                this.remove();
+            }
+        })
+        $.each(marker_obj,function(){
+            if(this.type == 'Lehigh'){
+                this.rmved = true;
+                this.remove();
+            }
+        })
+        lehigh_toggled = true;
+    }
+}
+
+// Toggles the stops for lanta
+function toggle_lanta() {
+    if (lanta_toggled) {
+        draw_lanta(mymap);
+        lanta_toggled = false;
+        update_map(mymap);
+    } else {
+        $.each(stop_arr, function() {
+            if (this.type == 'lanta') {
+                this.remove();
+            }
+        })
+        $.each(marker_obj,function(){
+            if(this.type != 'Lehigh'){
+                this.rmved = true;
+                this.remove();
+            }
+        })
+        lanta_toggled = true;
+    }
+}
+
+//make these things default invisible
+$("#directions_tab").toggle();
+$("#directions_instructions").toggle();
