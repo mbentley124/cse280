@@ -431,7 +431,7 @@ try {
 }
 
 // This adds the 'Lehigh' button, to pan the view to campus
-L.easyButton('<img src="img/lehigh_logo.png" style="padding-top:6px">', function (btn, map) {
+L.easyButton('<img src="img/lehigh_logo.png" style="padding-top:6px; float:center;">', function (btn, map) {
     var lehigh = [40.597856, -75.367639];
     map.setView(lehigh, 14);
 }).addTo(mymap);
