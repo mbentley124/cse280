@@ -237,7 +237,18 @@ function draw_buses(bus_obj, map) {
             // console.log(timings);
             // console.log(next_stop);
         }
-        const icon_style = ((service == "Lehigh") ? lehigh : lanta); //will only work for two bus services.
+        let icon_style;
+        if (service === "LANTA") {
+            icon_style = lanta;
+        } else if (route_name === "AccessLU") {
+            icon_style = lehigh_alu;
+        } else if (route_name === "Packer Express") {
+            icon_style = lehigh_pe;
+        } else if (route_name === "Campus Connector") {
+            icon_style = lehigh_pe;
+        } else {
+            icon_style = lehigh;
+        }
         if (bus_id in marker_obj) {
             // If the bus marker was removed, and the bus marker is a part of lehigh, and lehigh has been toggled to appear
             if (marker_obj[bus_id].rmved && (marker_obj[bus_id].type == 'Lehigh' && !lehigh_toggled)) {
