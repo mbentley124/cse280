@@ -505,8 +505,6 @@ $('<div id="directions_instructions" style="padding: 2%; color: whitesmoke;"><p>
 $("#directions_tab").toggle();
 $("#directions_instructions").toggle();
 
-
-//setting LEHIGH_STOPS_INFO
 for (var id of lehigh_route_stop_ids) {
     for (var j of stops.lehigh) {
         if (j.stop_id == id) {
