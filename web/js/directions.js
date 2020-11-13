@@ -136,34 +136,12 @@ function getRouteIfSame(start_nearest_routes, dest_nearest_routes) {
 //TODO: Only works for Lehigh atm
 async function getRoutes(stopName) {
     var stopRoutes = []
-        // const routes = await fetch("temp_routes_lu.json")
-        //     .then((data) => data.json())
-        //     .then(
-        //         (parsed) => {
-        //             const routes = [];
-
-    //             $.each(parsed, function() {
-    //                 // console.log(this);
-    //                 const { color, path, name } = this;
-    //                 routes.push({ color: color, path: path, name: name });
-    //             });
-
-    //             return routes;
-    //         }
-    //     );
     stopid = stop_arr[stopName]._stopid
     for (var i = 0; i < routes.lehigh.length; i++) {
         if (routes.lehigh[i].stops.includes(stopid)) {
             stopRoutes.push(routes.lehigh[i].name)
         }
     }
-    // if (routes.length == 0) {
-    //     for (i in routes.lanta) {
-    //         if (i.name == stopName) {
-    //             routes.push(i.name)
-    //         }
-    //     }
-    // }
     return stopRoutes;
 }
 
@@ -177,6 +155,7 @@ function calc_nearest_result(location) {
     var dist_arr_lu = []
     var dist_arr_lanta = []
         //replace with combined stops array
+
     $.each(stops.lehigh, function() { //LOOP: interates through each route for Lehigh
         var b_lat = parseFloat(this.latitude);
         var b_lon = parseFloat(this.longitude);
@@ -201,9 +180,9 @@ function calc_nearest_result(location) {
     //     // console.log(dist_arr_lanta);
     // });
     var result_lu = sortByKey(dist_arr_lu, "dist")[0];
-    var result_lanta = sortByKey(dist_arr_lanta, "dist")[0];
+    // var result_lanta = sortByKey(dist_arr_lanta, "dist")[0];
     var close_key = result_lu.key;
-    var close_dist = result_lu.dist;
+    // var close_dist = result_lu.dist;
 
     //TODO: this will be needed for using LANTA
     // if (result_lanta.dist < result_lu.dist) {
