@@ -11,8 +11,9 @@ class LANTAScraper:
     buses = []
     stops = []
     last_stops = t.time()
-    def __init__(self, routes = [], next_stop=False):
+    def __init__(self, routes = [], next_stop=False, threading = True):
         self.routes = routes #init with predetermined route numbers if needed
+        self.threading = threading
         print("Initialized LANTAScraper | PID: {}".format(os.getpid()))
     
     def request_routes(self, url = "https://realtimelanta.availtec.com/InfoPoint/rest/Routes/GetVisibleRoutes", return_data = False, processing = None):
@@ -74,10 +75,23 @@ class LANTAScraper:
     def get_buses(self, projection=True):
         bus_list = []
         self.projection = projection
-        with Pool(len(self.buses)) as p:
-            bus_list = list(p.map(self._multi_bus, self.buses))
+        # self.projection = projection
+        # with Pool(len(self.buses)) as p:
+        #     bus_list = list(p.map(self._multi_bus, self.buses))
                 
-        return bus_list
+        # return bus_list
+
+        if False:
+            with Pool(len(self.buses)) as p:
+                bus_list = list(p.map(self._multi_bus, self.buses))
+                    
+            return bus_list
+        else:
+            for bus in self.buses:
+                bus_list.append(
+                    self._multi_bus(bus)
+                )
+            return bus_list
 
     def _multi_bus(self, bus):
         bus_id = bus.get("VehicleId")

@@ -12,10 +12,11 @@ class LehighScraper:
     routes = []
     clean_stops = {}
     routes_from_java_script = []
-    def __init__(self, scraping_url = "https://lehigh.doublemap.com/map/v2/buses", next_stop=False):
+    def __init__(self, scraping_url = "https://lehigh.doublemap.com/map/v2/buses", next_stop=False, threading = True):
         self.scraping_url = scraping_url
         self.next_stop = next_stop
         self.cache = TimingCache().cache()
+        self.threading = threading
         print("Initialized LehighScraper | PID: {}".format(os.getpid()))
         with open("routes.json", "r") as r:
             self.routes_from_java_script = json.load(r)
@@ -42,10 +43,17 @@ class LehighScraper:
         bus_list = []
         self.projection = projection
         self.next_stop = next_
-        with Pool(len(self.buses)) as p:
-            bus_list = list(p.map(self._multi_bus, self.buses))
-                
-        return bus_list
+        if self.threading:
+            with Pool(len(self.buses)) as p:
+                bus_list = list(p.map(self._multi_bus, self.buses))
+                    
+            return bus_list
+        else:
+            for bus in self.buses:
+                bus_list.append(
+                    self._multi_bus(bus)
+                )
+            return bus_list
 
     def _multi_bus(self, bus):
         bus_id = bus.get("id")

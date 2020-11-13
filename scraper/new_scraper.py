@@ -54,14 +54,15 @@ parser = argparse.ArgumentParser("Scrape Lehigh University & LANTA Bus Trackers"
 parser.add_argument("-p", "--prediction", nargs='?', type=bool, const=True, default=False)
 parser.add_argument("-wf", "--write-file", nargs='?', type=bool, const=True, default=True)
 parser.add_argument("-wd", "--write-db", nargs='?', type=bool, const=True, default=True)
+parser.add_argument("-nt", "--threads", nargs='?', type=bool, const=False, default=True)
 args = parser.parse_args()
 
 preds = args.prediction
 write_files = args.write_file
 write_db = args.write_db
+th = args.threads
 
-
-lehigh = LehighScraper(next_stop=True)
+lehigh = LehighScraper(next_stop=True, threading=th)
 lanta = LANTAScraper()
 
 while True:
