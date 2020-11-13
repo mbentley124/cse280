@@ -154,20 +154,18 @@ function calc_nearest_result(location) {
     var lon = location.long;
     var dist_arr_lu = []
     var dist_arr_lanta = []
-        //replace with combined stops array
-
-    $.each(stops.lehigh, function() { //LOOP: interates through each route for Lehigh
-        var b_lat = parseFloat(this.latitude);
-        var b_lon = parseFloat(this.longitude);
+    LEHIGH_STOPS_INFO.forEach(function(value) {
+        var b_lat = parseFloat(value.latitude);
+        var b_lon = parseFloat(value.longitude);
         var dist = distance(lat, lon, b_lat, b_lon, 'M');
-        var key = this.name;
+        var key = value.name;
         if (isNaN(dist)) {
             dist = 9999999999999;
         }
         dist_arr_lu.push({ "key": key, "dist": dist, "r": dist.toString() });
-    });
+    })
 
-    // $.each(stops.lanta, function() { //LOOP: interates through each route for LANTA
+    // $.each(stops.lanta, function() { //LOOP: interates through each stop for LANTA
     //     var b_lon = this.longitude;
     //     var b_lat = this.latitude;
     //     var dist = distance(lat, lon, b_lat, b_lon, 'M');
