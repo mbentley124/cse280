@@ -20,22 +20,21 @@
  * @param {location} start the starting location
  * @param {location} dest the destination location
  */
-async function get_directions() {
-    //set up UI
-    if ($("#directions_tab").is(":visible")) {
-        $("#directions_tab").toggle();
-        return
-    }
-    $("#directions_tab").empty();
-    // $("#directions_choice").show();
-    $("#directions_instructions").toggle();
-    $("#directions_instructions p").html("Choose a starting location.");
-
-    await get_loc_onclick();
+async function get_directions(service) {
+    await get_loc_onclick(service);
 }
 
-async function get_directions_worker(start, dest) {
+async function get_directions_worker(service, start, dest) {
     try {
+        var service_info;
+        if (service == "lehigh") {
+            service_info = LEHIGH_STOPS_INFO
+        } else if (service == "lanta") {
+            service_info = stops.lanta
+        } else {
+            throw ("Unknown service: " + service);
+        }
+
         $("#directions_tab").toggle(); //make it visible
         $("#directions_child").remove(); //clear out old content
 
@@ -59,12 +58,12 @@ async function get_directions_worker(start, dest) {
         //     dest = dest2;
         // } catch (e) {}
 
-        var start_nearest = calc_nearest_result(start);
-        var dest_nearest = calc_nearest_result(dest);
+        var start_nearest = calc_nearest_result(service_info, start);
+        var dest_nearest = calc_nearest_result(service_info, dest);
 
         //get list of routes associated with our stops
-        var start_nearest_routes = await getRoutes(start_nearest);
-        var dest_nearest_routes = await getRoutes(dest_nearest);
+        var start_nearest_routes = await getRoutes(service, start_nearest);
+        var dest_nearest_routes = await getRoutes(service, dest_nearest);
 
         var sameRoute = getRouteIfSame(start_nearest_routes, dest_nearest_routes);
 
@@ -134,27 +133,28 @@ function getRouteIfSame(start_nearest_routes, dest_nearest_routes) {
 }
 
 //TODO: Only works for Lehigh atm
-async function getRoutes(stopName) {
+async function getRoutes(service, stopName) {
+    if (service == "lehigh") {
+        service = routes.lehigh
+    } else {
+        service = routes.lanta
+    }
     var stopRoutes = []
-    stopid = stop_arr[stopName]._stopid
-    for (var i = 0; i < routes.lehigh.length; i++) {
-        if (routes.lehigh[i].stops.includes(stopid)) {
-            stopRoutes.push(routes.lehigh[i].name)
+    var stopid = stop_arr[stopName]._stopid
+    for (var i of service) {
+        if (i.stops.includes(stopid)) {
+            stopRoutes.push(i.name)
         }
     }
     return stopRoutes;
 }
 
-function get_stops_into_routes(routes) {
-
-}
-
-function calc_nearest_result(location) {
+function calc_nearest_result(service_info, location) {
     var lat = location.lat;
     var lon = location.long;
     var dist_arr_lu = []
     var dist_arr_lanta = []
-    LEHIGH_STOPS_INFO.forEach(function(value) {
+    service_info.forEach(function(value) {
         var b_lat = parseFloat(value.latitude);
         var b_lon = parseFloat(value.longitude);
         var dist = distance(lat, lon, b_lat, b_lon, 'M');
@@ -201,7 +201,10 @@ function calc_nearest_result(location) {
 // }
 
 
-async function get_loc_onclick() {
+async function get_loc_onclick(service) {
+    $("#directions_instructions").empty();
+    $("#directions_instructions").html("<p>Choose a starting location.</p>");
+
     mymap.on('click', function(e) {
         // const ex = get_directions_worker(start, { lat: e.latlng.lat, long: e.latlng.lng });
         start = { lat: e.latlng.lat, long: e.latlng.lng }
@@ -210,7 +213,7 @@ async function get_loc_onclick() {
         mymap.on('click', function(e) {
             dest = { lat: e.latlng.lat, long: e.latlng.lng }
             $("#directions_instructions").toggle();
-            const ex = get_directions_worker(start, dest);
+            const ex = get_directions_worker(service, start, dest);
             ex.then(() => {
                 mymap.off('click');
             });

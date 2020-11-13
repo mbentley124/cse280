@@ -18,6 +18,7 @@ let lehigh_route_stop_ids = new Set();
 var LEHIGH_STOPS_INFO = new Map();
 
 
+
 var highlighted_route = null;
 
 // These will track whether or not the switches at the topbar have been toggled.
@@ -505,7 +506,7 @@ $("#directions_tab").toggle();
 $("#directions_instructions").toggle();
 
 
-
+//setting LEHIGH_STOPS_INFO
 for (var id of lehigh_route_stop_ids) {
     for (var j of stops.lehigh) {
         if (j.stop_id == id) {
