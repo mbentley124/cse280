@@ -196,5 +196,6 @@ body {
     #map {
         margin-top: 42.3px;
         height: calc(100vh - 42.3px);
+        position: fixed;
     }
 }

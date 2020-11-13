@@ -247,7 +247,7 @@ function draw_buses(bus_obj, map) {
         } else if (route_name === "Packer Express") {
             icon_style = lehigh_pe;
         } else if (route_name === "Campus Connector") {
-            icon_style = lehigh_pe;
+            icon_style = lehigh_cc;
         } else {
             icon_style = lehigh;
         }
