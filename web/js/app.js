@@ -18,6 +18,7 @@ let lehigh_route_stop_ids = new Set();
 var LEHIGH_STOPS_INFO = new Map();
 
 
+
 var highlighted_route = null;
 
 // These will track whether or not the switches at the topbar have been toggled.
@@ -141,9 +142,10 @@ async function draw_polyline_sample(map) {
         for (let i = 0; i < this.path.length; i += 2) {
             polyline.push(new L.LatLng(this.path[i], this.path[i + 1]));
         }
+        // Polyline color is fixed at lehigh brown. (will have to be changed once lanta highlighting is added)
         const leaflet_line = new L.polyline(
             polyline, {
-                color: this.color,
+                color: "#653818",
                 smoothFactor: 2,
             }
         );
@@ -247,7 +249,7 @@ function draw_buses(bus_obj, map) {
         } else if (route_name === "Packer Express") {
             icon_style = lehigh_pe;
         } else if (route_name === "Campus Connector") {
-            icon_style = lehigh_pe;
+            icon_style = lehigh_cc;
         } else {
             icon_style = lehigh;
         }
@@ -503,8 +505,6 @@ $('<div id="directions_instructions" style="padding: 2%; color: whitesmoke;"><p>
     //make these things default invisible
 $("#directions_tab").toggle();
 $("#directions_instructions").toggle();
-
-
 
 for (var id of lehigh_route_stop_ids) {
     for (var j of stops.lehigh) {
