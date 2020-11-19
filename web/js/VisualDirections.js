@@ -66,7 +66,7 @@ class VisualDirections {
      * Make a request given starting directions to the nearest bus stop. Returns a resolved promise(false) on error.
      * @param {string} serverURL 
      */
-    _makeStartingRequest(serverURL = "http://public-routing.triplemap.me:5000/route/v1/foot/") {
+    _makeStartingRequest(serverURL = "http://public-routing-proxy.triplemap.me/route/v1/foot/") {
         if(this.sameStart) {
             console.warn("Same starting position given.");
             return Promise.resolve(false);
@@ -91,7 +91,7 @@ class VisualDirections {
      * Make a request given ending directions to the nearest bus stop to destination. Returns a resolved promise(false) on error.
      * @param {string} serverURL 
      */
-    _makeEndingRequest(serverURL = "http://public-routing.triplemap.me:5000/route/v1/foot/") {
+    _makeEndingRequest(serverURL = "http://public-routing-proxy.triplemap.me/route/v1/foot/") {
         if(this.sameEnd) {
             console.warn("Same ending position given.");
             return Promise.resolve(false);
