@@ -41,8 +41,8 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.css">
     <script src="https://cdn.jsdelivr.net/npm/leaflet-easybutton@2/src/easy-button.js"></script>
     <!-- Library Files -->
-    <script type="text/javascript" src="stops.json"></script>
-    <script type="text/javascript" src="routes.json"></script>
+    <script type="text/javascript" src="stops_copy.json"></script>
+    <script type="text/javascript" src="routes_copy.json"></script>
     <script type="text/javascript" src="js/MovingMarker.js"></script>
     <script type="text/javascript" src="js/polyline.js"></script>
     <!-- CSS files -->
@@ -101,7 +101,7 @@
                             <a class="pure-menu-link" onclick="show_init_stop_list()">List of Stops</a>
                         </li>
                         <li class="pure-menu-item"><a class="pure-menu-link" onclick="do_location()">Find nearest stop</a></li>
-                        <li class="pure-menu-item"><a class="pure-menu-link" onclick="choose_a_service()">Directions</a></li>
+                        <li class="pure-menu-item" id="directions_parent"><a class="pure-menu-link" onclick="choose_a_service()">Directions</a></li>
                         <li class="pure-menu-item"><a class="pure-menu-link" onclick="showAbout()">About</a></li>
                     </ul>
                     <ul class="mode-toggler">

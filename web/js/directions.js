@@ -36,6 +36,7 @@ async function get_directions_worker(service, start, dest) {
         }
 
         $("#directions_tab").toggle(); //make it visible
+        $("#directions_tab").addClass("list-opened");
         $("#directions_child").remove(); //clear out old content
 
         //if we passed a browser location object instead of lat/long pair
@@ -70,14 +71,14 @@ async function get_directions_worker(service, start, dest) {
         //the starting and dest stops have a matching route
         directions_string = "Nothing.";
         if (sameRoute != null) {
-            directions_string = ("Get on " + sameRoute + " at " + start_nearest + ".<br>Depart at " + dest_nearest + " and walk to destination.");
-            html_string = `<p id="directions_child">${directions_string}</p>`
+            directions_string = ("Get on " + sameRoute + " at " + start_nearest + ".<br><br>Depart at " + dest_nearest + " and walk to destination.");
+            html_string = `<p id="directions_child" style:"white-space:normal;">${directions_string}</p>`
             $("#directions_tab").append(html_string)
 
         } else {
             connection = route_connection(start_nearest_routes, dest_nearest_routes);
             if (connection != null) {
-                directions_string = ("Get on " + sameRoute + " at " + start_nearest + ".<br>Transer to " + connection + " at " + connection + ". Depart at " + dest_nearest + " and walk to destination.");
+                directions_string = ("Get on " + sameRoute + " at " + start_nearest + ".<br><br>Transer to " + connection + " at " + connection + ". Depart at " + dest_nearest + " and walk to destination.");
                 html_string = `<p id="directions_child">${directions_string}</p>`
                 $("#directions_tab").append(html_string)
             }
@@ -213,6 +214,7 @@ async function get_loc_onclick(service) {
         mymap.on('click', function(e) {
             dest = { lat: e.latlng.lat, long: e.latlng.lng }
             $("#directions_instructions").toggle();
+            $('#directions_instructions').removeClass('list-opened');
             const ex = get_directions_worker(service, start, dest);
             ex.then(() => {
                 mymap.off('click');

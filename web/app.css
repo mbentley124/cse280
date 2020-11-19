@@ -181,13 +181,14 @@ body {
 @media (max-width: 768px) {
     #mobile-home {
         display: flex;
+        margin-left:-8px;
     }
     #desktop-home {
         display: none;
     }
     .lanta-switch-container{
         float: right;
-        margin-right: 10px;
+        margin-right: 5px;
     }
     .lehigh-switch-container{
         float: right;

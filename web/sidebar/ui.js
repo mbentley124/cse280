@@ -95,6 +95,33 @@ function show_stops(bus) {
     }
 }
 
+//Show directions tab on sidebar
+function choose_a_service() {
+    $('.list-opened').toggle();
+    $('.list-opened').removeClass('list-opened');
+    if (opened != 'directions') {
+        //set up UI
+        if ($("#directions_tab").is(":visible")) {
+            $("#directions_tab").toggle();
+            return
+        }
+        $("#directions_tab").empty();
+        $("#directions_instructions").toggle();
+        $("#directions_container").toggle();
+        $("#directions_container").addClass("list-opened");
+        $("#directions_instructions").addClass("list-opened");
+        opened = 'directions';
+    } else {
+        opened = null;
+    }
+
+    $("#directions_instructions").html(
+        `Choose a service:
+        <button id="lehigh" type="button" style="color: black;" onclick="get_directions('lehigh')">Lehigh</button>
+        <button id="lanta" type="button" style="color: black;" onclick="get_directions('lanta')">LANTA</button>`
+    );
+}
+
 //Called on keypress when user is searching stops
 function render_search_results(this_stops_list) {
     let stops_tracker2 = new Map();
