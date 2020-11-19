@@ -33,6 +33,9 @@ Directions container styling
 #directions_child {
     white-space: normal;
 }
+#directions_tab {
+    white-space: normal;
+}
 
 /*
 Add transition to containers so they can push in and out.

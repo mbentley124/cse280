@@ -72,8 +72,12 @@ async function get_directions_worker(service, start, dest) {
         directions_string = "Nothing.";
         if (sameRoute != null) {
             directions_string = ("Get on " + sameRoute + " at " + start_nearest + ".<br><br>Depart at " + dest_nearest + " and walk to destination.");
-            html_string = `<p id="directions_child" style:"white-space:normal;">${directions_string}</p>`
-            $("#directions_tab").append(html_string)
+            html_string = `<p id="directions_child">${directions_string}</p>`;
+            $("#directions_tab").append(html_string);
+            const coercedStart = {lat: start.lat, lng: start.long};
+            const coercedDest = {lat: dest.lat, lng: dest.long};
+            const vizDrxn = new VisualDirections(mymap, coercedStart, coercedDest, null, stop_arr[start_nearest]._latlng, stop_arr[dest_nearest]._latlng);
+            vizDrxn.visualizeDirections();
 
         } else {
             connection = route_connection(start_nearest_routes, dest_nearest_routes);
@@ -85,7 +89,7 @@ async function get_directions_worker(service, start, dest) {
             $("#directions_tab").append("Could not find directions using location given.");
         }
     } catch (e) {
-        console.error(e)
+        console.error(e);
         $("#directions_tab").append("Could not find directions using location given.");
     }
 
