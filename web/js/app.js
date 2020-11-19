@@ -142,9 +142,10 @@ async function draw_polyline_sample(map) {
         for (let i = 0; i < this.path.length; i += 2) {
             polyline.push(new L.LatLng(this.path[i], this.path[i + 1]));
         }
+        // Polyline color is fixed at lehigh brown. (will have to be changed once lanta highlighting is added)
         const leaflet_line = new L.polyline(
             polyline, {
-                color: this.color,
+                color: "#653818",
                 smoothFactor: 2,
             }
         );
