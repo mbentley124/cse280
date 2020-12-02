@@ -18,6 +18,7 @@ let lehigh_route_stop_ids = new Set();
 var LEHIGH_STOPS_INFO = new Map();
 
 
+
 var highlighted_route = null;
 
 // These will track whether or not the switches at the topbar have been toggled.
@@ -141,9 +142,10 @@ async function draw_polyline_sample(map) {
         for (let i = 0; i < this.path.length; i += 2) {
             polyline.push(new L.LatLng(this.path[i], this.path[i + 1]));
         }
+        // Polyline color is fixed at lehigh brown. (will have to be changed once lanta highlighting is added)
         const leaflet_line = new L.polyline(
             polyline, {
-                color: this.color,
+                color: "#653818",
                 smoothFactor: 2,
             }
         );
@@ -409,7 +411,7 @@ $.each(keys, function() {
     let stops_tracker = new Map();
     var count = 0;
     $('#init-stop-list').append('<a id="transportation-item" class="pure-menu-link" onclick="show_stops(\'' + this + '\')">' + this.charAt(0).toUpperCase() + this.slice(1) + '</a>');
-    $('#init-stop-list').append('<div id="stops-list-container-' + this + '" style="display: none;"><ul class="pure-menu-list" id="stops-list-' + this + '" style="background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height: 52.2vh;"></ul><ul class="pure-menu-list" id="' + this + '-query-results" style="background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height: 52.2vh;"></ul></div>');
+    $('#init-stop-list').append('<div id="stops-list-container-' + this + '" style="display: none;"><ul class="pure-menu-list" id="stops-list-' + this + '" style="background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height: 45vh;"></ul><ul class="pure-menu-list" id="' + this + '-query-results" style="background-color: rgb(153, 67, 6); font-size: 15px; overflow-x: hidden; overflow-y: scroll; max-height: 52.2vh;"></ul></div>');
     $('#stops-list-container-' + bus).prepend('<div style="text-align:center;border-bottom: 1px solid white; height:33.6px;"><input type="text" id="search-' + this + '" class="stops-item" style="margin-top:5px; width: 90%;" placeholder="Look for a stop" onkeyup="render_search_results(\'' + this + '\')"/></div>');
     $.each(stops[this], function() {
         if (!stops_tracker.has(this.name) && (bus !== "lehigh" || lehigh_route_stop_ids.has(this.stop_id))) {
@@ -499,7 +501,7 @@ function toggle_lanta() {
 }
 
 // Had to add directions this way to fix the map canvas disorientation
-$('<div id="directions_instructions" style="padding: 2%; color: whitesmoke;"><p>Choose a destination.</p></div><div id="directions_tab" style="padding: 2%; color: whitesmoke;"></div>').insertBefore('#map')
+$('#directions_parent').append('<div class="pure-menu-link" id="directions_container" style="display:none; cursor:default; background:rgb(102, 58, 26);"><div class id="directions_instructions">Choose a destination.</div><div id="directions_tab" style="color: whitesmoke;"></div></div>')
     //make these things default invisible
 $("#directions_tab").toggle();
 $("#directions_instructions").toggle();

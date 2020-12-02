@@ -8,6 +8,34 @@ body {
     height: auto;
 }
 
+/*
+Stops list styling
+*/
+#transportation-item {
+    background-color:rgb(102, 58, 26);
+}
+
+/*
+Directions container styling
+*/
+#directions_parent:hover {
+    cursor: default;
+}
+#directions_container:hover {
+    cursor: default;
+}
+#directions_tab:hover {
+    cursor: default;
+}
+#directions_instructions:hover {
+    cursor: default;
+}
+#directions_child {
+    white-space: normal;
+}
+#directions_tab {
+    white-space: normal;
+}
 
 /*
 Add transition to containers so they can push in and out.
@@ -142,8 +170,8 @@ appears on the left side of the page.
 
 
 /*
-        Change color of the anchor links on hover/focus.
-        */
+Change color of the anchor links on hover/focus.
+*/
 
 #menu .pure-menu li a:hover,
 #menu .pure-menu li a:focus {

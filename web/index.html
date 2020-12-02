@@ -30,7 +30,7 @@
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.4.1.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script>
     <!-- Config files -->
-    <script src="js/status.js"></script>
+    <!-- <script src="js/status.js"></script> -->
     <script src="js/config.js"></script>
     <!-- leaflet -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
@@ -101,7 +101,7 @@
                             <a class="pure-menu-link" onclick="show_init_stop_list()">List of Stops</a>
                         </li>
                         <li class="pure-menu-item"><a class="pure-menu-link" onclick="do_location()">Find nearest stop</a></li>
-                        <li class="pure-menu-item"><a class="pure-menu-link" onclick="get_directions()">Directions</a></li>
+                        <li class="pure-menu-item" id="directions_parent"><a class="pure-menu-link" onclick="choose_a_service()">Directions</a></li>
                         <li class="pure-menu-item"><a class="pure-menu-link" onclick="showAbout()">About</a></li>
                     </ul>
                     <ul class="mode-toggler">
@@ -121,10 +121,12 @@
     <script type="text/javascript" src="js/icons.js"></script>
     <script type="text/javascript" src="js/dark_mode.js"></script>
     <script type="text/javascript" src="js/app.js"></script>
+    <script type="text/javascript" src="js/directions_instructions.js"></script>
     <script type="text/javascript" src="js/nearest_location.js"></script>
     <script type="text/javascript" src="sidebar/ui.js"></script>
     <script type="text/javascript" src="js/about_page.js"></script>
     <script type="text/javascript" src="js/directions.js"></script>
+    <script type="text/javascript" src="js/VisualDirections.js"></script>
 
 </body>
 
