@@ -43,6 +43,8 @@ class LehighScraper:
         bus_list = []
         self.projection = projection
         self.next_stop = next_
+        if not len(self.buses):
+            return bus_list
         if self.threading:
             with Pool(len(self.buses)) as p:
                 bus_list = list(p.map(self._multi_bus, self.buses))
