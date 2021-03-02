@@ -74,8 +74,8 @@ async function get_directions_worker(service, start, dest) {
             directions_string = ("Get on " + sameRoute + " at " + start_nearest + ".<br><br>Depart at " + dest_nearest + " and walk to destination.");
             html_string = `<p id="directions_child">${directions_string}</p>`;
             $("#directions_tab").append(html_string);
-            const coercedStart = {lat: start.lat, lng: start.long};
-            const coercedDest = {lat: dest.lat, lng: dest.long};
+            const coercedStart = { lat: start.lat, lng: start.long };
+            const coercedDest = { lat: dest.lat, lng: dest.long };
             const vizDrxn = new VisualDirections(mymap, coercedStart, coercedDest, null, stop_arr[start_nearest]._latlng, stop_arr[dest_nearest]._latlng);
             vizDrxn.visualizeDirections();
 
@@ -95,16 +95,25 @@ async function get_directions_worker(service, start, dest) {
 
 }
 
+//Returns the array member from routes.lehigh pertaining to routeName
+function getRouteArr(routeName) {
+    for (var i in routes.lehigh) {
+        if (routeName == i.name) {
+            return i;
+        }
+    }
+}
+
 function route_connection(start_nearest_routes, dest_nearest_routes) {
     //only works for Lehigh atm
     //iterate through all the routes at nearest starting stop
-    for (var i = 0; i < start_nearest_routes.length(); i++) {
-        curr_route_stops = routes.lehigh[start_nearest_routes[i]].stops
+    for (var i = 0; i < start_nearest_routes.length; i++) {
+        curr_route_stops = getRouteArr(i).stops
 
         for (var j = 0; j < curr_route_stops; j++) {
 
-            for (var k = 0; k < dest_nearest_routes.length(); k++) {
-                dest_curr_route_stops = routes.lehigh[dest_nearest_routes[i]].stops
+            for (var k = 0; k < dest_nearest_routes.length; k++) {
+                dest_curr_route_stops = getRouteArr(j).stops
 
                 for (var z = 0; z < dest_curr_route_stops; z++) {
                     if (curr_route_stops[j] == dest_curr_route_stops[z]) {
