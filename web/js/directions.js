@@ -147,6 +147,7 @@ function getRouteIfSame(start_nearest_routes, dest_nearest_routes) {
 }
 
 //TODO: Only works for Lehigh atm
+//TODO: Need to get LANTA routes in routes[]
 async function getRoutes(service, stopName) {
     if (service == "lehigh") {
         service = routes.lehigh
@@ -166,17 +167,16 @@ async function getRoutes(service, stopName) {
 function calc_nearest_result(service_info, location) {
     var lat = location.lat;
     var lon = location.long;
-    var dist_arr_lu = []
-    var dist_arr_lanta = []
-    service_info.forEach(function(value) {
-        var b_lat = parseFloat(value.latitude);
-        var b_lon = parseFloat(value.longitude);
+    var dist_arr = []
+    service_info.forEach(function(stop) {
+        var b_lat = parseFloat(stop.latitude);
+        var b_lon = parseFloat(stop.longitude);
         var dist = distance(lat, lon, b_lat, b_lon, 'M');
-        var key = value.name;
+        var key = stop.name;
         if (isNaN(dist)) {
             dist = 9999999999999;
         }
-        dist_arr_lu.push({ "key": key, "dist": dist, "r": dist.toString() });
+        dist_arr.push({ "key": key, "dist": dist, "r": dist.toString() });
     })
 
     // $.each(stops.lanta, function() { //LOOP: interates through each stop for LANTA
@@ -191,16 +191,11 @@ function calc_nearest_result(service_info, location) {
     //     dist_arr_lanta.push({ "key": key, "dist": dist, "r": dist.toString() });
     //     // console.log(dist_arr_lanta);
     // });
-    var result_lu = sortByKey(dist_arr_lu, "dist")[0];
+    var result = sortByKey(dist_arr_lu, "dist")[0];
     // var result_lanta = sortByKey(dist_arr_lanta, "dist")[0];
-    var close_key = result_lu.key;
-    // var close_dist = result_lu.dist;
+    var close_key = result.key;
+    // var close_dist = result.dist;
 
-    //TODO: this will be needed for using LANTA
-    // if (result_lanta.dist < result_lu.dist) {
-    //     close_key = result_lanta.key;
-    //     close_dist = result_lanta.dist;
-    // }
 
     return close_key;
 }
