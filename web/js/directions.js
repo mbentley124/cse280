@@ -39,26 +39,6 @@ async function get_directions_worker(service, start, dest) {
         $("#directions_tab").addClass("list-opened");
         $("#directions_child").remove(); //clear out old content
 
-        //if we passed a browser location object instead of lat/long pair
-        // if (typeof start == typeof(lc)) {
-        //     var start2 = [];
-        //     start2.lat = start._marker._latlng.lat;
-        //     start2.long = start._marker._latlng.lng;
-        //     start = start2;
-        // }
-
-        // if (typeof dest == typeof(lc)) {
-        //     dest2 = [];
-        //     dest2.lat = dest._marker._latlng.lat;
-        //     dest2.long = dest._marker._latlng.lng;
-        // }
-        // try {
-        //     dest2 = {};
-        //     dest2.lat = dest._marker._latlng.lat;
-        //     dest2.long = dest._marker._latlng.lng;
-        //     dest = dest2;
-        // } catch (e) {}
-
         var start_nearest = calc_nearest_result(service_info, start);
         var dest_nearest = calc_nearest_result(service_info, dest);
 
