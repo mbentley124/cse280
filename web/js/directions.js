@@ -51,7 +51,7 @@ async function get_directions_worker(service, start, dest) {
         //if the starting and dest stops have a matching route
         directions_string = "Nothing.";
         if (sameRoute != null) {
-            directions_string = ("Get on " + sameRoute + " at " + start_nearest + ".<br><br>Depart at " + dest_nearest + " and walk to destination.");
+            directions_string = ("Get on " + sameRoute.name + " at " + start_nearest + ".<br><br>Depart at " + dest_nearest + " and walk to destination.");
             html_string = `<p id="directions_child">${directions_string}</p>`;
             $("#directions_tab").append(html_string);
             const coercedStart = { lat: start.lat, lng: start.long };
@@ -76,40 +76,23 @@ async function get_directions_worker(service, start, dest) {
 
 }
 
-//Returns the array member from routes.lehigh pertaining to routeName
-function getRouteArr(routeName) {
-    for (var i in routes.lehigh) {
-        if (routeName == i.name) {
-            return i;
-        }
-    }
-}
-
 function route_connection(start_nearest_routes, dest_nearest_routes) {
     //only works for Lehigh atm
     //iterate through all the routes at nearest starting stop
     for (var i = 0; i < start_nearest_routes.length; i++) {
-        curr_route_stops = getRouteArr(i).stops
+        curr_route_stops = start_nearest_routes[i].stops
 
         for (var j = 0; j < curr_route_stops; j++) {
 
             for (var k = 0; k < dest_nearest_routes.length; k++) {
-                dest_curr_route_stops = getRouteArr(j).stops
+                dest_curr_route_stops = dest_nearest_routes[j].stops
 
                 for (var z = 0; z < dest_curr_route_stops; z++) {
                     if (curr_route_stops[j] == dest_curr_route_stops[z]) {
-                        return stopid_to_name("lehigh", curr_route_stops[j]);
+                        return curr_route_stops[j].name;
                     }
                 }
             }
-        }
-    }
-}
-
-function stopid_to_name(service, id) {
-    for (var i = 0; stops.service.length(); i++) {
-        if (stops.service[i].stop_id == id) {
-            return stops.service[i].name;
         }
     }
 }
@@ -139,7 +122,7 @@ async function getRoutes(service, stopName) {
     var stopid = stop_arr[stopName]._stopid
     for (var i of service) {
         if (i.stops.includes(stopid)) {
-            stopRoutes.push(i.name)
+            stopRoutes.push(i)
         }
     }
     return stopRoutes;
@@ -180,15 +163,6 @@ function calc_nearest_result(service_info, location) {
 
     return close_key;
 }
-
-// function get_same_stops(routesList1, routesList2) {
-//     for (i in routesList1) {
-//         for (j in routes.lehigh.name == i)
-//             if (route2.stops.includes(i)) {
-//                 return stops.i
-//             }
-//     }
-// }
 
 
 async function get_loc_onclick(service) {
