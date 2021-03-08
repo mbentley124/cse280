@@ -39,8 +39,8 @@ async function get_directions_worker(service, start, dest) {
         $("#directions_tab").addClass("list-opened");
         $("#directions_child").remove(); //clear out old content
 
-        var start_nearest = calc_nearest_result(service_info, start);
-        var dest_nearest = calc_nearest_result(service_info, dest);
+        var start_nearest = calc_nearest_result(service_info, start); //get the nearest stop to the starting location
+        var dest_nearest = calc_nearest_result(service_info, dest); //get the nearest stop to the destination location
 
         //get list of routes associated with our stops
         var start_nearest_routes = await getRoutes(service, start_nearest);
@@ -48,7 +48,7 @@ async function get_directions_worker(service, start, dest) {
 
         var sameRoute = getRouteIfSame(start_nearest_routes, dest_nearest_routes);
 
-        //the starting and dest stops have a matching route
+        //if the starting and dest stops have a matching route
         directions_string = "Nothing.";
         if (sameRoute != null) {
             directions_string = ("Get on " + sameRoute + " at " + start_nearest + ".<br><br>Depart at " + dest_nearest + " and walk to destination.");
@@ -59,14 +59,15 @@ async function get_directions_worker(service, start, dest) {
             const vizDrxn = new VisualDirections(mymap, coercedStart, coercedDest, null, stop_arr[start_nearest]._latlng, stop_arr[dest_nearest]._latlng);
             vizDrxn.visualizeDirections();
 
-        } else {
+        } else { //if they don't, find a connection along the two routes
             connection = route_connection(start_nearest_routes, dest_nearest_routes);
             if (connection != null) {
                 directions_string = ("Get on " + sameRoute + " at " + start_nearest + ".<br><br>Transer to " + connection + " at " + connection + ". Depart at " + dest_nearest + " and walk to destination.");
                 html_string = `<p id="directions_child">${directions_string}</p>`
                 $("#directions_tab").append(html_string)
+            } else {
+                $("#directions_tab").append("Could not find directions using location given.");
             }
-            $("#directions_tab").append("Could not find directions using location given.");
         }
     } catch (e) {
         console.error(e);
@@ -171,7 +172,7 @@ function calc_nearest_result(service_info, location) {
     //     dist_arr_lanta.push({ "key": key, "dist": dist, "r": dist.toString() });
     //     // console.log(dist_arr_lanta);
     // });
-    var result = sortByKey(dist_arr_lu, "dist")[0];
+    var result = sortByKey(dist_arr, "dist")[0];
     // var result_lanta = sortByKey(dist_arr_lanta, "dist")[0];
     var close_key = result.key;
     // var close_dist = result.dist;
