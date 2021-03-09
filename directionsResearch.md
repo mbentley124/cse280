@@ -24,3 +24,5 @@ A tree that is formed from nodes being randomly explored. This sounds like somet
 - updated current directions functions to return pointers to stop objects instead of strings, so no longer need to convert between stopid and name. (led to deleting 2 functions running in O(n).
 
 - Now I need routes.lanta... once I have that, I believe lanta directions should work.
+
+- walking routes
