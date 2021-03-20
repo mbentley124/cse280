@@ -51,7 +51,13 @@ async function get_directions_worker(service, start, dest) {
         //if the starting and dest stops have a matching route
         directions_string = "Nothing.";
         if (sameRoute != null) {
-            directions_string = ("Get on " + sameRoute.name + " at " + start_nearest + ".<br><br>Depart at " + dest_nearest + " and walk to destination.");
+            let routeName
+            if (typeof sameRoute.name === "undefined") {
+                routeName = sameRoute.LongName
+            } else {
+                routename = sameRoute.name
+            } //Lanta and Lehigh route arrays have different var names
+            directions_string = ("Get on " + routeName + " at " + start_nearest + ".<br><br>Depart at " + dest_nearest + " and walk to destination.");
             html_string = `<p id="directions_child">${directions_string}</p>`;
             $("#directions_tab").append(html_string);
             const coercedStart = { lat: start.lat, lng: start.long };
@@ -115,9 +121,9 @@ function getRouteIfSame(start_nearest_routes, dest_nearest_routes) {
 async function getRoutes(service, stopName) {
     if (service == "lehigh") {
         service = routes.lehigh
-    } else {
+    } else if (service == "lanta") {
         service = routes.lanta
-    }
+    } else throw 'Error: Not a service'
     var stopRoutes = []
     var stopid = stop_arr[stopName]._stopid
     for (var i of service) {

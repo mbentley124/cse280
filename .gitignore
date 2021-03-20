@@ -3,3 +3,4 @@ stress_test/*
 scraper/*.log
 scraper/*.tar.gz
 git.log
+.vscode/settings.json
