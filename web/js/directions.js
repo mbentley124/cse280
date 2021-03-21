@@ -45,11 +45,11 @@ async function get_directions_worker(service, start, dest) {
         directions_string = "Nothing.";
         if (sameRoute != null) {
             let routeName
-            if (typeof sameRoute.name === "undefined") {
+            if (typeof sameRoute.name === "undefined") { //Lanta and Lehigh route arrays have different var names
                 routeName = sameRoute.LongName
             } else {
-                routename = sameRoute.name
-            } //Lanta and Lehigh route arrays have different var names
+                routeName = sameRoute.name
+            }
             directions_string = ("Get on " + routeName + " at " + start_nearest + ".<br><br>Depart at " + dest_nearest + " and walk to destination.");
             html_string = `<p id="directions_child">${directions_string}</p>`;
             $("#directions_tab").append(html_string);
