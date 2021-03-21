@@ -9,7 +9,8 @@
  * 
  * if so, give first instance of shared stop after starting_stop
  * 
- * lehigh_route_stop_ids
+ * If starting and dest stops are on different services, get user to 4th&New or Farrington, 
+ * then have them transer to the other.
  */
 
 
@@ -26,21 +27,13 @@ async function get_directions(service) {
 
 async function get_directions_worker(service, start, dest) {
     try {
-        var service_info;
-        if (service == "lehigh") {
-            service_info = LEHIGH_STOPS_INFO
-        } else if (service == "lanta") {
-            service_info = stops.lanta
-        } else {
-            throw ("Unknown service: " + service);
-        }
 
         $("#directions_tab").toggle(); //make it visible
         $("#directions_tab").addClass("list-opened");
         $("#directions_child").remove(); //clear out old content
 
-        var start_nearest = calc_nearest_result(service_info, start); //get the nearest stop to the starting location
-        var dest_nearest = calc_nearest_result(service_info, dest); //get the nearest stop to the destination location
+        var start_nearest = calc_nearest_result(start); //get the nearest stop to the starting location
+        var dest_nearest = calc_nearest_result(dest); //get the nearest stop to the destination location
 
         //get list of routes associated with our stops
         var start_nearest_routes = await getRoutes(service, start_nearest);
@@ -134,37 +127,27 @@ async function getRoutes(service, stopName) {
     return stopRoutes;
 }
 
-function calc_nearest_result(service_info, location) {
+function calc_nearest_result(location) {
     var lat = location.lat;
     var lon = location.long;
     var dist_arr = []
-    service_info.forEach(function(stop) {
-        var b_lat = parseFloat(stop.latitude);
-        var b_lon = parseFloat(stop.longitude);
-        var dist = distance(lat, lon, b_lat, b_lon, 'M');
-        var key = stop.name;
-        if (isNaN(dist)) {
-            dist = 9999999999999;
-        }
-        dist_arr.push({ "key": key, "dist": dist, "r": dist.toString() });
-    })
+    for (let service in stops) {
+        stops[service].forEach(function(stop) {
+            var b_lat = parseFloat(stop.latitude);
+            var b_lon = parseFloat(stop.longitude);
+            var dist = distance(lat, lon, b_lat, b_lon, 'M');
+            var key = stop.name;
+            if (isNaN(dist)) {
+                dist = 9999999999999;
+            }
+            dist_arr.push({ "key": key, "dist": dist, "r": dist.toString() });
+        })
+    }
 
-    // $.each(stops.lanta, function() { //LOOP: interates through each stop for LANTA
-    //     var b_lon = this.longitude;
-    //     var b_lat = this.latitude;
-    //     var dist = distance(lat, lon, b_lat, b_lon, 'M');
-    //     // console.log(dist);
-    //     if (isNaN(dist)) {
-    //         dist = 9999999999999;
-    //     }
-    //     var key = this.name;
-    //     dist_arr_lanta.push({ "key": key, "dist": dist, "r": dist.toString() });
-    //     // console.log(dist_arr_lanta);
-    // });
     var result = sortByKey(dist_arr, "dist")[0];
-    // var result_lanta = sortByKey(dist_arr_lanta, "dist")[0];
+
     var close_key = result.key;
-    // var close_dist = result.dist;
+
 
 
     return close_key;
