@@ -49,6 +49,15 @@ async function get_directions_worker(start, dest, print = true) {
                     lat: stop_arr["4TH&NEWw"]._latlng.lat,
                     long: stop_arr["4TH&NEWw"]._latlng.lng
                 }, dest)
+            } else if (start_nearest.type == "lanta") {
+                get_directions_worker(start, {
+                    lat: stop_arr["4TH&NEWw"]._latlng.lat,
+                    long: stop_arr["4TH&NEWw"]._latlng.lng
+                })
+                get_directions_worker({
+                    lat: stop_arr["Farrington Square Bus Stop (new)"]._latlng.lat,
+                    long: stop_arr["Farrington Square Bus Stop (new)"]._latlng.lng
+                }, dest)
             }
             return
         }
