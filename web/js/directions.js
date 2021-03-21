@@ -36,8 +36,8 @@ async function get_directions_worker(service, start, dest) {
         var dest_nearest = calc_nearest_result(dest); //get the nearest stop to the destination location
 
         //get list of routes associated with our stops
-        var start_nearest_routes = await getRoutes(service, start_nearest);
-        var dest_nearest_routes = await getRoutes(service, dest_nearest);
+        var start_nearest_routes = await getRoutes(start_nearest);
+        var dest_nearest_routes = await getRoutes(dest_nearest);
 
         var sameRoute = getRouteIfSame(start_nearest_routes, dest_nearest_routes);
 
@@ -50,13 +50,18 @@ async function get_directions_worker(service, start, dest) {
             } else {
                 routeName = sameRoute.name
             }
-            directions_string = ("Get on " + routeName + " at " + start_nearest + ".<br><br>Depart at " + dest_nearest + " and walk to destination.");
+            startingStopName = getStopName(start_nearest)
+            destStopName = getStopName(dest_nearest)
+            directions_string = ("Get on " + routeName + " at " + startingStopName + ".<br><br>Depart at " + destStopName + " and walk to destination.");
             html_string = `<p id="directions_child">${directions_string}</p>`;
             $("#directions_tab").append(html_string);
-            const coercedStart = { lat: start.lat, lng: start.long };
-            const coercedDest = { lat: dest.lat, lng: dest.long };
-            const vizDrxn = new VisualDirections(mymap, coercedStart, coercedDest, null, stop_arr[start_nearest]._latlng, stop_arr[dest_nearest]._latlng);
-            vizDrxn.visualizeDirections();
+
+
+            //CODY'S STUFF?
+            // const coercedStart = { lat: start.lat, lng: start.long };
+            // const coercedDest = { lat: dest.lat, lng: dest.long };
+            // const vizDrxn = new VisualDirections(mymap, coercedStart, coercedDest, null, stop_arr[start_nearest]._latlng, stop_arr[dest_nearest]._latlng);
+            // vizDrxn.visualizeDirections();
 
         } else { //if they don't, find a connection along the two routes
             connection = route_connection(start_nearest_routes, dest_nearest_routes);
@@ -73,6 +78,21 @@ async function get_directions_worker(service, start, dest) {
         $("#directions_tab").append("Could not find directions using location given.");
     }
 
+}
+
+function getStopName(stop) {
+    let service
+    if (stop.type == "lanta") {
+        service = stops.lanta
+    } else if (stop.type == "lehigh") {
+        service = stops.lehigh
+    }
+
+    for (let i of service) {
+        if (i.stop_id == stop._stopid) {
+            return i.name
+        }
+    }
 }
 
 function route_connection(start_nearest_routes, dest_nearest_routes) {
@@ -111,14 +131,16 @@ function getRouteIfSame(start_nearest_routes, dest_nearest_routes) {
 
 //TODO: Only works for Lehigh atm
 //TODO: Need to get LANTA routes in routes[]
-async function getRoutes(service, stopName) {
-    if (service == "lehigh") {
+async function getRoutes(stop) {
+    console.log(stop)
+    if (stop.type == "lehigh") {
         service = routes.lehigh
-    } else if (service == "lanta") {
+    } else if (stop.type == "lanta") {
         service = routes.lanta
     } else throw 'Error: Not a service'
     var stopRoutes = []
-    var stopid = stop_arr[stopName]._stopid
+
+    var stopid = stop._stopid
     for (var i of service) {
         if (i.stops.includes(stopid)) {
             stopRoutes.push(i)
@@ -131,24 +153,22 @@ function calc_nearest_result(location) {
     var lat = location.lat;
     var lon = location.long;
     var dist_arr = []
-    for (let service in stops) {
-        stops[service].forEach(function(stop) {
-            var b_lat = parseFloat(stop.latitude);
-            var b_lon = parseFloat(stop.longitude);
-            var dist = distance(lat, lon, b_lat, b_lon, 'M');
-            var key = stop.name;
-            if (isNaN(dist)) {
-                dist = 9999999999999;
-            }
-            dist_arr.push({ "key": key, "dist": dist, "r": dist.toString() });
-        })
+    for (let stop in stop_arr) {
+        stop = stop_arr[stop]
+        let b_lat = parseFloat(stop._latlng.lat);
+        let b_lon = parseFloat(stop._latlng.lng);
+        let dist = distance(lat, lon, b_lat, b_lon, 'M');
+        let key = stop;
+        if (isNaN(dist)) {
+            dist = 9999999999999;
+        }
+        dist_arr.push({ "key": key, "dist": dist, "r": dist.toString() });
     }
+
 
     var result = sortByKey(dist_arr, "dist")[0];
 
     var close_key = result.key;
-
-
 
     return close_key;
 }
