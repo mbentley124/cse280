@@ -25,15 +25,33 @@ async function get_directions(service) {
     await get_loc_onclick(service);
 }
 
-async function get_directions_worker(service, start, dest) {
+function htmlHelper() {
+    $("#directions_tab").toggle(); //make it visible
+    $("#directions_tab").addClass("list-opened");
+    $("#directions_child").remove(); //clear out old content
+}
+
+async function get_directions_worker(start, dest, print = true) {
     try {
 
-        $("#directions_tab").toggle(); //make it visible
-        $("#directions_tab").addClass("list-opened");
-        $("#directions_child").remove(); //clear out old content
+        htmlHelper();
 
         var start_nearest = calc_nearest_result(start); //get the nearest stop to the starting location
         var dest_nearest = calc_nearest_result(dest); //get the nearest stop to the destination location
+
+        if (start_nearest.type != dest_nearest.type) { //if start stop is on lanta, and dest is on lehigh or vice versa
+            if (start_nearest.type == "lehigh") {
+                get_directions_worker(start, {
+                    lat: stop_arr["Farrington Square Bus Stop (new)"]._latlng.lat,
+                    long: stop_arr["Farrington Square Bus Stop (new)"]._latlng.lng
+                })
+                get_directions_worker({
+                    lat: stop_arr["4TH&NEWw"]._latlng.lat,
+                    long: stop_arr["4TH&NEWw"]._latlng.lng
+                }, dest)
+            }
+            return
+        }
 
         //get list of routes associated with our stops
         var start_nearest_routes = await getRoutes(start_nearest);
@@ -41,9 +59,10 @@ async function get_directions_worker(service, start, dest) {
 
         var sameRoute = getRouteIfSame(start_nearest_routes, dest_nearest_routes);
 
-        //if the starting and dest stops have a matching route
-        directions_string = "Nothing.";
-        if (sameRoute != null) {
+        var directions_string;
+
+        if (sameRoute != null) { //if the starting and dest stops have a matching route
+
             let routeName
             if (typeof sameRoute.name === "undefined") { //Lanta and Lehigh route arrays have different var names
                 routeName = sameRoute.LongName
@@ -187,7 +206,7 @@ async function get_loc_onclick(service) {
             dest = { lat: e.latlng.lat, long: e.latlng.lng }
             $("#directions_instructions").toggle();
             $('#directions_instructions').removeClass('list-opened');
-            const ex = get_directions_worker(service, start, dest);
+            const ex = get_directions_worker(start, dest);
             ex.then(() => {
                 mymap.off('click');
             });
