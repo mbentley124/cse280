@@ -36,8 +36,9 @@ TO-DO
 DONE:
 
 - Can now get directions cross-service. Always tranfers at Farrington/New st.
+- Formatting data into graph
 
 TO-DO:
 
 - Update html. Only need one button and cross-service output needs to be formatted correctly
-- 
+
