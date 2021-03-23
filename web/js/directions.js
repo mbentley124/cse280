@@ -158,7 +158,6 @@ function getRouteIfSame(start_nearest_routes, dest_nearest_routes) {
 }
 
 async function getRoutes(stop) {
-    console.log(stop)
     if (stop.type == "lehigh") {
         service = routes.lehigh
     } else if (stop.type == "lanta") {
