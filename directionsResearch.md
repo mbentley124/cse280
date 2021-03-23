@@ -18,11 +18,18 @@ A tree that is formed from nodes being randomly explored. This sounds like somet
 
 # Timeline
 
-### 02/23 - 03/09
+### FEB 23 - MARCH 09
 - organizing research notes
 - updated current directions functions to accept input for lehigh OR lanta
 - updated current directions functions to return pointers to stop objects instead of strings, so no longer need to convert between stopid and name. (led to deleting 2 functions running in O(n).
-
+TO-DO
 - Now I need routes.lanta... once I have that, I believe lanta directions should work.
 
 - walking routes
+
+### MARCH 09 - MARCH 23
+DONE:
+- Can now get directions cross-service. Always tranfers at Farrington/New st.
+TO-DO
+- Update html. Only need one button and cross-service output needs to be formatted correctly
+- 
