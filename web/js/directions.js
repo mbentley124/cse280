@@ -157,8 +157,6 @@ function getRouteIfSame(start_nearest_routes, dest_nearest_routes) {
     return null;
 }
 
-//TODO: Only works for Lehigh atm
-//TODO: Need to get LANTA routes in routes[]
 async function getRoutes(stop) {
     console.log(stop)
     if (stop.type == "lehigh") {
