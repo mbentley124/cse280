@@ -21,8 +21,8 @@
  * @param {location} start the starting location
  * @param {location} dest the destination location
  */
-async function get_directions(service) {
-    await get_loc_onclick(service);
+async function get_directions() {
+    await get_loc_onclick();
 }
 
 function htmlHelper() {
@@ -31,7 +31,7 @@ function htmlHelper() {
     $("#directions_child").remove(); //clear out old content
 }
 
-async function get_directions_worker(start, dest, print = true) {
+async function get_directions_worker(start, dest, transService = null) {
     try {
 
         htmlHelper();
@@ -44,7 +44,7 @@ async function get_directions_worker(start, dest, print = true) {
                 get_directions_worker(start, {
                     lat: stop_arr["Farrington Square Bus Stop (new)"]._latlng.lat,
                     long: stop_arr["Farrington Square Bus Stop (new)"]._latlng.lng
-                })
+                }, 'lehigh')
                 get_directions_worker({
                     lat: stop_arr["4TH&NEWw"]._latlng.lat,
                     long: stop_arr["4TH&NEWw"]._latlng.lng
@@ -53,7 +53,7 @@ async function get_directions_worker(start, dest, print = true) {
                 get_directions_worker(start, {
                     lat: stop_arr["4TH&NEWw"]._latlng.lat,
                     long: stop_arr["4TH&NEWw"]._latlng.lng
-                })
+                }, 'lanta')
                 get_directions_worker({
                     lat: stop_arr["Farrington Square Bus Stop (new)"]._latlng.lat,
                     long: stop_arr["Farrington Square Bus Stop (new)"]._latlng.lng
@@ -70,6 +70,15 @@ async function get_directions_worker(start, dest, print = true) {
 
         var directions_string;
 
+        var ending;
+        if (transService == null) {
+            ending = 'destination'
+        } else if (transService == 'lehigh') {
+            ending = '4th & New'
+        } else if (transService == 'lanta') {
+            ending = 'Farrington Square Bus Stop'
+        }
+
         if (sameRoute != null) { //if the starting and dest stops have a matching route
 
             let routeName
@@ -80,7 +89,7 @@ async function get_directions_worker(start, dest, print = true) {
             }
             startingStopName = getStopName(start_nearest)
             destStopName = getStopName(dest_nearest)
-            directions_string = ("Get on " + routeName + " at " + startingStopName + ".<br><br>Depart at " + destStopName + " and walk to destination.");
+            directions_string = ("Get on " + routeName + " at " + startingStopName + ".<br><br>Depart at " + destStopName + " and walk to " + ending + ".");
             html_string = `<p id="directions_child">${directions_string}</p>`;
             $("#directions_tab").append(html_string);
 
@@ -94,7 +103,8 @@ async function get_directions_worker(start, dest, print = true) {
         } else { //if they don't, find a connection along the two routes
             connection = route_connection(start_nearest_routes, dest_nearest_routes);
             if (connection != null) {
-                directions_string = ("Get on " + sameRoute + " at " + start_nearest + ".<br><br>Transer to " + connection + " at " + connection + ". Depart at " + dest_nearest + " and walk to destination.");
+
+                directions_string = ("Get on " + sameRoute + " at " + start_nearest + ".<br><br>Transer to " + connection + " at " + connection + ". Depart at " + dest_nearest + " and walk to " + ending);
                 html_string = `<p id="directions_child">${directions_string}</p>`
                 $("#directions_tab").append(html_string)
             } else {
@@ -199,7 +209,7 @@ function calc_nearest_result(location) {
 }
 
 
-async function get_loc_onclick(service) {
+async function get_loc_onclick() {
     $("#directions_instructions").empty();
     $("#directions_instructions").html("<p>Choose a starting location.</p>");
 
@@ -212,7 +222,17 @@ async function get_loc_onclick(service) {
             dest = { lat: e.latlng.lat, long: e.latlng.lng }
             $("#directions_instructions").toggle();
             $('#directions_instructions').removeClass('list-opened');
+
+            //Meaure Performance
+            const t0 = performance.now()
+
+            //Do the work
             const ex = get_directions_worker(start, dest);
+
+            //End Measure Performance
+            const t1 = performance.now()
+            console.log("TIME: " + (t1 - t0))
+
             ex.then(() => {
                 mymap.off('click');
             });

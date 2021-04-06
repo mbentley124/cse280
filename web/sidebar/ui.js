@@ -115,11 +115,13 @@ function choose_a_service() {
         opened = null;
     }
 
-    $("#directions_instructions").html(
-        `Choose a service:
-        <button id="lehigh" type="button" style="color: black;" onclick="get_directions('lehigh')">Lehigh</button>
-        <button id="lanta" type="button" style="color: black;" onclick="get_directions('lanta')">LANTA</button>`
-    );
+    get_directions()
+
+    // $("#directions_instructions").html(
+    //     `Choose a service:
+    //     <button id="lehigh" type="button" style="color: black;" onclick="get_directions('lehigh')">Lehigh</button>
+    //     <button id="lanta" type="button" style="color: black;" onclick="get_directions('lanta')">LANTA</button>`
+    // );
 }
 
 //Called on keypress when user is searching stops
@@ -146,12 +148,12 @@ function render_search_results(this_stops_list) {
     for (i = 0; i < stops[this_stops_list].length; i++) { //iterate through stops_list
         if ((stops[this_stops_list][i]["name"]).toLowerCase().includes(query) && !stops_tracker2.has(stops[this_stops_list][i]["name"])) { //show stop if string contains query
             results.push(stops[this_stops_list][i])
-            stops_tracker2.set(stops[this_stops_list][i]["name"],true)
+            stops_tracker2.set(stops[this_stops_list][i]["name"], true)
         }
     }
     console.log(results);
     //render results
     for (i = 0; i < results.length; i++) {
-        $(query_results_list).append('<li><a class="pure-menu-link stops-item" onclick="find_stop(' + results[i].latitude + ',' + results[i].longitude +  ',\'' + results[i].name + '\')">' + results[i].name + '</a></li>');
+        $(query_results_list).append('<li><a class="pure-menu-link stops-item" onclick="find_stop(' + results[i].latitude + ',' + results[i].longitude + ',\'' + results[i].name + '\')">' + results[i].name + '</a></li>');
     }
 }
