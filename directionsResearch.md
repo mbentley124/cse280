@@ -42,3 +42,15 @@ TO-DO:
 
 - Update html. Only need one button and cross-service output needs to be formatted correctly
 
+### MARCH 23 - APRIL 6
+
+DONE:
+
+- Update html to understand transfers
+- Timed first algorithm [NOTE: this includes html rendering] (Lehigh-only stops: ~3.7 millisec; Lanta-only stops millisec: ~3.7; Cross-platform: 12.7 millisec)
+- Continued to work on putting data into graph format
+
+TODO: 
+
+- Finish putting data into graph format
+- Begin next algorithm
