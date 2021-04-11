@@ -14,7 +14,7 @@
  */
 
 //How many nearest stops to consider:
-const NUM_NEAREST_STOPS = 3
+const NUM_NEAREST_STOPS = 1
 
 
 /**
@@ -44,7 +44,8 @@ async function get_directions_worker(start, dest, transService = null) {
 
         for (var start_nearest of start_nearest_arr) {
             for (var dest_nearest of dest_nearest_arr) {
-                if (start_nearest.type != dest_nearest.type) { //if start stop is on lanta, and dest is on lehigh or vice versa
+                if ((start_nearest.type != dest_nearest.type) && //if start stop is on lanta, and dest is on lehigh or vice versa
+                    (transService == null)) { //also have to make sure we aren't currently working on transfer to avoid infinite loop
                     if (start_nearest.type == "lehigh") {
                         get_directions_worker(start, {
                             lat: stop_arr["Farrington Square Bus Stop (new)"]._latlng.lat,
