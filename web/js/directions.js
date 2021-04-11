@@ -14,7 +14,7 @@
  */
 
 //How many nearest stops to consider:
-const NUM_NEAREST_STOPS = 1
+const NUM_NEAREST_STOPS = 5
 
 
 /**
@@ -29,7 +29,7 @@ async function get_directions() {
 }
 
 function htmlHelper() {
-    $("#directions_tab").toggle(); //make it visible
+    $("#directions_tab").show(); //make it visible
     $("#directions_tab").addClass("list-opened");
     $("#directions_child").remove(); //clear out old content
 }
@@ -37,7 +37,9 @@ function htmlHelper() {
 async function get_directions_worker(start, dest, transService = null) {
     try {
 
-        htmlHelper();
+        if (transService == null) {
+            htmlHelper();
+        }
 
         var start_nearest_arr = calc_nearest_result(start); //get the nearest stop to the starting location
         var dest_nearest_arr = calc_nearest_result(dest); //get the nearest stop to the destination location
@@ -47,23 +49,23 @@ async function get_directions_worker(start, dest, transService = null) {
                 if ((start_nearest.type != dest_nearest.type) && //if start stop is on lanta, and dest is on lehigh or vice versa
                     (transService == null)) { //also have to make sure we aren't currently working on transfer to avoid infinite loop
                     if (start_nearest.type == "lehigh") {
-                        get_directions_worker(start, {
+                        await get_directions_worker(start, {
                             lat: stop_arr["Farrington Square Bus Stop (new)"]._latlng.lat,
                             long: stop_arr["Farrington Square Bus Stop (new)"]._latlng.lng
                         }, 'lehigh')
-                        get_directions_worker({
+                        await get_directions_worker({
                             lat: stop_arr["4TH&NEWw"]._latlng.lat,
                             long: stop_arr["4TH&NEWw"]._latlng.lng
-                        }, dest)
+                        }, dest, 'lehigh')
                     } else if (start_nearest.type == "lanta") {
-                        get_directions_worker(start, {
+                        await get_directions_worker(start, {
                             lat: stop_arr["4TH&NEWw"]._latlng.lat,
                             long: stop_arr["4TH&NEWw"]._latlng.lng
                         }, 'lanta')
-                        get_directions_worker({
+                        await get_directions_worker({
                             lat: stop_arr["Farrington Square Bus Stop (new)"]._latlng.lat,
                             long: stop_arr["Farrington Square Bus Stop (new)"]._latlng.lng
-                        }, dest)
+                        }, dest, 'lanta')
                     }
                     return
                 }
@@ -83,6 +85,7 @@ async function get_directions_worker(start, dest, transService = null) {
                         break
                     case 'lanta':
                         ending = 'Farrington Sqaure Bus Stop'
+                        break
                     default:
                         ending = 'destination'
                 }
@@ -100,6 +103,8 @@ async function get_directions_worker(start, dest, transService = null) {
                     directions_string = ("Get on " + routeName + " at " + startingStopName + ".<br><br>Depart at " + destStopName + " and walk to " + ending + ".");
                     html_string = `<p id="directions_child">${directions_string}</p>`;
                     $("#directions_tab").append(html_string);
+                    console.log("PRINTING")
+
                     return
 
                     //CODY'S STUFF?
@@ -111,9 +116,10 @@ async function get_directions_worker(start, dest, transService = null) {
                 } else { //if they don't, find a connection along the two routes
                     connection = route_connection(start_nearest_routes, dest_nearest_routes);
                     if (connection != null) {
-                        directions_string = ("Get on " + sameRoute + " at " + start_nearest + ".<br><br>Transer to " + connection + " at " + connection + ". Depart at " + dest_nearest + " and walk to " + ending);
+                        directions_string = ("Get on " + sameRoute + " at " + start_nearest + ".<br><br>Transer to " + connection + " at " + connection + ". Depart at " + dest_nearest + " and walk to " + ending + ".");
                         html_string = `<p id="directions_child">${directions_string}</p>`
                         $("#directions_tab").append(html_string)
+                        console.log("PRINTING")
                         return
                     }
                 }
@@ -242,15 +248,15 @@ async function get_loc_onclick() {
             const t0 = performance.now()
 
             //Do the work
-            const ex = get_directions_worker(start, dest);
+            get_directions_worker(start, dest)
+                .then(() => {
+                    //End Measure Performance
+                    const t1 = performance.now()
+                    console.log("TIME: " + (t1 - t0))
+                    mymap.off('click');
+                });
 
-            //End Measure Performance
-            const t1 = performance.now()
-            console.log("TIME: " + (t1 - t0))
 
-            ex.then(() => {
-                mymap.off('click');
-            });
         });
 
     });
