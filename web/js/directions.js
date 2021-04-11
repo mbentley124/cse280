@@ -71,12 +71,14 @@ async function get_directions_worker(start, dest, transService = null) {
         var directions_string;
 
         var ending;
-        if (transService == null) {
-            ending = 'destination'
-        } else if (transService == 'lehigh') {
-            ending = '4th & New'
-        } else if (transService == 'lanta') {
-            ending = 'Farrington Square Bus Stop'
+        switch (transService) {
+            case 'lehigh':
+                ending = '4th & New'
+                break
+            case 'lanta':
+                ending = 'Farrington Sqaure Bus Stop'
+            default:
+                ending = 'destination'
         }
 
         if (sameRoute != null) { //if the starting and dest stops have a matching route
@@ -103,7 +105,6 @@ async function get_directions_worker(start, dest, transService = null) {
         } else { //if they don't, find a connection along the two routes
             connection = route_connection(start_nearest_routes, dest_nearest_routes);
             if (connection != null) {
-
                 directions_string = ("Get on " + sameRoute + " at " + start_nearest + ".<br><br>Transer to " + connection + " at " + connection + ". Depart at " + dest_nearest + " and walk to " + ending);
                 html_string = `<p id="directions_child">${directions_string}</p>`
                 $("#directions_tab").append(html_string)
