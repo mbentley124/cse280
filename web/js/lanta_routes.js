@@ -8,4 +8,8 @@ routes.lanta.forEach(element => {
         .then(response => response.forEach(responseElement => {
             element.stops.push(responseElement.StopId)
         }))
+        .then(() => {
+            routes.lehigh.forEach(addStopsToGraph)
+            routes.lanta.forEach(addStopsToGraph)
+        })
 });
