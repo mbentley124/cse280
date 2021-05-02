@@ -54,3 +54,24 @@ TODO:
 
 - Finish putting data into graph format
 - Begin next algorithm
+
+### APRIL 6 - APRIL 20
+
+DONE:
+
+- Significant improvement to initial algorithm. Now can try multiple lanta routes. How many can be changed with a global var.
+- lanta and lehigh stops and routes now are loaded into memory upon page load. Still needs to include transfers.
+- fixed some more JS/html manipulation problems
+
+TODO: 
+
+- Implement Dijstra's twice; once using 1 starting node, again starting from opposite ends.
+
+### APRIL 20 - MAY 4
+
+DONE:
+
+
+
+TODO: 
+
