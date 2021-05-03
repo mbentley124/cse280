@@ -2,7 +2,6 @@ class Node {
     constructor(stop, d = Infinity) {
         this.stopid = stop
         this.d = d
-        this.visited = false
     }
 }
 
@@ -19,41 +18,49 @@ async function dijkstra(start, dest) {
     var start = calc_nearest_result(start); //get the nearest stop to the starting location
     var dest = calc_nearest_result(dest); //get the nearest stop to the destination location
 
-    let DISTANCE = Infinity
+    let myGraph = new Map()
 
-    function visitNode(node, d) {
-        node.visited = true
-        node.d = d + 1
-        if (node.stopid == dest) {
-            DISTANCE = d
-            return
-        }
-        visitNode(myGraph.get(node))
-    }
+    //make a new graph each time we want to search (to set distances to 0)
+    //TODO: maybe should preprocess?
+    stopsGraph.forEach((children, currStop, graph) => {
 
-    let myGraph = new Map(stopsGraph)
-    let startNode = new Node(start, 0)
-
-    //graph now has stop nodes instead of just stops 
-    myGraph.forEach((value, key, map) => {
-        for (let i = 0; i < value.length; i++) {
-            value[i] = new Node(value[i])
-        }
-        map.set(key, value)
-
-        if (key == start._stopid) { //TODO: won't work for lanta
-            map.set(key, startNode)
-        } else {
-            map.set(key, new Node(key))
-        }
     })
 
-    //visit every connected node until we get to the dest
-    myGraph.get(startNode).forEach((element) => {
-        visitNode(element, 0)
-    })
 
-    console.log("Hello! ", DISTANCE)
+    // let DISTANCE = Infinity //start off by setting the distance to the dest to infinity
+
+    // let myGraph = new Map()
+    // let startNode = new Node(start, 0)
+
+    // function visitNode(node, d) {
+    //     node.visited = true
+    //     node.d = d + 1
+    //     if (node.stopid == dest) {
+    //         DISTANCE = d
+    //         return
+    //     }
+    //     visitNode(myGraph.get(node))
+    // }
+
+    // //graph now has stop nodes instead of just stops 
+    // stopsGraph.forEach((value, key, map) => {
+    //     var keyNode = new Node(key)
+
+    //     for (let i = 0; i < value.length; i++) { //change arrays of stopids to Node arrays
+    //         value[i] = new Node(value[i])
+    //     }
+
+    //     myGraph.set(keyNode, value)
+
+
+    // })
+
+    // //visit every connected node until we get to the dest
+    // myGraph.get(startNode).forEach((element) => {
+    //     visitNode(element, 0)
+    // })
+
+    // console.log("Hello! ", DISTANCE)
 }
 
 
