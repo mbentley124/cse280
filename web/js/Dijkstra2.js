@@ -1,5 +1,27 @@
 async function dijkstra(start, dest) {
+    var graph = new Graph()
 
+    nodesMap = addAllStops(graph)
+    addAllEdges(nodesMap)
+    console.log(graph)
+}
+
+function addAllStops(graph) {
+    var nodes = new Map() //maps key (stopid) to Graph Node
+    stopsGraph.forEach((value, key, map) => {
+        nodes.set(key, graph.addNode(key))
+    })
+    return nodes
+}
+
+function addAllEdges(nodes) {
+    stopsGraph.forEach((value, key, map) => {
+        value.forEach((el) => {
+            keyNode = nodes.get(key)
+            recipient = nodes.get(el)
+            keyNode.addEdge(recipient)
+        })
+    })
 }
 
 
