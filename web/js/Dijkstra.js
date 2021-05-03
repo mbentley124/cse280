@@ -2,6 +2,12 @@ class Node {
     constructor(stop, d = Infinity) {
         this.stopid = stop
         this.d = d
+        this.equals = function(otherNode) {
+            if (this.stopid == otherNode.stopid) {
+                return true
+            }
+            return false;
+        }
     }
 }
 
@@ -15,17 +21,62 @@ var start = new Node() //TODO: get starting stop (which one do I choose?)
 
 //create a copy of the graph. 
 async function dijkstra(start, dest) {
-    var start = calc_nearest_result(start); //get the nearest stop to the starting location
-    var dest = calc_nearest_result(dest); //get the nearest stop to the destination location
+    var start = calc_nearest_result(start)._stopid; //get the nearest stop to the starting location
+    var dest = calc_nearest_result(dest)._stopid; //get the nearest stop to the destination location
 
     let myGraph = new Map()
 
-    //make a new graph each time we want to search (to set distances to 0)
-    //TODO: maybe should preprocess?
-    stopsGraph.forEach((children, currStop, graph) => {
+    myGraph.findPairById = function(stopid, stopNode = null) {
+        for (const [key, children] of this.entries()) {
+            if (key.stopid == stopid) {
+                return { key, children }
+            }
+        }
+        return null
+    }
 
+    myGraph.findPairByNode = function(stopid, stopNode = null) {
+        for (const [key, children] of this.entries()) {
+            if (key.equals(stopNode)) {
+                return { key, children }
+            }
+        }
+        return null
+    }
+
+    //make a new graph each time we want to search (to set distances to 0)
+    //TODO: maybe should preprocess and then just clear distances to 0 for each run?
+    stopsGraph.forEach((children, currStop, graph) => {
+        // let childrenAsNodes = []
+        // for (let i = 0; i < children.length; i++) {
+        //     childrenAsNodes.push(new Node(children[i]))
+        // }
+        myGraph.set(new Node(currStop), children)
     })
 
+    function explore(currNode, destNode, distance) { //NOT SURE IF THIS ACTUALLY CHANGES THE ITEM IN THE MAP
+        if (currNode.distance > distance) {
+            currNode.distance = distance
+            return
+        }
+        if (currNode.key.equals(destNode)) {
+            DISTANCE = currNode.distance
+            return
+        }
+        children = currNode.children
+        for (let i = 0; i < children.length; i++) {
+            let nextNode = myGraph.findPairById(children[i])
+            explore(nextNode, destNode, distance++)
+        }
+    }
+
+    let startNode = myGraph.findPairById(start)
+    let destNode = myGraph.findPairById(dest)
+
+    let DISTANCE
+
+    explore(startNode, destNode, 0)
+    console.log(DISTANCE)
 
     // let DISTANCE = Infinity //start off by setting the distance to the dest to infinity
 
