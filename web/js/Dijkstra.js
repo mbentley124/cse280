@@ -27,8 +27,6 @@ class Node {
 
 //TODO: going to have to add easy transfers to stopsGraph
 
-var start = new Node() //TODO: get starting stop (which one do I choose?)
-
 //create a copy of the graph. 
 async function dijkstra(start, dest) {
 
