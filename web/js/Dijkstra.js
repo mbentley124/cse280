@@ -69,12 +69,15 @@ async function dijkstra(start, dest) {
 
     let startingStopID = RESULT[0].stopid
     let destStopID = RESULT[RESULT.length - 1].stopid
+
+    console.log(startingStopID, destStopID)
+
     let startingStop = getStopFromID(startingStopID)
     let destStop = getStopFromID(destStopID)
     renderHTML(startingStop.type, startingStop._popup._content, destStop._popup._content)
 
 }
-
+//4579, 205
 /**
  * helper to find the Node corresponding to a stopid
  * @param {[Node]} graph in which to find the nodes
@@ -108,6 +111,12 @@ function loadNodes() {
             currNode.addAdjacent(newNode)
         })
     })
+
+    //add transfer lehigh to 4th & New
+    let temp1 = findNode(graph, 4579)
+    let temp2 = findNode(graph, 205)
+    temp1.addAdjacent(temp2)
+    temp2.addAdjacent(temp1)
 
     return graph
 }
