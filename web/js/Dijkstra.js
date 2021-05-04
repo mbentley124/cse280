@@ -29,47 +29,6 @@ class Node {
 
 var start = new Node() //TODO: get starting stop (which one do I choose?)
 
-//go through every node connected to this one
-
-function findNode(graph, stopid) {
-    for (let i of graph) {
-        if (i.stopid == stopid) {
-            return i
-        }
-    }
-}
-
-function loadNodes() {
-    let graph = [] //will just be an array of nodes
-
-    stopsGraph.forEach((value, key) => { //add all of the elements from the map
-        currNode = new Node(key)
-        graph.push(currNode)
-    })
-
-    stopsGraph.forEach((value, key) => { //add all of the elements from the map
-        currNode = findNode(graph, key)
-        value.forEach((el) => {
-            newNode = findNode(graph, el)
-            currNode.addAdjacent(newNode)
-        })
-    })
-
-    return graph
-}
-
-function initHTML() {
-    $("#directions_tab").show(); //make it visible
-    $("#directions_tab").addClass("list-opened");
-    $("#directions_child").remove(); //clear out old content
-}
-
-function renderHTML(startRoute, startStop, destStop) {
-    let directions_string = "Get on " + startRoute + " at " + startStop + ". " + "Get off at " + destStop + " and walk to destination"
-    html_string = `<p id="directions_child">${directions_string}</p>`;
-    $("#directions_tab").append(html_string);
-}
-
 //create a copy of the graph. 
 async function dijkstra(start, dest) {
 
@@ -118,6 +77,66 @@ async function dijkstra(start, dest) {
 
 }
 
+/**
+ * helper to find the Node corresponding to a stopid
+ * @param {[Node]} graph in which to find the nodes
+ * @param {int} stopid the stopid of the node we are looking for
+ * @returns 
+ */
+function findNode(graph, stopid) {
+    for (let i of graph) {
+        if (i.stopid == stopid) {
+            return i
+        }
+    }
+}
+
+/**
+ * helper to convert map of stopid's to graph of Nodes
+ * @returns a graph (implemented as an arr of nodes)
+ */
+function loadNodes() {
+    let graph = [] //will just be an array of nodes
+
+    stopsGraph.forEach((value, key) => { //add all of the elements from the map
+        currNode = new Node(key)
+        graph.push(currNode)
+    })
+
+    stopsGraph.forEach((value, key) => { //add all of the elements from the map
+        currNode = findNode(graph, key)
+        value.forEach((el) => {
+            newNode = findNode(graph, el)
+            currNode.addAdjacent(newNode)
+        })
+    })
+
+    return graph
+}
+
+/**
+ *  initialize the dispay box for the html
+ */
+function initHTML() {
+    $("#directions_tab").show(); //make it visible
+    $("#directions_tab").addClass("list-opened");
+    $("#directions_child").remove(); //clear out old content
+}
+
+/**
+ * helper to display directions in html
+ */
+function renderHTML(startRoute, startStop, destStop) {
+    let directions_string = "Get on " + startRoute + " at " + startStop + ". " + "Get off at " + destStop + " and walk to destination"
+    html_string = `<p id="directions_child">${directions_string}</p>`;
+    $("#directions_tab").append(html_string);
+}
+
+/**
+ * find the stop object pertaining to stopid
+ * @param {int} stopid 
+ * @returns the stop object from stop_arr
+ */
 function getStopFromID(stopid) {
     for (i in stop_arr) {
         if (stop_arr[i]._stopid == stopid) {
@@ -125,7 +144,6 @@ function getStopFromID(stopid) {
         }
     }
 }
-
 
 /**
  * returns a string in the form:
