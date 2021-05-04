@@ -37,7 +37,7 @@ function addAllEdges(nodes) {
         value.forEach((el) => {
             keyNode = nodes.get(key)
             recipient = nodes.get(el)
-            keyNode.addEdge(recipient)
+            keyNode.addEdge(recipient, 1)
         })
     })
 }
