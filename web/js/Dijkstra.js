@@ -11,8 +11,9 @@ class Node {
         this.adjacent = [] //holds adjacent nodes
         this.path = [] // holds currPath to this node
 
-        this.addAdjacent = function(Node) {
-            this.adjacent.push(Node)
+        this.addAdjacent = function(node) {
+            this.adjacent.push(node)
+            node.adjacent.push(this)
         }
         this.updateDistance = function(dist) {
             this.d = dist
@@ -30,15 +31,28 @@ var start = new Node() //TODO: get starting stop (which one do I choose?)
 
 //go through every node connected to this one
 
+function findNode(graph, stopid) {
+    for (let i of graph) {
+        if (i.stopid == stopid) {
+            return i
+        }
+    }
+}
+
 function loadNodes() {
     let graph = [] //will just be an array of nodes
 
     stopsGraph.forEach((value, key) => { //add all of the elements from the map
         currNode = new Node(key)
-        value.forEach((el) => {
-            currNode.addAdjacent(new Node(el))
-        })
         graph.push(currNode)
+    })
+
+    stopsGraph.forEach((value, key) => { //add all of the elements from the map
+        currNode = findNode(graph, key)
+        value.forEach((el) => {
+            newNode = findNode(graph, el)
+            currNode.addAdjacent(newNode)
+        })
     })
 
     return graph
