@@ -1,17 +1,35 @@
-async function dijkstra(start, dest) {
+async function myDijkstra(start, dest) {
+    var start = calc_nearest_result(start)._stopid; //get the nearest stop to the starting location
+    var dest = calc_nearest_result(dest)._stopid; //get the nearest stop to the destination location
     var graph = new Graph()
 
-    nodesMap = addAllStops(graph)
-    addAllEdges(nodesMap)
+
+    result = addAllStops(graph, start, dest)
+    let nodes = result.nodes
+    let startNode = result.startNode
+    let destNode = result.destNode
+    console.log(startNode)
+    console.log(destNode)
+
+    addAllEdges(nodes)
     console.log(graph)
+
+    let dist = dijkstra(graph, startNode, destNode); // returns shortest distance between source and destination nodes
+    console.log(dist)
 }
 
-function addAllStops(graph) {
+function addAllStops(graph, start, dest) {
     var nodes = new Map() //maps key (stopid) to Graph Node
     stopsGraph.forEach((value, key, map) => {
         nodes.set(key, graph.addNode(key))
+        if (key == start) {
+            startNode = nodes.get(key)
+        }
+        if (key == dest) {
+            destNode = nodes.get(key)
+        }
     })
-    return nodes
+    return { nodes, startNode, destNode }
 }
 
 function addAllEdges(nodes) {
@@ -56,7 +74,7 @@ async function get_loc_onclick() {
             const t0 = performance.now()
 
             //Do the work
-            dijkstra(start, dest)
+            myDijkstra(start, dest)
                 .then(() => {
                     //End Measure Performance
                     const t1 = performance.now()
