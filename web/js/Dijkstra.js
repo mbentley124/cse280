@@ -14,6 +14,9 @@ class Node {
         this.addAdjacent = function(Node) {
             this.adjacent.push(Node)
         }
+        this.updateDistance = function(dist) {
+            this.d = dist
+        }
         this.updatePath = function(pathToHere) {
             pathToHere.push(this)
             this.path = pathToHere
@@ -23,11 +26,23 @@ class Node {
 
 //TODO: going to have to add easy transfers to stopsGraph
 
-var NodesArr = []
-var minVal = Infinity
 var start = new Node() //TODO: get starting stop (which one do I choose?)
 
 //go through every node connected to this one
+
+function loadNodes() {
+    let graph = [] //will just be an array of nodes
+
+    stopsGraph.forEach((value, key) => { //add all of the elements from the map
+        currNode = new Node(key)
+        value.forEach((el) => {
+            currNode.addAdjacent(new Node(el))
+        })
+        graph.push(currNode)
+    })
+
+    return graph
+}
 
 //create a copy of the graph. 
 async function dijkstra(start, dest) {
@@ -35,16 +50,36 @@ async function dijkstra(start, dest) {
     var dest = calc_nearest_result(dest)._stopid; //get the nearest stop to the destination location
 
     //TRY 3
-    let graph = [] //will just be an array of nodes
+    let graph = loadNodes()
+    let RESULT
 
-    stopsGraph.forEach((value, key) => { //add all of the elements from the map
-        currNode = new Node(key)
-        value.forEach((el) => {
-            currNode.addAdjacent(el)
-        })
-        graph.push(currNode)
-    })
-    console.log(graph)
+    function explore(node, dist, path) {
+        if (dist >= node.d) {
+            return
+        }
+        node.updateDistance(dist + 1)
+        node.updatePath(path)
+        if (node.stopid == dest) { //if we reach the dest
+            RESULT = node.path
+        }
+        //otherwise, explore adjacents
+        for (let i = 0; i < node.adjacent.length; i++) {
+            explore(node.adjacent[i], node.d, node.path)
+        }
+
+    }
+
+    let startNodeNum
+    for (let i = 0; i < graph.length; i++) {
+        if (graph[i].stopid == start) {
+            startNodeNum = i
+        }
+    }
+
+    explore(graph[startNodeNum], 0, [])
+
+    console.log(RESULT)
+
 
     //TRY 2
 
