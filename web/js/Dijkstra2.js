@@ -15,7 +15,8 @@ async function myDijkstra(start, dest) {
     console.log(graph)
 
     let dist = dijkstra(graph, startNode, destNode); // returns shortest distance between source and destination nodes
-    console.log(dist)
+    let myBFS = bfs(graph)
+    console.log(dist, myBFS)
 }
 
 function addAllStops(graph, start, dest) {
