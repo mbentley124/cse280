@@ -13,7 +13,7 @@ class Node {
 
         this.addAdjacent = function(node) {
             this.adjacent.push(node)
-            node.adjacent.push(this)
+                // node.adjacent.push(this)
         }
         this.updateDistance = function(dist) {
             this.d = dist
@@ -60,11 +60,11 @@ function loadNodes() {
 
 //create a copy of the graph. 
 async function dijkstra(start, dest) {
-    var start = calc_nearest_result(start)._stopid; //get the nearest stop to the starting location
-    var dest = calc_nearest_result(dest)._stopid; //get the nearest stop to the destination location
+    // var start = calc_nearest_result(start)._stopid; //get the nearest stop to the starting location
+    // var dest = calc_nearest_result(dest)._stopid; //get the nearest stop to the destination location
 
     //TRY 3
-    let graph = loadNodes()
+    var graph = loadNodes()
     let RESULT
 
     function explore(node, dist, path) {
@@ -75,10 +75,11 @@ async function dijkstra(start, dest) {
         node.updatePath(path)
         if (node.stopid == dest) { //if we reach the dest
             RESULT = node.path
+            return
         }
         //otherwise, explore adjacents
         for (let i = 0; i < node.adjacent.length; i++) {
-            explore(node.adjacent[i], node.d, node.path)
+            explore(node.adjacent[i], node.d, node.path.map((x) => x))
         }
 
     }
@@ -262,3 +263,15 @@ function calc_nearest_result(location) {
 
     return result;
 }
+
+
+
+
+//TESTING
+setTimeout(function() { //wait for stopsGraph to finish (async)
+    dijkstra(206, 207) //lehigh to lehigh, one stop
+    dijkstra(206, 208) //lehigh to lehigh, multistop
+    dijkstra(4587, 4583) //lanta to lanta, one stop
+    dijkstra(4591, 4583) //lanta to lanta, multistop
+    dijkstra(4591, 207) //lanta to lehigh
+}, 1000)
