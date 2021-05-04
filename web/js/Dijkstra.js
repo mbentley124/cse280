@@ -58,10 +58,25 @@ function loadNodes() {
     return graph
 }
 
+function initHTML() {
+    $("#directions_tab").show(); //make it visible
+    $("#directions_tab").addClass("list-opened");
+    $("#directions_child").remove(); //clear out old content
+}
+
+function renderHTML(startRoute, startStop, destStop) {
+    let directions_string = "Get on " + startRoute + " at " + startStop + ". " + "Get off at " + destStop + " and walk to destination"
+    html_string = `<p id="directions_child">${directions_string}</p>`;
+    $("#directions_tab").append(html_string);
+}
+
 //create a copy of the graph. 
 async function dijkstra(start, dest) {
-    // var start = calc_nearest_result(start)._stopid; //get the nearest stop to the starting location
-    // var dest = calc_nearest_result(dest)._stopid; //get the nearest stop to the destination location
+
+    initHTML()
+
+    var start = calc_nearest_result(start)._stopid; //get the nearest stop to the starting location
+    var dest = calc_nearest_result(dest)._stopid; //get the nearest stop to the destination location
 
     //TRY 3
     var graph = loadNodes()
@@ -80,6 +95,7 @@ async function dijkstra(start, dest) {
         //otherwise, explore adjacents
         for (let i = 0; i < node.adjacent.length; i++) {
             explore(node.adjacent[i], node.d, node.path.map((x) => x))
+                //need to use map to avoid all nodes referencing the same node.path array
         }
 
     }
@@ -93,103 +109,22 @@ async function dijkstra(start, dest) {
 
     explore(graph[startNodeNum], 0, [])
 
-    console.log(RESULT)
 
+    let startingStopID = RESULT[0].stopid
+    let destStopID = RESULT[RESULT.length - 1].stopid
+    let startingStop = getStopFromID(startingStopID)
+    let destStop = getStopFromID(destStopID)
+    renderHTML(startingStop.type, startingStop._popup._content, destStop._popup._content)
 
-    //TRY 2
-
-    // let myGraph = new Map()
-
-    // myGraph.findPairById = function(stopid, stopNode = null) {
-    //     for (const [key, children] of this.entries()) {
-    //         if (key.stopid == stopid) {
-    //             return { key, children }
-    //         }
-    //     }
-    //     return null
-    // }
-
-    // myGraph.findPairByNode = function(stopid, stopNode = null) {
-    //     for (const [key, children] of this.entries()) {
-    //         if (key.equals(stopNode)) {
-    //             return { key, children }
-    //         }
-    //     }
-    //     return null
-    // }
-
-    // //make a new graph each time we want to search (to set distances to 0)
-    // //TODO: maybe should preprocess and then just clear distances to 0 for each run?
-    // stopsGraph.forEach((children, currStop, graph) => {
-    //     // let childrenAsNodes = []
-    //     // for (let i = 0; i < children.length; i++) {
-    //     //     childrenAsNodes.push(new Node(children[i]))
-    //     // }
-    //     myGraph.set(new Node(currStop), children)
-    // })
-
-    // function explore(currNode, destNode, distance) { //NOT SURE IF THIS ACTUALLY CHANGES THE ITEM IN THE MAP
-    //     if (currNode.distance > distance) {
-    //         currNode.distance = distance
-    //         return
-    //     }
-    //     if (currNode.key.equals(destNode)) {
-    //         DISTANCE = currNode.distance
-    //         return
-    //     }
-    //     children = currNode.children
-    //     for (let i = 0; i < children.length; i++) {
-    //         let nextNode = myGraph.findPairById(children[i])
-    //         explore(nextNode, destNode, distance++)
-    //     }
-    // }
-
-    // let startNode = myGraph.findPairById(start)
-    // let destNode = myGraph.findPairById(dest)
-
-    // let DISTANCE
-
-    // explore(startNode, destNode, 0)
-    // console.log(DISTANCE)
-
-    //TRY 1
-
-    // let DISTANCE = Infinity //start off by setting the distance to the dest to infinity
-
-    // let myGraph = new Map()
-    // let startNode = new Node(start, 0)
-
-    // function visitNode(node, d) {
-    //     node.visited = true
-    //     node.d = d + 1
-    //     if (node.stopid == dest) {
-    //         DISTANCE = d
-    //         return
-    //     }
-    //     visitNode(myGraph.get(node))
-    // }
-
-    // //graph now has stop nodes instead of just stops 
-    // stopsGraph.forEach((value, key, map) => {
-    //     var keyNode = new Node(key)
-
-    //     for (let i = 0; i < value.length; i++) { //change arrays of stopids to Node arrays
-    //         value[i] = new Node(value[i])
-    //     }
-
-    //     myGraph.set(keyNode, value)
-
-
-    // })
-
-    // //visit every connected node until we get to the dest
-    // myGraph.get(startNode).forEach((element) => {
-    //     visitNode(element, 0)
-    // })
-
-    // console.log("Hello! ", DISTANCE)
 }
 
+function getStopFromID(stopid) {
+    for (i in stop_arr) {
+        if (stop_arr[i]._stopid == stopid) {
+            return stop_arr[i]
+        }
+    }
+}
 
 
 /**
@@ -253,13 +188,7 @@ function calc_nearest_result(location) {
         dist_arr.push({ "key": key, "dist": dist, "r": dist.toString() });
     }
 
-
-    // var results = sortByKey(dist_arr, "dist").slice(0, NUM_NEAREST_STOPS);
-    // results.forEach
-
     var result = sortByKey(dist_arr, "dist")[0].key
-        // console.log(result)
-        // var close_key = result.key;
 
     return result;
 }
@@ -268,10 +197,10 @@ function calc_nearest_result(location) {
 
 
 //TESTING
-setTimeout(function() { //wait for stopsGraph to finish (async)
-    dijkstra(206, 207) //lehigh to lehigh, one stop
-    dijkstra(206, 208) //lehigh to lehigh, multistop
-    dijkstra(4587, 4583) //lanta to lanta, one stop
-    dijkstra(4591, 4583) //lanta to lanta, multistop
-    dijkstra(4591, 207) //lanta to lehigh
-}, 1000)
+// setTimeout(function() { //wait for stopsGraph to finish (async)
+//     dijkstra(206, 207) //lehigh to lehigh, one stop
+//     dijkstra(206, 208) //lehigh to lehigh, multistop
+//     dijkstra(4587, 4583) //lanta to lanta, one stop
+//     dijkstra(4591, 4583) //lanta to lanta, multistop
+//     dijkstra(4591, 207) //lanta to lehigh
+// }, 1000)
