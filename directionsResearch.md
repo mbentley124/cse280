@@ -71,7 +71,16 @@ TODO:
 
 DONE:
 
+- Implemented Dijkstra's. Began work on Timing.
 
 
 TODO: 
 
+- Time Dijkstra's (with a large sample) and write report
+
+### MAY 4 - MAY 16
+
+DONE:
+
+- Fixed performance timing issues
+- Wrote report
