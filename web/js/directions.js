@@ -103,7 +103,6 @@ async function get_directions_worker(start, dest, transService = null) {
                     directions_string = ("Get on " + routeName + " at " + startingStopName + ".<br><br>Depart at " + destStopName + " and walk to " + ending + ".");
                     html_string = `<p id="directions_child">${directions_string}</p>`;
                     $("#directions_tab").append(html_string);
-                    console.log("PRINTING")
 
                     return
 
@@ -119,7 +118,6 @@ async function get_directions_worker(start, dest, transService = null) {
                         directions_string = ("Get on " + sameRoute + " at " + start_nearest + ".<br><br>Transer to " + connection + " at " + connection + ". Depart at " + dest_nearest + " and walk to " + ending + ".");
                         html_string = `<p id="directions_child">${directions_string}</p>`
                         $("#directions_tab").append(html_string)
-                        console.log("PRINTING")
                         return
                     }
                 }
@@ -222,9 +220,6 @@ function calc_nearest_result(location) {
     // results.forEach
 
     var results = sortByKey(dist_arr, "dist").slice(0, NUM_NEAREST_STOPS).map(i => i.key)
-    console.log(results)
-        // console.log(result)
-        // var close_key = result.key;
 
     return results;
 }
@@ -239,24 +234,33 @@ async function get_loc_onclick() {
         start = { lat: e.latlng.lat, long: e.latlng.lng }
         $("#directions_instructions p").html("Choose a destination.");
         mymap.off('click');
-        mymap.on('click', function(e) {
+        mymap.on('click', async function(e) {
             dest = { lat: e.latlng.lat, long: e.latlng.lng }
             $("#directions_instructions").toggle();
             $('#directions_instructions').removeClass('list-opened');
 
             //Meaure Performance
-            const t0 = performance.now()
+            let perArr = []
+            for (let i = 0; i < 50; i++) {
+                const t0 = performance.now()
 
-            //Do the work
-            get_directions_worker(start, dest)
-                .then(() => {
-                    //End Measure Performance
-                    const t1 = performance.now()
-                    console.log("TIME: " + (t1 - t0))
-                    mymap.off('click');
-                });
-
-
+                //Do the work
+                await get_directions_worker(start, dest)
+                    .then(() => {
+                        //End Measure Performance
+                        perArr.push(performance.now() - t0)
+                            // console.log("TIME: " + (t1 - t0))
+                        mymap.off('click');
+                    });
+            }
+            setTimeout(() => {
+                let sum = 0
+                for (let i = 0; i < perArr.length; i++) {
+                    console.log(perArr[i])
+                    sum += perArr[i]
+                }
+                console.log(sum / 50)
+            }, 5000)
         });
 
     });

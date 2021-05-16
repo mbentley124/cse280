@@ -25,6 +25,8 @@ class Node {
     }
 }
 
+console.log(stops)
+
 //TODO: going to have to add easy transfers to stopsGraph
 
 //create a copy of the graph. 
@@ -118,6 +120,12 @@ function loadNodes() {
     temp1.addAdjacent(temp2)
     temp2.addAdjacent(temp1)
 
+    //add transfer 4th & New to 
+    temp1 = findNode(graph, 4579)
+    temp2 = findNode(graph, 5163)
+    temp1.addAdjacent(temp2)
+    temp2.addAdjacent(temp1)
+
     return graph
 }
 
@@ -173,22 +181,33 @@ async function get_loc_onclick() {
         start = { lat: e.latlng.lat, long: e.latlng.lng }
         $("#directions_instructions p").html("Choose a destination.");
         mymap.off('click');
-        mymap.on('click', function(e) {
+        mymap.on('click', async function(e) {
             dest = { lat: e.latlng.lat, long: e.latlng.lng }
             $("#directions_instructions").toggle();
             $('#directions_instructions').removeClass('list-opened');
 
             //Meaure Performance
-            const t0 = performance.now()
+            let perArr = []
+            for (let i = 0; i < 50; i++) {
+                const t0 = performance.now()
 
-            //Do the work
-            dijkstra(start, dest)
-                .then(() => {
-                    //End Measure Performance
-                    const t1 = performance.now()
-                    console.log("TIME: " + (t1 - t0))
-                    mymap.off('click');
-                });
+                //Do the work
+                await dijkstra(start, dest)
+                    .then(() => {
+                        //End Measure Performance
+                        perArr.push(performance.now() - t0)
+                            // console.log("TIME: " + (t1 - t0))
+                        mymap.off('click');
+                    });
+            }
+            setTimeout(() => {
+                let sum = 0
+                for (let i = 0; i < perArr.length; i++) {
+                    console.log(perArr[i])
+                    sum += perArr[i]
+                }
+                console.log(sum / 50)
+            }, 5000)
 
 
         });
